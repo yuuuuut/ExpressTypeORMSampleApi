@@ -71,8 +71,6 @@ const useAuthCtx = (): AuthContextType => {
               photoURL: data.user.photoURL,
             }
 
-            console.log(user)
-
             await create(user)
 
             const currentUser = firebase.auth().currentUser

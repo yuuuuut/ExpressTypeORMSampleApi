@@ -16,7 +16,7 @@ export class User extends BaseEntity {
   id: string
 
   @Column({ nullable: false, name: 'display_name' })
-  diaplayName: string
+  displayName: string
 
   @Column({ nullable: false, name: 'photo_url' })
   photoURL: string
