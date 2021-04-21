@@ -1,9 +1,9 @@
 import request from 'supertest'
 import { getManager } from 'typeorm'
 
-import { User } from '../entities'
+import { Profile, User } from '../entities'
 
-const ApiReq = request('http://localhost:4000/api')
+const Req = request('http://localhost:4000/api')
 
 /**
  * Test用Userを作成する。
@@ -22,6 +22,24 @@ async function createTestUser() {
   return userData
 }
 
+/**
+ * Test用Profileを作成する。
+ */
+async function createTestProfile(user: User) {
+  const profileRepository = getManager().getRepository(Profile)
+
+  const profile = new Profile()
+  profile.user = user
+
+  const profileData = await profileRepository.save(profile)
+  if (!profileData) throw new Error('Test Failed')
+
+  return profileData
+}
+
+/**
+ * Test用Userを削除する。
+ */
 async function deleteTestUser(id: string) {
   const userRepository = getManager().getRepository(User)
   const user = await userRepository.findOne(id)
@@ -29,4 +47,4 @@ async function deleteTestUser(id: string) {
   if (user) await userRepository.delete(id)
 }
 
-export { ApiReq, deleteTestUser, createTestUser }
+export { Req, deleteTestUser, createTestUser, createTestProfile }

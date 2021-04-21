@@ -1,19 +1,19 @@
 import { TestIResponse, UserCreateApiRes } from '../../../commons/types'
-import { ApiReq, createTestUser } from '../../common'
+import { Req, createTestUser } from '../../common'
 
 /***************************
  *    Main
  **************************/
 describe('User API Controller Test', () => {
   describe('Create Test', () => {
-    it('POST /users Userの作成ができること。', async () => {
+    it('POST /api/users Userの作成ができること。', async () => {
       const userData = {
         id: 'TestUser',
         displayName: 'TestUser',
         photoURL: 'TestUserPhoto',
       }
 
-      const response = (await ApiReq.post('/users').send(
+      const response = (await Req.post('/users').send(
         userData
       )) as TestIResponse<UserCreateApiRes>
 
@@ -23,7 +23,7 @@ describe('User API Controller Test', () => {
       expect(response.body.data.profile?.user.id).toEqual(userData.id)
     })
 
-    it('POST /users Userが存在する場合、Userの作成が行われないこと。', async () => {
+    it('POST /api/users Userが存在する場合、Userの作成が行われないこと。', async () => {
       const user = await createTestUser()
 
       const newUser = {
@@ -32,7 +32,7 @@ describe('User API Controller Test', () => {
         photoURL: user.photoURL,
       }
 
-      const response = (await ApiReq.post('/users').send(
+      const response = (await Req.post('/users').send(
         newUser
       )) as TestIResponse<UserCreateApiRes>
 

@@ -18,3 +18,8 @@ export interface UserCreateApiRes {
   profile: Profile | null
   isCreate: boolean
 }
+
+export interface ProfileUpdateApiRes {
+  profile: Profile
+  message: string
+}

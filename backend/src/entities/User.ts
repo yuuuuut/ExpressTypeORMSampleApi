@@ -16,10 +16,10 @@ export class User extends BaseEntity {
   id: string
 
   @Column({ nullable: false, name: 'display_name' })
-  displayName: string
+  displayName?: string
 
   @Column({ nullable: false, name: 'photo_url' })
-  photoURL: string
+  photoURL?: string
 
   @Column({ default: false })
   isAdmin: boolean
