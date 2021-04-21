@@ -1,21 +1,18 @@
 import { Request, Response } from 'express'
 
-import { IResponse } from '../../commons/response'
-import { User } from '../../entities'
+import { IResponse, UserCreateApiRes } from '../../commons/types'
 import * as model from '../../models/user.model'
 
 export const create = async (req: Request, res: Response) => {
-  const response: IResponse<{ user: User }> = {
+  const response: IResponse<UserCreateApiRes> = {
     status: 201,
-    success: true,
   }
 
   try {
-    const user = await model.create(req)
-    response.data = { user: user }
+    const data = await model.create(req)
+    response.data = { user: data.user, isCreate: data.isCreate }
   } catch (err) {
     response.status = err.status || 500
-    response.success = false
     response.error = { message: err.message }
   }
 

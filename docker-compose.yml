@@ -8,7 +8,7 @@ services:
     volumes:
       - ./backend/:/usr/app
       - /backend/node_modules
-    command: sh -c "yarn dev"
+    command: sh -c "yarn ${ENV}"
     ports:
       - "4000:4000"
 
@@ -36,5 +36,21 @@ services:
       - ./db/data:/var/lib/mysql
     ports:
       - "3305:3306"
+    security_opt:
+      - seccomp:unconfined
+
+  test-db:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: ${TEST_DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${TEST_DB_ROOTPASS}
+      MYSQL_USER: ${TEST_DB_USERNAME}
+      MYSQL_PASSWORD: ${TEST_DB_PASS}
+      TZ: "Asia/Tokyo"
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - ./test-db/data:/var/lib/mysql
+    ports:
+      - "3307:3306"
     security_opt:
       - seccomp:unconfined

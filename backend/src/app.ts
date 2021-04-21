@@ -7,12 +7,14 @@ import router from '../src/routes'
 
 dotenv.config()
 
+console.log(process.env.NODE_ENV)
+
 createConnection()
   .then(async (connection) => {
     console.log(connection.options)
 
     const app = express()
-    const PORT: string | number = process.env.PORT || 4000
+    const PORT = 4000
 
     app.use(express.json())
     app.use(express.urlencoded({ extended: true }))

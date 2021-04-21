@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { IResponse } from '../commons/response'
+import { IResponse } from '../commons/types'
 import { User } from '../entities'
 
 import * as model from '../models/user.model'
@@ -7,7 +7,6 @@ import * as model from '../models/user.model'
 export const index = async (req: Request, res: Response) => {
   const response: IResponse<{ users: User[] }> = {
     status: 200,
-    success: true,
   }
 
   try {
@@ -15,7 +14,6 @@ export const index = async (req: Request, res: Response) => {
     response.data = { users: users }
   } catch (err) {
     response.status = err.status || 500
-    response.success = false
     response.error = { message: err.message }
   }
 

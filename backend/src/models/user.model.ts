@@ -23,10 +23,10 @@ const create = async (req: Request) => {
 
     await userRepository.save(user)
 
-    return user
+    return { user, isCreate: true }
   }
 
-  return user
+  return { user, isCreate: false }
 }
 
 export { index, create }
