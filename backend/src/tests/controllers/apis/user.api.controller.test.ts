@@ -1,5 +1,5 @@
 import { TestIResponse, UserCreateApiRes } from '../../../commons/types'
-import { ApiReq, createTestUser, deleteTestUser } from '../../common'
+import { ApiReq, createTestUser } from '../../common'
 
 /***************************
  *    Main
@@ -7,21 +7,20 @@ import { ApiReq, createTestUser, deleteTestUser } from '../../common'
 describe('User API Controller Test', () => {
   describe('Create Test', () => {
     it('POST /users Userの作成ができること。', async () => {
-      const user = {
-        id: 'Test',
+      const userData = {
+        id: 'TestUser',
         displayName: 'TestUser',
         photoURL: 'TestUserPhoto',
       }
 
       const response = (await ApiReq.post('/users').send(
-        user
+        userData
       )) as TestIResponse<UserCreateApiRes>
 
       expect(response.status).toEqual(201)
-      expect(response.body.data.user).toEqual({ ...user, isAdmin: false })
+      expect(response.body.data.user).toEqual({ ...userData, isAdmin: false })
       expect(response.body.data.isCreate).toEqual(true)
-
-      await deleteTestUser(user.id)
+      expect(response.body.data.profile?.user.id).toEqual(userData.id)
     })
 
     it('POST /users Userが存在する場合、Userの作成が行われないこと。', async () => {
@@ -38,10 +37,7 @@ describe('User API Controller Test', () => {
       )) as TestIResponse<UserCreateApiRes>
 
       expect(response.status).toEqual(201)
-      expect(response.body.data.user).toEqual({ ...user, isAdmin: false })
       expect(response.body.data.isCreate).toEqual(false)
-
-      await deleteTestUser(user.id)
     })
   })
 })

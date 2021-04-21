@@ -1,4 +1,4 @@
-import { User } from '../entities'
+import { Profile, User } from '../entities'
 
 export interface IResponse<T> {
   status: number
@@ -15,5 +15,6 @@ export interface TestIResponse<T> {
 
 export interface UserCreateApiRes {
   user: User
+  profile: Profile | null
   isCreate: boolean
 }

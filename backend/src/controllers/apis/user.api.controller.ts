@@ -10,7 +10,11 @@ export const create = async (req: Request, res: Response) => {
 
   try {
     const data = await model.create(req)
-    response.data = { user: data.user, isCreate: data.isCreate }
+    response.data = {
+      user: data.user,
+      profile: data.profile,
+      isCreate: data.isCreate,
+    }
   } catch (err) {
     response.status = err.status || 500
     response.error = { message: err.message }

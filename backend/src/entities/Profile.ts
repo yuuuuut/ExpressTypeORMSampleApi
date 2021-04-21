@@ -14,13 +14,13 @@ export class Profile extends BaseEntity {
   @PrimaryGeneratedColumn()
   readonly id: number
 
-  @Column({ name: 'line_id' })
+  @Column({ name: 'line_id', nullable: true })
   lineId: string
 
-  @Column({ name: 'twitter_id' })
+  @Column({ name: 'twitter_id', nullable: true })
   twitterId: string
 
-  @OneToOne(() => User)
+  @OneToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: User
 }

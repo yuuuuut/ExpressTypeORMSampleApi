@@ -29,7 +29,7 @@ const option = {
   username: username[process.env.NODE_ENV],
   password: password[process.env.NODE_ENV],
   database: database[process.env.NODE_ENV],
-  synchronize: true,
+  synchronize: false,
   logging: false,
   entities: ['src/entities/**/*.ts'],
   migrations: ['src/migration/**/*.ts'],
