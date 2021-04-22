@@ -13,6 +13,10 @@ export interface TestIResponse<T> {
   body: { data: T }
 }
 
+export interface UserIndexApiRes {
+  users: User[]
+}
+
 export interface UserCreateApiRes {
   user: User
   profile: Profile | null
@@ -21,5 +25,9 @@ export interface UserCreateApiRes {
 
 export interface ProfileUpdateApiRes {
   profile: Profile
+  message: string
+}
+
+export interface RelationshipCreateApiRes {
   message: string
 }

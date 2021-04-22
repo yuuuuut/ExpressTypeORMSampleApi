@@ -8,12 +8,12 @@ const Req = request('http://localhost:4000/api')
 /**
  * Test用Userを作成する。
  */
-async function createTestUser() {
+async function createTestUser(name?: string) {
   const userRepository = getManager().getRepository(User)
 
   const user = new User()
-  user.id = 'TestUser'
-  user.displayName = 'TestUserName'
+  user.id = name || 'TestUser'
+  user.displayName = 'TestDisName'
   user.photoURL = 'TestUserPhoto'
 
   const userData = await userRepository.save(user)

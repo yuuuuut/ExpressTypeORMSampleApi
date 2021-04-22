@@ -8,7 +8,7 @@ import {
   PrimaryColumn,
 } from 'typeorm'
 
-import { Entry, Message, Notification, Profile, Relationship, Tag } from '.'
+import { Entry, Message, Notification, Relationship, Tag } from '.'
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -31,10 +31,10 @@ export class User extends BaseEntity {
   messages: Message[]
 
   @OneToMany((type) => Relationship, (followings) => followings.user)
-  followings: User[]
+  followings: Relationship[]
 
-  @OneToMany((type) => Relationship, (followers) => followers.user)
-  followers: User[]
+  @OneToMany((type) => Relationship, (followers) => followers.follow)
+  followers: Relationship[]
 
   @OneToMany((type) => Notification, (notification) => notification.visiter)
   active_notifications: Notification[]

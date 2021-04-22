@@ -1,5 +1,5 @@
-import { TestIResponse, UserCreateApiRes } from '../../../commons/types'
-import { Req, createTestUser } from '../../common'
+import { TestIResponse, UserCreateApiRes } from '../../commons/types'
+import { Req, createTestUser } from '../common'
 
 /***************************
  *    Main

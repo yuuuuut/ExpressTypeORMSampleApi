@@ -1,7 +1,8 @@
+import axios from 'axios'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 
-export const AAA = () => {
+export const AAA = (): JSX.Element => {
   const { user, signin, signout } = useAuth()
 
   const handleSignin = async () => {
@@ -10,6 +11,23 @@ export const AAA = () => {
 
   const handleSignout = async () => {
     await signout()
+  }
+
+  const a = async () => {
+    const token = localStorage.getItem('@token')
+    if (!token) console.log('None Token')
+
+    const data = {
+      lineId: 'A',
+    }
+
+    const res = await axios.put('http://localhost:4000/api/profiles', data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+
+    console.log(res)
   }
 
   return (
@@ -22,9 +40,8 @@ export const AAA = () => {
       )}
       <a href="/bbb">BBB</a>
       <Link to={'/bbb'}>q</Link>
-      <form method="post" action="http://localhost:4000/user">
-        <button type="submit">a</button>
-      </form>
+
+      <button onClick={a}>Update</button>
     </div>
   )
 }

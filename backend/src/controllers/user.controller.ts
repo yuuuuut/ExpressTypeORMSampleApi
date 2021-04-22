@@ -1,11 +1,13 @@
 import { Request, Response } from 'express'
-import { IResponse } from '../commons/types'
-import { User } from '../entities'
 
+import { IResponse, UserCreateApiRes, UserIndexApiRes } from '../commons/types'
 import * as model from '../models/user.model'
 
-export const index = async (req: Request, res: Response) => {
-  const response: IResponse<{ users: User[] }> = {
+/**
+ * UserIndex
+ */
+const index = async (req: Request, res: Response) => {
+  const response: IResponse<UserIndexApiRes> = {
     status: 200,
   }
 
@@ -19,3 +21,28 @@ export const index = async (req: Request, res: Response) => {
 
   return res.status(response.status).json(response)
 }
+
+/**
+ * UserCreate
+ */
+const create = async (req: Request, res: Response) => {
+  const response: IResponse<UserCreateApiRes> = {
+    status: 201,
+  }
+
+  try {
+    const data = await model.create(req)
+    response.data = {
+      user: data.user,
+      profile: data.profile,
+      isCreate: data.isCreate,
+    }
+  } catch (err) {
+    response.status = err.status || 500
+    response.error = { message: err.message }
+  }
+
+  return res.status(response.status).json(response)
+}
+
+export { index, create }

@@ -5,11 +5,15 @@ export const BBB = () => {
   const a = async () => {
     const b = await axios.get('http://localhost:4000/api/users')
 
-    console.log(b)
+    return b
   }
 
   useEffect(() => {
     console.log('OK!')
+
+    const res = a()
+
+    console.log(res)
   }, [])
 
   return (

@@ -7,13 +7,4 @@ import { Message } from './Message'
 import { Notification } from './Notification'
 import { Relationship } from './Relationship'
 
-export {
-  Tag,
-  User,
-  Room,
-  Entry,
-  Profile,
-  Message,
-  Notification,
-  Relationship
-}
+export { Tag, User, Room, Entry, Profile, Message, Notification, Relationship }

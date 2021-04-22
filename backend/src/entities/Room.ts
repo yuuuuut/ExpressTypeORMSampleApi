@@ -1,10 +1,10 @@
-import { BaseEntity, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm"
-import { Entry, Message } from "."
+import { BaseEntity, Entity, OneToMany, PrimaryColumn } from 'typeorm'
+import { Entry, Message } from '.'
 
 @Entity('rooms')
 export class Room extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  readonly id: number
+  @PrimaryColumn()
+  readonly id: string
 
   @OneToMany((type) => Entry, (entries) => entries.room)
   entries: Entry[]

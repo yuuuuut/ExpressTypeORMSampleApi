@@ -5,7 +5,7 @@ import { createTestProfile, deleteTestUser } from '../common'
 /***************************
  *    Main
  **************************/
-describe('Profile Controller Test', () => {
+describe('Profile API Controller Test', () => {
   describe('Update Test', () => {
     it('PUT /api/profiles Profileの更新に成功すること。', async () => {
       const user = await createFirebaseUser()
