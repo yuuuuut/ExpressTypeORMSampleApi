@@ -1,4 +1,4 @@
-import { Profile, User } from '../entities'
+import { Profile, Room, User } from '../entities'
 
 export interface IResponse<T> {
   status: number
@@ -43,4 +43,8 @@ export interface RelationshipCreateApiRes {
 
 export interface RelationshipDestroyApiRes {
   message: string
+}
+
+export interface RoomCreateApiRes {
+  room: Room
 }
