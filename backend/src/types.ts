@@ -1,4 +1,4 @@
-import { Profile, Room, User } from '../entities'
+import { Profile, Room, User } from './entities'
 
 export interface IResponse<T> {
   status: number

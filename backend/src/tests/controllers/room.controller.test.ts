@@ -1,4 +1,4 @@
-import { RoomCreateApiRes, TestIResponse } from '../../commons/types'
+import { RoomCreateApiRes, TestIResponse } from '../../types'
 import { authCheckMock } from '../firebase'
 
 /***************************

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 
-import { IResponse, RoomCreateApiRes } from '../commons/types'
+import { IResponse, RoomCreateApiRes } from '../types'
 import * as roomModel from '../models/room.model'
 
 /**

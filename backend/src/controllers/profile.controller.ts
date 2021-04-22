@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { IResponse, ProfileUpdateApiRes } from '../commons/types'
+import { IResponse, ProfileUpdateApiRes } from '../types'
 
 import * as model from '../models/profile.model'
 

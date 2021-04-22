@@ -1,4 +1,4 @@
-import { ProfileUpdateApiRes, TestIResponse } from '../../commons/types'
+import { ProfileUpdateApiRes, TestIResponse } from '../../types'
 import { authCheckMock, createFirebaseUser } from '../firebase'
 import { createTestProfile, deleteTestUser } from '../common'
 

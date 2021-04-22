@@ -5,7 +5,7 @@ import {
   UserCreateApiRes,
   UserIndexApiRes,
   UserShowApiRes,
-} from '../commons/types'
+} from '../types'
 import * as model from '../models/user.model'
 
 /**
