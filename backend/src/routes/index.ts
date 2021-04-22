@@ -10,6 +10,11 @@ const router = Router()
 router.get('/api/users', userController.index)
 router.post('/api/users', userController.create)
 router.post('/api/users/:id/follow', authCheck, relationshipController.create)
+router.delete(
+  '/api/users/:id/unfollow',
+  authCheck,
+  relationshipController.destroy
+)
 
 router.put('/api/profiles', authCheck, profileController.update)
 

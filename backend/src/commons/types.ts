@@ -31,3 +31,7 @@ export interface ProfileUpdateApiRes {
 export interface RelationshipCreateApiRes {
   message: string
 }
+
+export interface RelationshipDestroyApiRes {
+  message: string
+}

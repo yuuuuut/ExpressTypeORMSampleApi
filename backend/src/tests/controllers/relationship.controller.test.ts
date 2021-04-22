@@ -1,8 +1,16 @@
 import { getManager } from 'typeorm'
 
-import { RelationshipCreateApiRes, TestIResponse } from '../../commons/types'
+import {
+  RelationshipCreateApiRes,
+  RelationshipDestroyApiRes,
+  TestIResponse,
+} from '../../commons/types'
+import {
+  createTestRelationship,
+  createTestUser,
+  deleteTestUser,
+} from '../common'
 import { authCheckMock, createFirebaseUser } from '../firebase'
-import { createTestUser, deleteTestUser } from '../common'
 import { User } from '../../entities'
 
 /***************************
@@ -30,6 +38,24 @@ describe('Relationship API Controller Test', () => {
       expect(response.status).toEqual(201)
       expect(response.body.data.message).toEqual('フォローしました。')
       expect(currentUser.followings[0].follow).toEqual(TestfollowUser)
+    })
+  })
+
+  describe('Destroy Test', () => {
+    it('DELETE /api/users/:id/unfollow フォローの解除ができること。', async () => {
+      const TestCurrentUser = await createFirebaseUser()
+      const TestfollowUser = await createTestUser()
+      await createTestRelationship(TestCurrentUser, TestfollowUser)
+
+      const response = (await authCheckMock(
+        `/users/${TestfollowUser.id}/unfollow`,
+        'DELETE'
+      )) as TestIResponse<RelationshipDestroyApiRes>
+
+      await deleteTestUser(TestCurrentUser.id)
+
+      expect(response.status).toEqual(200)
+      expect(response.body.data.message).toEqual('フォローを解除しました。')
     })
   })
 })
