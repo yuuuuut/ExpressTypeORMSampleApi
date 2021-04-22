@@ -1,10 +1,40 @@
-import { TestIResponse, UserCreateApiRes } from '../../commons/types'
-import { Req, createTestUser } from '../common'
+import {
+  TestIResponse,
+  UserCreateApiRes,
+  UserShowApiRes,
+} from '../../commons/types'
+import { Req, createTestUser, deleteTestUser } from '../common'
+import { authCheckMock, createFirebaseUser } from '../firebase'
 
 /***************************
  *    Main
  **************************/
 describe('User API Controller Test', () => {
+  describe('Show Test', () => {
+    it('GET /api/users/:id Userの取得ができること。', async () => {
+      const user = await createFirebaseUser()
+
+      const response = (await authCheckMock(
+        `/users/${user.id}`,
+        'GET'
+      )) as TestIResponse<UserShowApiRes>
+
+      await deleteTestUser(user.id)
+
+      expect(response.status).toEqual(200)
+      expect(response.body.data.user).toEqual(user)
+    })
+    it('GET /api/users/:id Userが存在しない場合Userの取得ができないこと。', async () => {
+      const response = (await authCheckMock(
+        `/users/NotUser`,
+        'GET'
+      )) as TestIResponse<UserShowApiRes>
+
+      expect(response.status).toEqual(404)
+      expect(response.body.error?.message).toEqual('ユーザーが存在しません。')
+    })
+  })
+
   describe('Create Test', () => {
     it('POST /api/users Userの作成ができること。', async () => {
       const userData = {

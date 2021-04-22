@@ -10,11 +10,20 @@ export interface IResponse<T> {
 
 export interface TestIResponse<T> {
   status: number
-  body: { data: T }
+  body: {
+    data: T
+    error?: {
+      message?: string
+    }
+  }
 }
 
 export interface UserIndexApiRes {
   users: User[]
+}
+
+export interface UserShowApiRes {
+  user: User
 }
 
 export interface UserCreateApiRes {

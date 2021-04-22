@@ -5,7 +5,7 @@ import * as profileModel from './profile.model'
 import { User } from '../entities'
 
 /**
- *
+ * user index model
  */
 const index = async () => {
   const userRepository = getManager().getRepository(User)
@@ -15,7 +15,21 @@ const index = async () => {
 }
 
 /**
- *
+ * user show model
+ */
+const show = async (req: Request) => {
+  const userRepository = getManager().getRepository(User)
+  const id = req.params.id
+
+  const user = await userRepository.findOne(id)
+  if (!user)
+    throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })
+
+  return { user }
+}
+
+/**
+ * user create model
  */
 const create = async (req: Request) => {
   const userRepository = getManager().getRepository(User)
@@ -42,4 +56,4 @@ const create = async (req: Request) => {
   }
 }
 
-export { index, create }
+export { index, show, create }

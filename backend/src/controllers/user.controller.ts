@@ -1,10 +1,15 @@
 import { Request, Response } from 'express'
 
-import { IResponse, UserCreateApiRes, UserIndexApiRes } from '../commons/types'
+import {
+  IResponse,
+  UserCreateApiRes,
+  UserIndexApiRes,
+  UserShowApiRes,
+} from '../commons/types'
 import * as model from '../models/user.model'
 
 /**
- * UserIndex
+ * user controller index
  */
 const index = async (req: Request, res: Response) => {
   const response: IResponse<UserIndexApiRes> = {
@@ -23,7 +28,26 @@ const index = async (req: Request, res: Response) => {
 }
 
 /**
- * UserCreate
+ * user controller show
+ */
+const show = async (req: Request, res: Response) => {
+  const response: IResponse<UserShowApiRes> = {
+    status: 200,
+  }
+
+  try {
+    const data = await model.show(req)
+    response.data = { user: data.user }
+  } catch (err) {
+    response.status = err.status || 500
+    response.error = { message: err.message }
+  }
+
+  return res.status(response.status).json(response)
+}
+
+/**
+ * user controller create
  */
 const create = async (req: Request, res: Response) => {
   const response: IResponse<UserCreateApiRes> = {
@@ -45,4 +69,4 @@ const create = async (req: Request, res: Response) => {
   return res.status(response.status).json(response)
 }
 
-export { index, create }
+export { index, show, create }

@@ -37,7 +37,7 @@ export async function createFirebaseUser() {
 
 export async function authCheckMock(
   checkURL: string,
-  type: 'POST' | 'PUT' | 'DELETE',
+  type: 'GET' | 'POST' | 'PUT' | 'DELETE',
   data?: any
 ) {
   let response: any
@@ -58,6 +58,11 @@ export async function authCheckMock(
   const authToken = await tokenRes.data.idToken
 
   switch (type) {
+    case 'GET':
+      response = await Req.get(checkURL).set({
+        Authorization: `Bearer ${authToken}`,
+      })
+      break
     case 'POST':
       response = await Req.post(checkURL)
         .set({ Authorization: `Bearer ${authToken}` })
@@ -73,10 +78,6 @@ export async function authCheckMock(
         Authorization: `Bearer ${authToken}`,
       })
       break
-    default:
-      response = await Req.get(checkURL).set({
-        Authorization: `Bearer ${authToken}`,
-      })
   }
 
   return response
