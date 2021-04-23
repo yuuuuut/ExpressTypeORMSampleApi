@@ -4,7 +4,7 @@ import {
   RelationshipCreateApiRes,
   RelationshipDestroyApiRes,
   TestIResponse,
-} from '../../commons/types'
+} from '../../types'
 import {
   createTestRelationship,
   createTestUser,
@@ -20,7 +20,7 @@ describe('Relationship API Controller Test', () => {
   describe('Create Test', () => {
     it('POST /api/users/:id/follow フォローの作成ができること。', async () => {
       const userRepository = getManager().getRepository(User)
-      const TestcurrentUser = await createFirebaseUser()
+      const TestCurrentUser = await createFirebaseUser()
       const TestfollowUser = await createTestUser()
 
       const response = (await authCheckMock(
@@ -28,12 +28,12 @@ describe('Relationship API Controller Test', () => {
         'POST'
       )) as TestIResponse<RelationshipCreateApiRes>
 
-      const currentUser = await userRepository.findOne(TestcurrentUser.id, {
+      const currentUser = await userRepository.findOne(TestCurrentUser.id, {
         relations: ['followings', 'followings.follow'],
       })
       if (!currentUser) throw new Error('Test Failed')
 
-      await deleteTestUser(TestcurrentUser.id)
+      await deleteTestUser(TestCurrentUser.id)
 
       expect(response.status).toEqual(201)
       expect(response.body.data.message).toEqual('フォローしました。')

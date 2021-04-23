@@ -1,4 +1,4 @@
-import { Entry, Profile, Room, User } from './entities'
+import { Entry, Message, Profile, Room, User } from './entities'
 
 export interface IResponse<T> {
   status: number
@@ -53,4 +53,12 @@ export interface RoomCreateApiRes {
   room: Room
   currentUserEntry: Entry
   userEntry: Entry
+}
+
+export interface MessageCreateApiReq {
+  kind: Message['kind']
+}
+
+export interface MessageCreateApiRes {
+  message: Message
 }

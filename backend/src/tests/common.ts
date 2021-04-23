@@ -1,8 +1,9 @@
-import request from 'supertest'
 import { getManager } from 'typeorm'
+import request from 'supertest'
 
-import { Profile, Relationship, Room, User } from '../entities'
+import { Entry, Profile, Relationship, Room, User } from '../entities'
 
+// api url
 const Req = request('http://localhost:4000/api')
 
 /**
@@ -16,10 +17,7 @@ async function createTestUser(name?: string) {
   user.displayName = 'TestDisName'
   user.photoURL = 'TestUserPhoto'
 
-  const userData = await userRepository.save(user)
-  if (!userData) throw new Error('Test Failed')
-
-  return userData
+  return await userRepository.save(user)
 }
 
 /**
@@ -31,10 +29,7 @@ async function createTestProfile(user: User) {
   const profile = new Profile()
   profile.user = user
 
-  const profileData = await profileRepository.save(profile)
-  if (!profileData) throw new Error('Test Failed')
-
-  return profileData
+  return await profileRepository.save(profile)
 }
 
 /**
@@ -48,6 +43,19 @@ async function createTestRelationship(currentUser: User, followUser: User) {
   relationship.follow = followUser
 
   await relationshipRepository.save(relationship)
+}
+
+/**
+ * Test用Entryを作成する。
+ */
+async function createTestEntry(user: User, room: Room) {
+  const entryRepository = getManager().getRepository(Entry)
+
+  const entry = new Entry()
+  entry.room = room
+  entry.user = user
+
+  return await entryRepository.save(entry)
 }
 
 /**
@@ -72,11 +80,23 @@ async function deleteTestUser(id: string) {
   if (user) await userRepository.delete(id)
 }
 
+/**
+ * Test用Roomを削除する。
+ */
+async function deleteTestRoom(id: string) {
+  const roomRepository = getManager().getRepository(Room)
+  const room = await roomRepository.findOne(id)
+
+  if (room) await roomRepository.delete(id)
+}
+
 export {
   Req,
   deleteTestUser,
   createTestUser,
   createTestProfile,
   createTestRelationship,
+  createTestEntry,
   createTestRoom,
+  deleteTestRoom,
 }

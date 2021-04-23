@@ -1,5 +1,10 @@
 import { RoomCreateApiRes, RoomShowApiRes, TestIResponse } from '../../types'
-import { createTestRoom, createTestUser } from '../common'
+import {
+  createTestRoom,
+  createTestUser,
+  deleteTestRoom,
+  deleteTestUser,
+} from '../common'
 import { authCheckMock, createFirebaseUser } from '../firebase'
 
 /***************************
@@ -15,7 +20,7 @@ describe('Room API Controller Test', () => {
         'GET'
       )) as TestIResponse<RoomShowApiRes>
 
-      console.log(response)
+      await deleteTestRoom(room.id)
 
       expect(response.status).toEqual(200)
     })
@@ -39,7 +44,8 @@ describe('Room API Controller Test', () => {
         'POST'
       )) as TestIResponse<RoomCreateApiRes>
 
-      console.log(response)
+      await deleteTestUser(currentUser.id)
+      await deleteTestRoom(response.body.data.room.id)
 
       expect(response.status).toEqual(201)
     })

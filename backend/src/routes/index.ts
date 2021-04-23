@@ -2,6 +2,7 @@ import { Router } from 'express'
 
 import * as relationshipController from '../controllers/relationship.controller'
 import * as profileController from '../controllers/profile.controller'
+import * as messageController from '../controllers/message.controller'
 import * as userController from '../controllers/user.controller'
 import * as roomController from '../controllers/room.controller'
 import authCheck from '../middlewares/auth'
@@ -28,5 +29,6 @@ router.put('/api/profiles', authCheck, profileController.update)
  *    /rooms
  **************************/
 router.get('/api/rooms/:id', authCheck, roomController.show)
+router.post('/api/rooms/:id/messages', authCheck, messageController.create)
 
 export default router
