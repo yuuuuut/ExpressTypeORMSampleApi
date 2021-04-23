@@ -45,6 +45,10 @@ export interface RelationshipDestroyApiRes {
   message: string
 }
 
+export interface RoomShowApiRes {
+  room: Room
+}
+
 export interface RoomCreateApiRes {
   room: Room
   currentUserEntry: Entry

@@ -1,8 +1,30 @@
 import { Request, Response } from 'express'
 
-import { IResponse, RoomCreateApiRes } from '../types'
+import { IResponse, RoomCreateApiRes, RoomShowApiRes } from '../types'
 import { getCuurentUser } from '../models/common.model'
 import * as roomModel from '../models/room.model'
+
+/**
+ * room controller show
+ */
+const show = async (req: Request, res: Response) => {
+  const response: IResponse<RoomShowApiRes> = {
+    status: 200,
+  }
+  const id = req.params.id
+
+  try {
+    const data = await roomModel.show(id)
+    response.data = {
+      room: data.room,
+    }
+  } catch (err) {
+    response.status = err.status || 500
+    response.error = { message: err.message }
+  }
+
+  return res.status(response.status).json(response)
+}
 
 /**
  * room controller create
@@ -30,4 +52,4 @@ const create = async (req: Request, res: Response) => {
   return res.status(response.status).json(response)
 }
 
-export { create }
+export { show, create }

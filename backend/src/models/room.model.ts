@@ -7,6 +7,14 @@ import { Room, User } from '../entities'
 /**
  * room show model
  */
+const show = async (id: string) => {
+  const roomRepository = getManager().getRepository(Room)
+  const room = await roomRepository.findOne(id)
+  if (!room)
+    throw Object.assign(new Error('ルームが存在しません。'), { status: 404 })
+
+  return { room }
+}
 
 /**
  * room create model
@@ -38,4 +46,4 @@ const create = async (userId: string, currentUser: User) => {
   }
 }
 
-export { create }
+export { show, create }
