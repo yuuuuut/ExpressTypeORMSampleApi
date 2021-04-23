@@ -1,4 +1,3 @@
-import { Request } from 'express'
 import { getManager } from 'typeorm'
 
 import * as profileModel from './profile.model'
@@ -17,10 +16,8 @@ const index = async () => {
 /**
  * user show model
  */
-const show = async (req: Request) => {
+const show = async (id: string) => {
   const userRepository = getManager().getRepository(User)
-  const id = req.params.id
-
   const user = await userRepository.findOne(id)
   if (!user)
     throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })
@@ -31,10 +28,9 @@ const show = async (req: Request) => {
 /**
  * user create model
  */
-const create = async (req: Request) => {
+const create = async (body: Pick<User, 'id' | 'displayName' | 'photoURL'>) => {
   const userRepository = getManager().getRepository(User)
 
-  const body = req.body as Pick<User, 'id' | 'displayName' | 'photoURL'>
   const user = await userRepository.findOne(body.id)
   if (!user) {
     const data = await getManager().transaction(async (em) => {

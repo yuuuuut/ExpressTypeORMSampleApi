@@ -6,17 +6,21 @@ import {
   RelationshipDestroyApiRes,
 } from '../types'
 import * as model from '../models/relationship.model'
+import { getCuurentUser } from '../models/common.model'
 
 /**
- * RelationshipCreate
+ * relationship controller create
  */
 const create = async (req: Request, res: Response) => {
   const response: IResponse<RelationshipCreateApiRes> = {
     status: 201,
   }
+  const currentUserId = req.currentUserId
+  const id = req.params.id
 
   try {
-    await model.create(req)
+    const currentUser = await getCuurentUser(currentUserId)
+    await model.create(id, currentUser)
     response.data = {
       message: 'フォローしました。',
     }
@@ -29,15 +33,18 @@ const create = async (req: Request, res: Response) => {
 }
 
 /**
- * Relationship Destroy
+ * relationship controller destroy
  */
 const destroy = async (req: Request, res: Response) => {
   const response: IResponse<RelationshipDestroyApiRes> = {
     status: 200,
   }
+  const currentUserId = req.currentUserId
+  const id = req.params.id
 
   try {
-    await model.destroy(req)
+    const currentUser = await getCuurentUser(currentUserId)
+    await model.destroy(id, currentUser)
     response.data = {
       message: 'フォローを解除しました。',
     }

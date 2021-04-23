@@ -1,4 +1,3 @@
-import { Request } from 'express'
 import { getManager } from 'typeorm'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -6,17 +5,18 @@ import * as model from '../models/entry.model'
 import { Room, User } from '../entities'
 
 /**
+ * room show model
+ */
+
+/**
  * room create model
  */
-const create = async (req: Request) => {
+const create = async (userId: string, currentUser: User) => {
   const userRepository = getManager().getRepository(User)
-  const currentUserId = req.currentUserId
-  const userId = req.params.id
   const uuid = uuidv4()
 
-  const currentUser = await userRepository.findOne(currentUserId)
   const user = await userRepository.findOne(userId)
-  if (!currentUser || !user)
+  if (!user)
     throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })
 
   const data = await getManager().transaction(async (em) => {

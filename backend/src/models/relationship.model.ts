@@ -1,20 +1,17 @@
-import { Request } from 'express'
 import { getManager } from 'typeorm'
+
 import { Relationship, User } from '../entities'
 
 /**
  * Relationship model create
  */
-const create = async (req: Request) => {
+const create = async (id: string, currentUser: User) => {
   const relationshipRepository = getManager().getRepository(Relationship)
   const userRepository = getManager().getRepository(User)
 
-  const currentUserId = req.currentUserId
-  const reqId = req.params.id
-
-  const currentUser = await userRepository.findOne(currentUserId)
-  const followUser = await userRepository.findOne(reqId)
-  if (!followUser || !currentUser) throw new Error('Userが存在しません。')
+  const followUser = await userRepository.findOne(id)
+  if (!followUser)
+    throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })
 
   const relationship = new Relationship()
   relationship.user = currentUser
@@ -26,16 +23,16 @@ const create = async (req: Request) => {
 /**
  * Relationship model destroy
  */
-const destroy = async (req: Request) => {
+const destroy = async (id: string, currentUser: User) => {
   const relationshipRepository = getManager().getRepository(Relationship)
 
-  const currentUserId = req.currentUserId
-  const reqId = req.params.id
-
   const relatinoship = await relationshipRepository.findOne({
-    where: { user: currentUserId, follow: reqId },
+    where: { user: currentUser.id, follow: id },
   })
-  if (!relatinoship) throw new Error('フォロー関係が存在しません。')
+  if (!relatinoship)
+    throw Object.assign(new Error('フォロー関係が存在しません。'), {
+      status: 404,
+    })
 
   await relationshipRepository.delete(relatinoship)
 }

@@ -1,17 +1,23 @@
 import { Request, Response } from 'express'
+
 import { IResponse, ProfileUpdateApiRes } from '../types'
-
+import { getCuurentUser } from '../models/common.model'
 import * as model from '../models/profile.model'
+import { Profile } from '../entities'
 
+/**
+ * profile controller update
+ */
 const update = async (req: Request, res: Response) => {
   const response: IResponse<ProfileUpdateApiRes> = {
     status: 201,
   }
-
   const currentUserId = req.currentUserId
+  const body = (req.body as unknown) as Pick<Profile, 'lineId' | 'twitterId'>
 
   try {
-    const profile = await model.update(req, currentUserId)
+    const currentUser = await getCuurentUser(currentUserId)
+    const profile = await model.update(currentUser, body)
     response.data = {
       profile: profile,
       message: 'プロフィールの更新に成功しました。',

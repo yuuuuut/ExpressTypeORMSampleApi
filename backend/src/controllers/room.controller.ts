@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 
 import { IResponse, RoomCreateApiRes } from '../types'
+import { getCuurentUser } from '../models/common.model'
 import * as roomModel from '../models/room.model'
 
 /**
@@ -10,9 +11,12 @@ const create = async (req: Request, res: Response) => {
   const response: IResponse<RoomCreateApiRes> = {
     status: 201,
   }
+  const currentUserId = req.currentUserId
+  const userId = req.params.id
 
   try {
-    const data = await roomModel.create(req)
+    const currentUser = await getCuurentUser(currentUserId)
+    const data = await roomModel.create(userId, currentUser)
     response.data = {
       room: data.room,
       currentUserEntry: data.currentUserEntry,

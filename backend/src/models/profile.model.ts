@@ -1,10 +1,9 @@
-import { Request } from 'express'
 import { EntityManager, getManager } from 'typeorm'
 
 import { Profile, User } from '../entities'
 
 /**
- *
+ * profile model create
  */
 const create = async (user: User, em: EntityManager) => {
   const profileData = em.create(Profile, {
@@ -17,16 +16,21 @@ const create = async (user: User, em: EntityManager) => {
 }
 
 /**
- *
+ * profile model update
  */
-const update = async (req: Request, userId: string) => {
+const update = async (
+  currentUser: User,
+  body: Pick<Profile, 'lineId' | 'twitterId'>
+) => {
   const profileRepository = getManager().getRepository(Profile)
   const profile = await profileRepository.findOne({
-    where: { user: userId },
+    where: { user: currentUser.id },
   })
-  if (!profile) throw new Error('プロフィールが存在しません。')
+  if (!profile)
+    throw Object.assign(new Error('プロフィールが存在しません。'), {
+      status: 404,
+    })
 
-  const body = (req.body as unknown) as Pick<Profile, 'lineId' | 'twitterId'>
   profile.lineId = body.lineId
   profile.twitterId = body.twitterId
 
