@@ -26,10 +26,21 @@ export interface UserShowApiRes {
   user: User
 }
 
+export interface UserCreateApiReq {
+  id: User['id']
+  displayName: User['displayName']
+  photoURL: User['photoURL']
+}
+
 export interface UserCreateApiRes {
   user: User
   profile: Profile | null
   isCreate: boolean
+}
+
+export interface ProfileUpdateApiReq {
+  lineId: Profile['lineId']
+  twitterId: Profile['twitterId']
 }
 
 export interface ProfileUpdateApiRes {

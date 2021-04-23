@@ -1,9 +1,8 @@
 import { Request, Response } from 'express'
 
-import { IResponse, ProfileUpdateApiRes } from '../types'
+import { IResponse, ProfileUpdateApiReq, ProfileUpdateApiRes } from '../types'
 import { getCuurentUser } from '../models/common.model'
 import * as model from '../models/profile.model'
-import { Profile } from '../entities'
 
 /**
  * profile controller update
@@ -13,7 +12,7 @@ const update = async (req: Request, res: Response) => {
     status: 201,
   }
   const currentUserId = req.currentUserId
-  const body = (req.body as unknown) as Pick<Profile, 'lineId' | 'twitterId'>
+  const body = req.body as ProfileUpdateApiReq
 
   try {
     const currentUser = await getCuurentUser(currentUserId)

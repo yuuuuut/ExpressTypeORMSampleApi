@@ -1,6 +1,7 @@
 import { getManager } from 'typeorm'
 
 import * as profileModel from './profile.model'
+import { UserCreateApiReq } from '../types'
 import { User } from '../entities'
 
 /**
@@ -28,7 +29,7 @@ const show = async (id: string) => {
 /**
  * user create model
  */
-const create = async (body: Pick<User, 'id' | 'displayName' | 'photoURL'>) => {
+const create = async (body: UserCreateApiReq) => {
   const userRepository = getManager().getRepository(User)
 
   const user = await userRepository.findOne(body.id)

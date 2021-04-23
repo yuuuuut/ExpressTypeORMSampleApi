@@ -1,5 +1,6 @@
 import { EntityManager, getManager } from 'typeorm'
 
+import { ProfileUpdateApiReq } from '../types'
 import { Profile, User } from '../entities'
 
 /**
@@ -18,10 +19,7 @@ const create = async (user: User, em: EntityManager) => {
 /**
  * profile model update
  */
-const update = async (
-  currentUser: User,
-  body: Pick<Profile, 'lineId' | 'twitterId'>
-) => {
+const update = async (currentUser: User, body: ProfileUpdateApiReq) => {
   const profileRepository = getManager().getRepository(Profile)
   const profile = await profileRepository.findOne({
     where: { user: currentUser.id },

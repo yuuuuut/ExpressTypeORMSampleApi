@@ -2,12 +2,12 @@ import { Request, Response } from 'express'
 
 import {
   IResponse,
+  UserCreateApiReq,
   UserCreateApiRes,
   UserIndexApiRes,
   UserShowApiRes,
 } from '../types'
 import * as model from '../models/user.model'
-import { User } from '../entities'
 
 /**
  * user controller index
@@ -55,7 +55,7 @@ const create = async (req: Request, res: Response) => {
   const response: IResponse<UserCreateApiRes> = {
     status: 201,
   }
-  const body = req.body as Pick<User, 'id' | 'displayName' | 'photoURL'>
+  const body = req.body as UserCreateApiReq
 
   try {
     const data = await model.create(body)
