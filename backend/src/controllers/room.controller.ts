@@ -12,9 +12,11 @@ const create = async (req: Request, res: Response) => {
   }
 
   try {
-    const data = await roomModel.create()
+    const data = await roomModel.create(req)
     response.data = {
       room: data.room,
+      currentUserEntry: data.currentUserEntry,
+      userEntry: data.userEntry,
     }
   } catch (err) {
     response.status = err.status || 500

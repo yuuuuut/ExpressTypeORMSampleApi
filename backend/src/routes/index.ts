@@ -15,6 +15,7 @@ router.get('/api/users', userController.index)
 router.get('/api/users/:id', authCheck, userController.show)
 router.post('/api/users', userController.create)
 router.post('/api/users/:id/follow', authCheck, relationshipController.create)
+router.post('/api/users/:id/rooms', authCheck, roomController.create)
 // prettier-ignore
 router.delete('/api/users/:id/unfollow', authCheck, relationshipController.destroy)
 
@@ -22,10 +23,5 @@ router.delete('/api/users/:id/unfollow', authCheck, relationshipController.destr
  *    /profiles
  **************************/
 router.put('/api/profiles', authCheck, profileController.update)
-
-/***************************
- *    /rooms
- **************************/
-router.post('/api/rooms', authCheck, roomController.create)
 
 export default router
