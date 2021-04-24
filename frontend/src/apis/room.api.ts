@@ -6,6 +6,10 @@ import { Axios } from './axios'
  **************************/
 interface RoomShowRes {
   room: Room
+  otherEntry: {
+    id: Entry['id']
+    user: Entry['user']
+  }
 }
 
 interface RoomCreateRes {

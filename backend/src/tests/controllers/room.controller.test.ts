@@ -1,19 +1,24 @@
 import { RoomCreateApiRes, RoomShowApiRes, TestIResponse } from '../../types'
+import { authCheckMock, createFirebaseUser } from '../firebase'
 import {
+  createTestEntry,
   createTestRoom,
   createTestUser,
   deleteTestRoom,
   deleteTestUser,
 } from '../common'
-import { authCheckMock, createFirebaseUser } from '../firebase'
 
 /***************************
  *    Main
  **************************/
-describe('Room API Controller Test', () => {
+describe('Room Controller Test', () => {
   describe('Show Test', () => {
     it('GET /api/rooms/:id Roomの取得ができること。', async () => {
+      const currentUser = await createFirebaseUser()
+      const user = await createTestUser()
       const room = await createTestRoom()
+      await createTestEntry(currentUser, room)
+      await createTestEntry(user, room)
 
       const response = (await authCheckMock(
         `/rooms/${room.id}`,
@@ -21,8 +26,11 @@ describe('Room API Controller Test', () => {
       )) as TestIResponse<RoomShowApiRes>
 
       await deleteTestRoom(room.id)
+      await deleteTestUser(currentUser.id)
 
       expect(response.status).toEqual(200)
+      expect(response.body.data.room).toEqual(room)
+      expect(response.body.data.otherEntry.user).toEqual(user)
     })
     it('GET /api/rooms/:id Roomが存在しない場合取得ができないこと。', async () => {
       const response = (await authCheckMock(

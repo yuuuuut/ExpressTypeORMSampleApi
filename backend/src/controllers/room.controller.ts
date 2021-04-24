@@ -11,12 +11,15 @@ const show = async (req: Request, res: Response) => {
   const response: IResponse<RoomShowApiRes> = {
     status: 200,
   }
+  const currentUserId = req.currentUserId
   const id = req.params.id
 
   try {
-    const data = await roomModel.show(id)
+    const currentUser = await getCuurentUser(currentUserId)
+    const data = await roomModel.show(id, currentUser)
     response.data = {
       room: data.room,
+      otherEntry: data.otherEntry,
     }
   } catch (err) {
     response.status = err.status || 500

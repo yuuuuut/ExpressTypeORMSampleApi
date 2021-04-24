@@ -58,6 +58,10 @@ export interface RelationshipDestroyApiRes {
 
 export interface RoomShowApiRes {
   room: Room
+  otherEntry: {
+    id: Entry['id']
+    user: Entry['user']
+  }
 }
 
 export interface RoomCreateApiRes {
