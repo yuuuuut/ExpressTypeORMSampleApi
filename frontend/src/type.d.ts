@@ -22,3 +22,12 @@ interface Entry {
   user: User
   room: Room
 }
+
+interface Message {
+  id: number
+  kind: 'LINE' | 'TWITTER'
+  isApproval: boolean
+  rejected: boolean
+  user: User
+  room: Room
+}

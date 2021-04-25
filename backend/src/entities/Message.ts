@@ -16,7 +16,7 @@ export class Message extends BaseEntity {
   readonly id: number
 
   @Column({ nullable: false })
-  kind: 'LINE' | 'Twitter'
+  kind: 'LINE' | 'TWITTER'
 
   @Column({ default: false })
   isApproval: boolean
