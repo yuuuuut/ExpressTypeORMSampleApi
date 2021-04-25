@@ -74,6 +74,10 @@ export interface MessageCreateApiReq {
   kind: Message['kind']
 }
 
+export interface MessageIndexApiRes {
+  messages: Message[]
+}
+
 export interface MessageCreateApiRes {
   message: Message
 }

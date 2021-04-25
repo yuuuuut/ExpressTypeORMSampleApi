@@ -4,6 +4,20 @@ import { Message, Room, User } from '../entities'
 import { MessageCreateApiReq } from '../types'
 
 /**
+ * message index model
+ */
+const index = async (roomId: string) => {
+  const messageRepository = getManager().getRepository(Message)
+
+  const messages = await messageRepository.find({
+    where: { room: roomId },
+    relations: ['user'],
+  })
+
+  return { messages }
+}
+
+/**
  * message create model
  */
 const create = async (
@@ -28,4 +42,4 @@ const create = async (
   return { message }
 }
 
-export { create }
+export { index, create }

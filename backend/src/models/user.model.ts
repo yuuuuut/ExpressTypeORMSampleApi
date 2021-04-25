@@ -1,4 +1,4 @@
-import { getManager } from 'typeorm'
+import { createQueryBuilder, getManager } from 'typeorm'
 
 import * as profileModel from './profile.model'
 import { UserCreateApiReq } from '../types'
@@ -9,7 +9,7 @@ import { User } from '../entities'
  */
 const index = async () => {
   const userRepository = getManager().getRepository(User)
-  const users = await userRepository.find()
+  const users = await userRepository.find({})
 
   return users
 }

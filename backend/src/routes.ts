@@ -29,6 +29,7 @@ router.put('/api/profiles', authCheck, profileController.update)
  *    /rooms
  **************************/
 router.get('/api/rooms/:id', authCheck, roomController.show)
+router.get('/api/rooms/:id/messages', authCheck, messageController.index)
 router.post('/api/rooms/:id/messages', authCheck, messageController.create)
 
 export default router
