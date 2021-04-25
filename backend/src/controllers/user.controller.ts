@@ -1,5 +1,7 @@
 import { Request, Response } from 'express'
 
+import { getCuurentUser } from '../models/common.model'
+import * as model from '../models/user.model'
 import {
   IResponse,
   UserCreateApiReq,
@@ -7,7 +9,6 @@ import {
   UserIndexApiRes,
   UserShowApiRes,
 } from '../types'
-import * as model from '../models/user.model'
 
 /**
  * user controller index
@@ -35,11 +36,17 @@ const show = async (req: Request, res: Response) => {
   const response: IResponse<UserShowApiRes> = {
     status: 200,
   }
-  const id = req.params.id
+  const currentUserId = req.currentUserId
+  const userId = req.params.id
 
   try {
-    const data = await model.show(id)
-    response.data = { user: data.user }
+    const currentUser = await getCuurentUser(currentUserId)
+    const data = await model.show(userId, currentUser)
+    response.data = {
+      user: data.user,
+      isFollowing: data.isFollowing,
+      isMutualFollow: data.isMutualFollow,
+    }
   } catch (err) {
     response.status = err.status || 500
     response.error = { message: err.message }

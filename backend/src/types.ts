@@ -24,6 +24,8 @@ export interface UserIndexApiRes {
 
 export interface UserShowApiRes {
   user: User
+  isFollowing: boolean
+  isMutualFollow: boolean
 }
 
 export interface UserCreateApiReq {

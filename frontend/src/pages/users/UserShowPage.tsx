@@ -19,6 +19,7 @@ const UserShowPage = (): JSX.Element => {
     }
 
     const response = await userAPI.show(id, token)
+    console.log(response)
     const user = response.data.data?.user
 
     setUser(user)

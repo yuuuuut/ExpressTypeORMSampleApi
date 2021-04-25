@@ -1,5 +1,6 @@
-import { createQueryBuilder, getManager } from 'typeorm'
+import { getManager } from 'typeorm'
 
+import * as relationshipModel from './relationship.model'
 import * as profileModel from './profile.model'
 import { UserCreateApiReq } from '../types'
 import { User } from '../entities'
@@ -17,13 +18,23 @@ const index = async () => {
 /**
  * user show model
  */
-const show = async (id: string) => {
+const show = async (userId: string, currentUser: User) => {
   const userRepository = getManager().getRepository(User)
-  const user = await userRepository.findOne(id)
+  const user = await userRepository.findOne(userId)
   if (!user)
     throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })
 
-  return { user }
+  const isFollowing = await relationshipModel.isFollowingBool(
+    userId,
+    currentUser.id
+  )
+  const isAthorFollowing = await relationshipModel.isFollowingBool(
+    currentUser.id,
+    user.id
+  )
+  const isMutualFollow = isFollowing && isAthorFollowing
+
+  return { user, isFollowing, isMutualFollow }
 }
 
 /**

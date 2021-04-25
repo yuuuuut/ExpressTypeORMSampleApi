@@ -10,6 +10,8 @@ interface UserIndexRes {
 
 interface UserShowRes {
   user: User
+  isFollowing: boolean
+  isMutualFollow: boolean
 }
 
 /***************************

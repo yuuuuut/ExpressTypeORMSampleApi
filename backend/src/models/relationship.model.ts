@@ -37,4 +37,17 @@ const destroy = async (id: string, currentUser: User) => {
   await relationshipRepository.delete(relatinoship)
 }
 
-export { create, destroy }
+/**
+ * Relationship関係が存在するかどうかを返す。
+ */
+const isFollowingBool = async (userId: string, currentUserId: string) => {
+  const relationshipRepository = getManager().getRepository(Relationship)
+
+  const relationship = await relationshipRepository.findOne({
+    where: { user: currentUserId, follow: userId },
+  })
+
+  return Boolean(relationship)
+}
+
+export { create, destroy, isFollowingBool }

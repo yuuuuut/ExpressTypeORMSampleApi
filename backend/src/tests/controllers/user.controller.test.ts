@@ -1,8 +1,4 @@
-import {
-  TestIResponse,
-  UserCreateApiRes,
-  UserShowApiRes,
-} from '../../commons/types'
+import { TestIResponse, UserCreateApiRes, UserShowApiRes } from '../../types'
 import { Req, createTestUser, deleteTestUser } from '../common'
 import { authCheckMock, createFirebaseUser } from '../firebase'
 
