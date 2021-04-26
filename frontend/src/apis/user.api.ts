@@ -12,6 +12,8 @@ interface UserShowRes {
   user: User
   isFollowing: boolean
   isMutualFollow: boolean
+  isRoom: boolean
+  roomId: string
 }
 
 /***************************

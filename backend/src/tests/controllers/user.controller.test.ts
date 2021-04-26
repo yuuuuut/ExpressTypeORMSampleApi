@@ -7,18 +7,36 @@ import { authCheckMock, createFirebaseUser } from '../firebase'
  **************************/
 describe('User API Controller Test', () => {
   describe('Show Test', () => {
-    it('GET /api/users/:id Userの取得ができること。', async () => {
-      const user = await createFirebaseUser()
+    it('GET /api/users/:id currentUserの取得ができること。', async () => {
+      const currentUser = await createFirebaseUser()
+
+      const response = (await authCheckMock(
+        `/users/${currentUser.id}`,
+        'GET'
+      )) as TestIResponse<UserShowApiRes>
+
+      await deleteTestUser(currentUser.id)
+
+      expect(response.status).toEqual(200)
+      expect(response.body.data.user).toEqual(currentUser)
+    })
+    it('GET /api/users/:id 他人のUserが取得ができること。', async () => {
+      const currentUser = await createFirebaseUser()
+      const user = await createTestUser()
 
       const response = (await authCheckMock(
         `/users/${user.id}`,
         'GET'
       )) as TestIResponse<UserShowApiRes>
 
-      await deleteTestUser(user.id)
+      console.log(response.body)
+
+      await deleteTestUser(currentUser.id)
 
       expect(response.status).toEqual(200)
-      expect(response.body.data.user).toEqual(user)
+      expect(response.body.data.isFollowing).toEqual(false)
+      expect(response.body.data.isMutualFollow).toEqual(false)
+      expect(response.body.data.isRoom).toEqual(false)
     })
     it('GET /api/users/:id Userが存在しない場合Userの取得ができないこと。', async () => {
       const response = (await authCheckMock(

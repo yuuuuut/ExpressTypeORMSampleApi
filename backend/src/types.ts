@@ -24,8 +24,10 @@ export interface UserIndexApiRes {
 
 export interface UserShowApiRes {
   user: User
-  isFollowing: boolean
-  isMutualFollow: boolean
+  isFollowing: boolean | undefined
+  isMutualFollow: boolean | undefined
+  isRoom: boolean | undefined
+  roomId: string | undefined
 }
 
 export interface UserCreateApiReq {

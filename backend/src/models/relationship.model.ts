@@ -50,4 +50,15 @@ const isFollowingBool = async (userId: string, currentUserId: string) => {
   return Boolean(relationship)
 }
 
-export { create, destroy, isFollowingBool }
+/**
+ * 相互フォローかどうかを返す。
+ */
+const isMutualFollowBool = async (userId: string, currentUserId: string) => {
+  const isFollowing = await isFollowingBool(userId, currentUserId)
+  const isAthorFollowing = await isFollowingBool(currentUserId, userId)
+  const isMutualFollow = isFollowing && isAthorFollowing
+
+  return isMutualFollow
+}
+
+export { create, destroy, isFollowingBool, isMutualFollowBool }

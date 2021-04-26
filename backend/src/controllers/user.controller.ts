@@ -46,6 +46,8 @@ const show = async (req: Request, res: Response) => {
       user: data.user,
       isFollowing: data.isFollowing,
       isMutualFollow: data.isMutualFollow,
+      isRoom: data.isRoom,
+      roomId: data.roomId,
     }
   } catch (err) {
     response.status = err.status || 500

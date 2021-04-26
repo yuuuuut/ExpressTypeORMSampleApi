@@ -3,6 +3,7 @@ import { getManager } from 'typeorm'
 import * as relationshipModel from './relationship.model'
 import * as profileModel from './profile.model'
 import { UserCreateApiReq } from '../types'
+import { isRoomBool } from './entry.model'
 import { User } from '../entities'
 
 /**
@@ -24,17 +25,21 @@ const show = async (userId: string, currentUser: User) => {
   if (!user)
     throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })
 
-  const isFollowing = await relationshipModel.isFollowingBool(
-    userId,
-    currentUser.id
-  )
-  const isAthorFollowing = await relationshipModel.isFollowingBool(
-    currentUser.id,
-    user.id
-  )
-  const isMutualFollow = isFollowing && isAthorFollowing
+  if (user.id !== currentUser.id) {
+    const isFollowing = await relationshipModel.isFollowingBool(
+      userId,
+      currentUser.id
+    )
+    const isMutualFollow = await relationshipModel.isMutualFollowBool(
+      userId,
+      currentUser.id
+    )
+    const { isRoom, roomId } = await isRoomBool(user.id, currentUser.id)
 
-  return { user, isFollowing, isMutualFollow }
+    return { user, isFollowing, isMutualFollow, isRoom, roomId }
+  }
+
+  return { user }
 }
 
 /**
@@ -45,7 +50,7 @@ const create = async (body: UserCreateApiReq) => {
 
   const user = await userRepository.findOne(body.id)
   if (!user) {
-    const data = await getManager().transaction(async (em) => {
+    const { user, profile } = await getManager().transaction(async (em) => {
       const userData = em.create(User, {
         id: body.id,
         displayName: body.displayName,
@@ -58,7 +63,7 @@ const create = async (body: UserCreateApiReq) => {
       return { user, profile }
     })
 
-    return { user: data.user, profile: data.profile, isCreate: true }
+    return { user, profile, isCreate: true }
   } else {
     return { user, profile: null, isCreate: false }
   }
