@@ -23,23 +23,19 @@ export async function createFirebaseUser() {
   const userRepository = getManager().getRepository(User)
   const firebaseUser = await firebaseAdmin.auth().getUser(UID)
 
-  const user = new User()
-  user.id = firebaseUser.uid
-  user.displayName = firebaseUser.displayName
-  user.photoURL = firebaseUser.photoURL
+  const newUser = new User()
+  newUser.id = firebaseUser.uid
+  newUser.displayName = firebaseUser.displayName
+  newUser.photoURL = firebaseUser.photoURL
+  const userDate = await userRepository.save(newUser)
 
-  const userDate = await userRepository.save(user)
+  const user = await userRepository.findOne(userDate.id)
+  if (!user) throw new Error('Test Failed')
 
-  if (!userDate) throw new Error('Test Failed')
-
-  return userDate
+  return user
 }
 
-export async function authCheckMock(
-  checkURL: string,
-  type: 'GET' | 'POST' | 'PUT' | 'DELETE',
-  data?: any
-) {
+export async function authCheckMock(checkURL: string, type: 'GET' | 'POST' | 'PUT' | 'DELETE', data?: any) {
   let response: any
 
   const token = await firebaseAdmin.auth().createCustomToken(UID)

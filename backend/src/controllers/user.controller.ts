@@ -1,14 +1,8 @@
 import { Request, Response } from 'express'
 
+import { IResponse, UserCreateApiReq, UserCreateApiRes, UserIndexApiRes, UserShowApiRes } from '../types'
 import { getCuurentUser } from '../models/common.model'
 import * as model from '../models/user.model'
-import {
-  IResponse,
-  UserCreateApiReq,
-  UserCreateApiRes,
-  UserIndexApiRes,
-  UserShowApiRes,
-} from '../types'
 
 /**
  * user controller index

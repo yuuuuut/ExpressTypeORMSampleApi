@@ -1,13 +1,4 @@
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  JoinTable,
-  ManyToMany,
-  OneToMany,
-  PrimaryColumn,
-} from 'typeorm'
-
+import { AfterLoad, BaseEntity, Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryColumn } from 'typeorm'
 import { Entry, Message, Notification, Relationship, Tag } from '.'
 
 @Entity('users')
@@ -33,8 +24,30 @@ export class User extends BaseEntity {
   @OneToMany((type) => Relationship, (followings) => followings.user)
   followings: Relationship[]
 
+  followingsCount: number
+  @AfterLoad()
+  async countFollowings() {
+    const { count } = await Relationship.createQueryBuilder('relationship')
+      .where('relationship.user = :id', { id: this.id })
+      .select('COUNT(*)', 'count')
+      .getRawOne()
+
+    this.followingsCount = count
+  }
+
   @OneToMany((type) => Relationship, (followers) => followers.follow)
   followers: Relationship[]
+
+  followersCount: number
+  @AfterLoad()
+  async countFollowers() {
+    const { count } = await Relationship.createQueryBuilder('relationship')
+      .where('relationship.follow = :id', { id: this.id })
+      .select('COUNT(*)', 'count')
+      .getRawOne()
+
+    this.followersCount = count
+  }
 
   @OneToMany((type) => Notification, (notification) => notification.visiter)
   active_notifications: Notification[]

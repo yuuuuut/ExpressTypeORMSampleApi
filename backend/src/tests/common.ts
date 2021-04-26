@@ -3,8 +3,20 @@ import request from 'supertest'
 
 import { Entry, Message, Profile, Relationship, Room, User } from '../entities'
 
-// api url
+// API URL
 const Req = request('http://localhost:4000/api')
+
+/**
+ * TestUser取得する。
+ */
+async function getTestUser(userId: string) {
+  const userRepository = getManager().getRepository(User)
+
+  const user = await userRepository.findOne(userId)
+  if (!user) throw new Error('Test Failed None User')
+
+  return user
+}
 
 /**
  * Test用Userを作成する。
@@ -12,12 +24,16 @@ const Req = request('http://localhost:4000/api')
 async function createTestUser(name?: string) {
   const userRepository = getManager().getRepository(User)
 
-  const user = new User()
-  user.id = name || 'TestUser'
-  user.displayName = 'TestDisName'
-  user.photoURL = 'TestUserPhoto'
+  const newUser = new User()
+  newUser.id = name || 'TestUser'
+  newUser.displayName = 'TestDisName'
+  newUser.photoURL = 'TestUserPhoto'
+  const userData = await userRepository.save(newUser)
 
-  return await userRepository.save(user)
+  const user = await userRepository.findOne(userData.id)
+  if (!user) throw new Error('Test Failed')
+
+  return user
 }
 
 /**
@@ -106,6 +122,7 @@ async function deleteTestRoom(id: string) {
 
 export {
   Req,
+  getTestUser,
   createTestUser,
   createTestProfile,
   createTestRelationship,
