@@ -56,6 +56,10 @@ export interface RelationshipFollowingsApiRes {
   followings: Relationship[]
 }
 
+export interface RelationshipFollowersApiRes {
+  followers: Relationship[]
+}
+
 export interface RelationshipCreateApiRes {
   message: string
 }

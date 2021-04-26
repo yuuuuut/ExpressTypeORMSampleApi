@@ -17,6 +17,20 @@ const followings = async (userId: string) => {
 }
 
 /**
+ * Relationship model followers
+ */
+const followers = async (userId: string) => {
+  const relationshipRepository = getManager().getRepository(Relationship)
+
+  const followers = await relationshipRepository.find({
+    where: { follow: userId },
+    relations: ['user'],
+  })
+
+  return followers
+}
+
+/**
  * Relationship model create
  */
 const create = async (id: string, currentUser: User) => {
@@ -74,4 +88,4 @@ const isMutualFollowBool = async (userId: string, currentUserId: string) => {
   return isMutualFollow
 }
 
-export { followings, create, destroy, isFollowingBool, isMutualFollowBool }
+export { followings, followers, create, destroy, isFollowingBool, isMutualFollowBool }

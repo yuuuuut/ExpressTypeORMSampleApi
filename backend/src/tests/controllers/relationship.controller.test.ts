@@ -1,14 +1,16 @@
 import { getManager } from 'typeorm'
 
-import { createTestRelationship, createTestUser, deleteTestUser } from '../common'
-import { authCheckMock, createFirebaseUser } from '../firebase'
-import { User } from '../../entities'
 import {
   RelationshipCreateApiRes,
   RelationshipDestroyApiRes,
+  RelationshipFollowersApiRes,
   RelationshipFollowingsApiRes,
   TestIResponse,
 } from '../../types'
+
+import { createTestRelationship, createTestUser, deleteTestUser } from '../common'
+import { authCheckMock, createFirebaseUser } from '../firebase'
+import { User } from '../../entities'
 
 /***************************
  *    Main
@@ -29,6 +31,23 @@ describe('Relationship API Controller Test', () => {
 
       expect(response.status).toEqual(200)
       expect(response.body.data.followings[0].follow).toEqual(testUser)
+    })
+  })
+  describe('Followers Test', () => {
+    it('GET /api/users/:id/followers フォロワー一覧の取得ができること。', async () => {
+      const testCurrentUser = await createFirebaseUser()
+      const testUser = await createTestUser()
+      await createTestRelationship(testUser, testCurrentUser)
+
+      const response = (await authCheckMock(
+        `/users/${testCurrentUser.id}/followers`,
+        'GET'
+      )) as TestIResponse<RelationshipFollowersApiRes>
+
+      await deleteTestUser(testCurrentUser.id)
+
+      expect(response.status).toEqual(200)
+      expect(response.body.data.followers[0].user).toEqual(testUser)
     })
   })
   describe('Create Test', () => {

@@ -1,6 +1,13 @@
 import { Request, Response } from 'express'
 
-import { IResponse, RelationshipCreateApiRes, RelationshipDestroyApiRes, RelationshipFollowingsApiRes } from '../types'
+import {
+  IResponse,
+  RelationshipCreateApiRes,
+  RelationshipDestroyApiRes,
+  RelationshipFollowersApiRes,
+  RelationshipFollowingsApiRes,
+} from '../types'
+
 import { getCuurentUser } from '../models/common.model'
 import * as model from '../models/relationship.model'
 
@@ -11,11 +18,31 @@ const followings = async (req: Request, res: Response) => {
   const response: IResponse<RelationshipFollowingsApiRes> = {
     status: 200,
   }
-  const id = req.params.id
+  const userId = req.params.id
 
   try {
-    const followings = await model.followings(id)
+    const followings = await model.followings(userId)
     response.data = { followings }
+  } catch (err) {
+    response.status = err.status || 500
+    response.error = { message: err.message }
+  }
+
+  return res.status(response.status).json(response)
+}
+
+/**
+ * relationship controlelr followers
+ */
+const followers = async (req: Request, res: Response) => {
+  const response: IResponse<RelationshipFollowersApiRes> = {
+    status: 200,
+  }
+  const userId = req.params.id
+
+  try {
+    const followers = await model.followers(userId)
+    response.data = { followers }
   } catch (err) {
     response.status = err.status || 500
     response.error = { message: err.message }
@@ -72,4 +99,4 @@ const destroy = async (req: Request, res: Response) => {
   return res.status(response.status).json(response)
 }
 
-export { followings, create, destroy }
+export { followings, followers, create, destroy }
