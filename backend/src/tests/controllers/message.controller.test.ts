@@ -1,10 +1,5 @@
 import { authCheckMock, createFirebaseUser } from '../firebase'
-import {
-  MessageCreateApiReq,
-  MessageCreateApiRes,
-  MessageIndexApiRes,
-  TestIResponse,
-} from '../../types'
+import { MessageCreateApiReq, MessageCreateApiRes, MessageIndexApiRes, TestIResponse } from '../../types'
 import {
   createTestEntry,
   createTestMessage,
@@ -27,15 +22,11 @@ describe('Message API Controller Test', () => {
       await createTestEntry(user, room)
       const message = await createTestMessage(currentUser, room)
 
-      const response = (await authCheckMock(
-        `/rooms/${room.id}/messages`,
-        'GET'
-      )) as TestIResponse<MessageIndexApiRes>
+      const response = (await authCheckMock(`/rooms/${room.id}/messages`, 'GET')) as TestIResponse<MessageIndexApiRes>
 
       await deleteTestUser(currentUser.id)
       await deleteTestRoom(room.id)
 
-      console.log(response)
       expect(response.status).toEqual(200)
       expect(response.body.data.messages[0].id).toEqual(message.id)
       expect(response.body.data.messages[0].user).toEqual(currentUser)

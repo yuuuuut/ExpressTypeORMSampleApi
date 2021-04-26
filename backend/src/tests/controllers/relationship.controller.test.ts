@@ -1,58 +1,72 @@
 import { getManager } from 'typeorm'
 
+import { createTestRelationship, createTestUser, deleteTestUser } from '../common'
+import { authCheckMock, createFirebaseUser } from '../firebase'
+import { User } from '../../entities'
 import {
   RelationshipCreateApiRes,
   RelationshipDestroyApiRes,
+  RelationshipFollowingsApiRes,
   TestIResponse,
 } from '../../types'
-import {
-  createTestRelationship,
-  createTestUser,
-  deleteTestUser,
-} from '../common'
-import { authCheckMock, createFirebaseUser } from '../firebase'
-import { User } from '../../entities'
 
 /***************************
  *    Main
  **************************/
 describe('Relationship API Controller Test', () => {
+  describe('Followings Test', () => {
+    it('GET /api/users/:id/followings フォロー一覧の取得ができること。', async () => {
+      const testCurrentUser = await createFirebaseUser()
+      const testUser = await createTestUser()
+      await createTestRelationship(testCurrentUser, testUser)
+
+      const response = (await authCheckMock(
+        `/users/${testCurrentUser.id}/followings`,
+        'GET'
+      )) as TestIResponse<RelationshipFollowingsApiRes>
+
+      await deleteTestUser(testCurrentUser.id)
+
+      expect(response.status).toEqual(200)
+      expect(response.body.data.followings[0].follow).toEqual(testUser)
+    })
+  })
   describe('Create Test', () => {
     it('POST /api/users/:id/follow フォローの作成ができること。', async () => {
       const userRepository = getManager().getRepository(User)
-      const TestCurrentUser = await createFirebaseUser()
-      const TestfollowUser = await createTestUser()
+      const testCurrentUser = await createFirebaseUser()
+      const testUser = await createTestUser()
 
       const response = (await authCheckMock(
-        `/users/${TestfollowUser.id}/follow`,
+        `/users/${testUser.id}/follow`,
         'POST'
       )) as TestIResponse<RelationshipCreateApiRes>
 
-      const currentUser = await userRepository.findOne(TestCurrentUser.id, {
+      const currentUser = await userRepository.findOne(testCurrentUser.id, {
         relations: ['followings', 'followings.follow'],
       })
       if (!currentUser) throw new Error('Test Failed')
 
-      await deleteTestUser(TestCurrentUser.id)
+      await deleteTestUser(testCurrentUser.id)
 
       expect(response.status).toEqual(201)
       expect(response.body.data.message).toEqual('フォローしました。')
-      expect(currentUser.followings[0].follow).toEqual(TestfollowUser)
+      expect(currentUser.followings[0].follow).toEqual(testUser)
     })
   })
 
   describe('Destroy Test', () => {
     it('DELETE /api/users/:id/unfollow フォローの解除ができること。', async () => {
-      const TestCurrentUser = await createFirebaseUser()
-      const TestfollowUser = await createTestUser()
-      await createTestRelationship(TestCurrentUser, TestfollowUser)
+      const testCurrentUser = await createFirebaseUser()
+      const testUser = await createTestUser()
+      await createTestRelationship(testCurrentUser, testUser)
 
       const response = (await authCheckMock(
-        `/users/${TestfollowUser.id}/unfollow`,
+        `/users/${testUser.id}/unfollow`,
         'DELETE'
       )) as TestIResponse<RelationshipDestroyApiRes>
 
-      await deleteTestUser(TestCurrentUser.id)
+      await deleteTestUser(testCurrentUser.id)
 
       expect(response.status).toEqual(200)
       expect(response.body.data.message).toEqual('フォローを解除しました。')

@@ -15,8 +15,8 @@ const router = Router()
 router.get('/api/users', userController.index)
 router.get('/api/users/:id', authCheck, userController.show)
 router.post('/api/users', userController.create)
+router.get('/api/users/:id/followings', authCheck, relationshipController.followings)
 router.post('/api/users/:id/follow', authCheck, relationshipController.create)
-// prettier-ignore
 router.delete('/api/users/:id/unfollow', authCheck, relationshipController.destroy)
 router.post('/api/users/:id/rooms', authCheck, roomController.create)
 

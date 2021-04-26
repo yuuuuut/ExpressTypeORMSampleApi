@@ -10,10 +10,7 @@ describe('User API Controller Test', () => {
     it('GET /api/users/:id currentUserの取得ができること。', async () => {
       const currentUser = await createFirebaseUser()
 
-      const response = (await authCheckMock(
-        `/users/${currentUser.id}`,
-        'GET'
-      )) as TestIResponse<UserShowApiRes>
+      const response = (await authCheckMock(`/users/${currentUser.id}`, 'GET')) as TestIResponse<UserShowApiRes>
 
       await deleteTestUser(currentUser.id)
 
@@ -24,12 +21,7 @@ describe('User API Controller Test', () => {
       const currentUser = await createFirebaseUser()
       const user = await createTestUser()
 
-      const response = (await authCheckMock(
-        `/users/${user.id}`,
-        'GET'
-      )) as TestIResponse<UserShowApiRes>
-
-      console.log(response.body)
+      const response = (await authCheckMock(`/users/${user.id}`, 'GET')) as TestIResponse<UserShowApiRes>
 
       await deleteTestUser(currentUser.id)
 
@@ -39,10 +31,7 @@ describe('User API Controller Test', () => {
       expect(response.body.data.isRoom).toEqual(false)
     })
     it('GET /api/users/:id Userが存在しない場合Userの取得ができないこと。', async () => {
-      const response = (await authCheckMock(
-        `/users/NotUser`,
-        'GET'
-      )) as TestIResponse<UserShowApiRes>
+      const response = (await authCheckMock(`/users/NotUser`, 'GET')) as TestIResponse<UserShowApiRes>
 
       expect(response.status).toEqual(404)
       expect(response.body.error?.message).toEqual('ユーザーが存在しません。')
@@ -57,9 +46,7 @@ describe('User API Controller Test', () => {
         photoURL: 'TestUserPhoto',
       }
 
-      const response = (await Req.post('/users').send(
-        userData
-      )) as TestIResponse<UserCreateApiRes>
+      const response = (await Req.post('/users').send(userData)) as TestIResponse<UserCreateApiRes>
 
       expect(response.status).toEqual(201)
       expect(response.body.data.user).toEqual({ ...userData, isAdmin: false })
@@ -76,9 +63,7 @@ describe('User API Controller Test', () => {
         photoURL: user.photoURL,
       }
 
-      const response = (await Req.post('/users').send(
-        newUser
-      )) as TestIResponse<UserCreateApiRes>
+      const response = (await Req.post('/users').send(newUser)) as TestIResponse<UserCreateApiRes>
 
       expect(response.status).toEqual(201)
       expect(response.body.data.isCreate).toEqual(false)

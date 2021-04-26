@@ -3,6 +3,20 @@ import { getManager } from 'typeorm'
 import { Relationship, User } from '../entities'
 
 /**
+ * Relationship model followings
+ */
+const followings = async (userId: string) => {
+  const relationshipRepository = getManager().getRepository(Relationship)
+
+  const followings = await relationshipRepository.find({
+    where: { user: userId },
+    relations: ['follow'],
+  })
+
+  return followings
+}
+
+/**
  * Relationship model create
  */
 const create = async (id: string, currentUser: User) => {
@@ -10,8 +24,7 @@ const create = async (id: string, currentUser: User) => {
   const userRepository = getManager().getRepository(User)
 
   const followUser = await userRepository.findOne(id)
-  if (!followUser)
-    throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })
+  if (!followUser) throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })
 
   const relationship = new Relationship()
   relationship.user = currentUser
@@ -61,4 +74,4 @@ const isMutualFollowBool = async (userId: string, currentUserId: string) => {
   return isMutualFollow
 }
 
-export { create, destroy, isFollowingBool, isMutualFollowBool }
+export { followings, create, destroy, isFollowingBool, isMutualFollowBool }

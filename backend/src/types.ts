@@ -1,4 +1,4 @@
-import { Entry, Message, Profile, Room, User } from './entities'
+import { Entry, Message, Profile, Relationship, Room, User } from './entities'
 
 export interface IResponse<T> {
   status: number
@@ -50,6 +50,10 @@ export interface ProfileUpdateApiReq {
 export interface ProfileUpdateApiRes {
   profile: Profile
   message: string
+}
+
+export interface RelationshipFollowingsApiRes {
+  followings: Relationship[]
 }
 
 export interface RelationshipCreateApiRes {
