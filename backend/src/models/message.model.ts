@@ -1,7 +1,7 @@
 import { getManager } from 'typeorm'
 
+import { MessageCreateApiReq, MessageUpdateApiReq } from '../types'
 import { Message, Room, User } from '../entities'
-import { MessageCreateApiReq } from '../types'
 
 /**
  * message index model
@@ -37,4 +37,30 @@ const create = async (body: MessageCreateApiReq, roomId: string, currentUser: Us
   return { message }
 }
 
-export { index, create }
+/**
+ * message model update
+ */
+const update = async (messageId: string, body: MessageUpdateApiReq) => {
+  const messageRepository = getManager().getRepository(Message)
+
+  let message = await messageRepository.findOne(messageId)
+  if (!message)
+    throw Object.assign(new Error('メッセージが存在しません。'), {
+      status: 404,
+    })
+
+  switch (body.type) {
+    case 'IS_APPROVAL':
+      message.isApproval = true
+      message = await messageRepository.save(message)
+      break
+    case 'REJECTED':
+      message.rejected = true
+      message = await messageRepository.save(message)
+      break
+  }
+
+  return message
+}
+
+export { index, create, update }

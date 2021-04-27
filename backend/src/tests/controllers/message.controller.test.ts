@@ -1,5 +1,12 @@
-import { MessageCreateApiReq, MessageCreateApiRes, MessageIndexApiRes, TestIResponse } from '../../types'
-import { authCheckMock, createFirebaseUser } from '../firebase'
+import {
+  MessageCreateApiReq,
+  MessageCreateApiRes,
+  MessageIndexApiRes,
+  MessageUpdateApiReq,
+  MessageUpdateApiRes,
+  TestIResponse,
+} from '../../types'
+
 import {
   createTestEntry,
   createTestMessage,
@@ -8,6 +15,8 @@ import {
   deleteTestRoom,
   deleteTestUser,
 } from '../common'
+
+import { authCheckMock, createFirebaseUser } from '../firebase'
 
 /***************************
  *    Main
@@ -18,22 +27,25 @@ describe('Message API Controller Test', () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()
       const testUser = await createTestUser()
-      const room = await createTestRoom()
-      await createTestEntry(testCurrentUser, room)
-      await createTestEntry(testUser, room)
-      const message = await createTestMessage(testCurrentUser, room)
+      const testRoom = await createTestRoom()
+      await createTestEntry(testCurrentUser, testRoom)
+      await createTestEntry(testUser, testRoom)
+      const testMessage = await createTestMessage(testCurrentUser, testRoom)
 
       // Response
-      const response = (await authCheckMock(`/rooms/${room.id}/messages`, 'GET')) as TestIResponse<MessageIndexApiRes>
+      const response = (await authCheckMock(
+        `/rooms/${testRoom.id}/messages`,
+        'GET'
+      )) as TestIResponse<MessageIndexApiRes>
 
       // ExpectedJson Data
       const expectedJson = {
         messages: [
           {
-            id: message.id,
-            kind: message.kind,
-            isApproval: message.isApproval,
-            rejected: message.rejected,
+            id: testMessage.id,
+            kind: testMessage.kind,
+            isApproval: testMessage.isApproval,
+            rejected: testMessage.rejected,
             user: {
               id: testCurrentUser.id,
               displayName: testCurrentUser.displayName,
@@ -48,7 +60,7 @@ describe('Message API Controller Test', () => {
 
       // Delete Test Data
       await deleteTestUser(testCurrentUser.id)
-      await deleteTestRoom(room.id)
+      await deleteTestRoom(testRoom.id)
 
       expect(response.status).toEqual(200)
       expect(response.body.data).toEqual(expectedJson)
@@ -60,9 +72,9 @@ describe('Message API Controller Test', () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()
       const testUser = await createTestUser()
-      const room = await createTestRoom()
-      await createTestEntry(testCurrentUser, room)
-      await createTestEntry(testUser, room)
+      const testRoom = await createTestRoom()
+      await createTestEntry(testCurrentUser, testRoom)
+      await createTestEntry(testUser, testRoom)
 
       // Test Data
       const data = {
@@ -71,7 +83,7 @@ describe('Message API Controller Test', () => {
 
       // Response
       const response = (await authCheckMock(
-        `/rooms/${room.id}/messages`,
+        `/rooms/${testRoom.id}/messages`,
         'POST',
         data
       )) as TestIResponse<MessageCreateApiRes>
@@ -92,14 +104,87 @@ describe('Message API Controller Test', () => {
             followersCount: testCurrentUser.followersCount,
           },
           room: {
-            id: room.id,
+            id: testRoom.id,
           },
         },
       }
 
       // Delete Test Data
       await deleteTestUser(testCurrentUser.id)
-      await deleteTestRoom(room.id)
+      await deleteTestRoom(testRoom.id)
+
+      expect(response.status).toEqual(201)
+      expect(response.body.data).toEqual(expectedJson)
+    })
+  })
+
+  describe('Update Test', () => {
+    it('PUT /api/messages/:id MessageのisApprovalをTrueにできること。', async () => {
+      // Create Test Data
+      const testCurrentUser = await createFirebaseUser()
+      const testRoom = await createTestRoom()
+      const testMessage = await createTestMessage(testCurrentUser, testRoom)
+
+      // Test Data
+      const data = {
+        type: 'IS_APPROVAL',
+      } as MessageUpdateApiReq
+
+      // Response
+      const response = (await authCheckMock(
+        `/messages/${testMessage.id}`,
+        'PUT',
+        data
+      )) as TestIResponse<MessageUpdateApiRes>
+
+      // ExpectedJson Data
+      const expectedJson = {
+        message: {
+          id: testMessage.id,
+          kind: testMessage.kind,
+          isApproval: true,
+          rejected: testMessage.rejected,
+        },
+      }
+
+      // Delete Test Data
+      await deleteTestUser(testCurrentUser.id)
+      await deleteTestRoom(testRoom.id)
+
+      expect(response.status).toEqual(201)
+      expect(response.body.data).toEqual(expectedJson)
+    })
+    it('PUT /api/messages/:id MessageのrejectedをTrueにできること。', async () => {
+      // Create Test Data
+      const testCurrentUser = await createFirebaseUser()
+      const testRoom = await createTestRoom()
+      const testMessage = await createTestMessage(testCurrentUser, testRoom)
+
+      // Test Data
+      const data = {
+        type: 'REJECTED',
+      } as MessageUpdateApiReq
+
+      // Response
+      const response = (await authCheckMock(
+        `/messages/${testMessage.id}`,
+        'PUT',
+        data
+      )) as TestIResponse<MessageUpdateApiRes>
+
+      // ExpectedJson Data
+      const expectedJson = {
+        message: {
+          id: testMessage.id,
+          kind: testMessage.kind,
+          isApproval: testMessage.isApproval,
+          rejected: true,
+        },
+      }
+
+      // Delete Test Data
+      await deleteTestUser(testCurrentUser.id)
+      await deleteTestRoom(testRoom.id)
 
       expect(response.status).toEqual(201)
       expect(response.body.data).toEqual(expectedJson)

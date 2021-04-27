@@ -93,3 +93,11 @@ export interface MessageIndexApiRes {
 export interface MessageCreateApiRes {
   message: Message
 }
+
+export interface MessageUpdateApiReq {
+  type: 'IS_APPROVAL' | 'REJECTED'
+}
+
+export interface MessageUpdateApiRes {
+  message: Message
+}

@@ -12,6 +12,10 @@ interface MessageCreateRes {
   message: Message
 }
 
+interface MessageUpdateRes {
+  message: Message
+}
+
 /***************************
  *   Apis
  **************************/
@@ -53,4 +57,25 @@ const create = async (
   return response
 }
 
-export { index, create }
+/**
+ * message update api
+ */
+const update = async (
+  messageId: number,
+  type: 'IS_APPROVAL' | 'REJECTED',
+  token: string
+): Promise<AxiosResponse<IResponse<MessageUpdateRes>>> => {
+  const data = {
+    type: type,
+  }
+
+  const response = (await Axios.put(`/messages/${messageId}`, data, {
+    headers: {
+      Authorization: 'Bearer ' + token,
+    },
+  })) as AxiosResponse<IResponse<MessageUpdateRes>>
+
+  return response
+}
+
+export { index, create, update }
