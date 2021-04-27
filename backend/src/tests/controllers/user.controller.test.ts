@@ -9,36 +9,36 @@ describe('User API Controller Test', () => {
   describe('Show Test', () => {
     it('GET /api/users/:id currentUserの取得ができること。', async () => {
       // Create Test Data
-      const currentUser = await createFirebaseUser()
+      const testCurrentUser = await createFirebaseUser()
 
       // Response
-      const response = (await authCheckMock(`/users/${currentUser.id}`, 'GET')) as TestIResponse<UserShowApiRes>
+      const response = (await authCheckMock(`/users/${testCurrentUser.id}`, 'GET')) as TestIResponse<UserShowApiRes>
 
       // ExpectedJson Data
       const expectedJson = {
         user: {
-          id: currentUser.id,
-          displayName: currentUser.displayName,
-          photoURL: currentUser.photoURL,
-          isAdmin: false,
-          followersCount: '0',
-          followingsCount: '0',
+          id: testCurrentUser.id,
+          displayName: testCurrentUser.displayName,
+          photoURL: testCurrentUser.photoURL,
+          isAdmin: testCurrentUser.isAdmin,
+          followersCount: testCurrentUser.followersCount,
+          followingsCount: testCurrentUser.followingsCount,
         },
       }
 
-      // Delete FirebaseCurrentUser
-      await deleteTestUser(currentUser.id)
+      // Delete Test Data
+      await deleteTestUser(testCurrentUser.id)
 
       expect(response.status).toEqual(200)
       expect(response.body.data).toEqual(expectedJson)
     })
     it('GET /api/users/:id 他人のUserが取得ができること。', async () => {
       // Create Test Data
-      const currentUser = await createFirebaseUser()
-      const user = await createTestUser()
+      const testCurrentUser = await createFirebaseUser()
+      const testUser = await createTestUser()
 
       // Response
-      const response = (await authCheckMock(`/users/${user.id}`, 'GET')) as TestIResponse<UserShowApiRes>
+      const response = (await authCheckMock(`/users/${testUser.id}`, 'GET')) as TestIResponse<UserShowApiRes>
 
       // ExpectedJson Data
       const expectedJson = {
@@ -46,17 +46,17 @@ describe('User API Controller Test', () => {
         isMutualFollow: false,
         isRoom: false,
         user: {
-          id: user.id,
-          displayName: user.displayName,
-          photoURL: user.photoURL,
-          isAdmin: false,
-          followersCount: '0',
-          followingsCount: '0',
+          id: testUser.id,
+          displayName: testUser.displayName,
+          photoURL: testUser.photoURL,
+          isAdmin: testUser.isAdmin,
+          followersCount: testUser.followersCount,
+          followingsCount: testUser.followingsCount,
         },
       }
 
-      // Delete FirebaseCurrentUser
-      await deleteTestUser(currentUser.id)
+      // Delete Test Data
+      await deleteTestUser(testCurrentUser.id)
 
       expect(response.status).toEqual(200)
       expect(response.body.data).toEqual(expectedJson)
@@ -90,13 +90,13 @@ describe('User API Controller Test', () => {
 
     it('POST /api/users Userが存在する場合、Userの作成が行われないこと。', async () => {
       // Create Test Data
-      const user = await createTestUser()
+      const testUser = await createTestUser()
 
       // Test Data
       const newUser = {
-        id: user.id,
-        displayName: user.displayName,
-        photoURL: user.photoURL,
+        id: testUser.id,
+        displayName: testUser.displayName,
+        photoURL: testUser.photoURL,
       }
 
       // Response

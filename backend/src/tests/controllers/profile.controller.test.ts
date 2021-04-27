@@ -8,74 +8,94 @@ import { createTestProfile, deleteTestUser } from '../common'
 describe('Profile API Controller Test', () => {
   describe('Update Test', () => {
     it('PUT /api/profiles Profileの更新に成功すること。', async () => {
-      const user = await createFirebaseUser()
-      const profile = await createTestProfile(user)
+      // Create Test Data
+      const testCurrentUser = await createFirebaseUser()
+      const profile = await createTestProfile(testCurrentUser)
 
+      // Test Data
       const data = {
         lineId: 'TestLineId',
         twitterId: 'TestTwitterId',
       }
 
-      const response = (await authCheckMock(
-        '/profiles',
-        'PUT',
-        data
-      )) as TestIResponse<ProfileUpdateApiRes>
+      // Response
+      const response = (await authCheckMock('/profiles', 'PUT', data)) as TestIResponse<ProfileUpdateApiRes>
 
-      await deleteTestUser(user.id)
+      // ExpectedJson Data
+      const expectedJson = {
+        profile: {
+          id: profile.id,
+          lineId: data.lineId,
+          twitterId: data.twitterId,
+        },
+        message: 'プロフィールの更新に成功しました。',
+      }
+
+      // Delete Test Data
+      await deleteTestUser(testCurrentUser.id)
 
       expect(response.status).toEqual(201)
-      expect(response.body.data.profile.lineId).toEqual(data.lineId)
-      expect(response.body.data.profile.twitterId).toEqual(data.twitterId)
-      expect(response.body.data.message).toEqual(
-        'プロフィールの更新に成功しました。'
-      )
+      expect(response.body.data).toEqual(expectedJson)
     })
 
     it('PUT /api/profiles LINE_IDのみの更新に成功すること。', async () => {
-      const user = await createFirebaseUser()
-      const profile = await createTestProfile(user)
+      // Create Test Data
+      const testCurrentUser = await createFirebaseUser()
+      const profile = await createTestProfile(testCurrentUser)
 
+      // Test Data
       const data = {
         lineId: 'TestLineId',
       }
 
-      const response = (await authCheckMock(
-        '/profiles',
-        'PUT',
-        data
-      )) as TestIResponse<ProfileUpdateApiRes>
+      // Response
+      const response = (await authCheckMock('/profiles', 'PUT', data)) as TestIResponse<ProfileUpdateApiRes>
 
-      await deleteTestUser(user.id)
+      // ExpectedJson Data
+      const expectedJson = {
+        profile: {
+          id: profile.id,
+          lineId: data.lineId,
+          twitterId: null,
+        },
+        message: 'プロフィールの更新に成功しました。',
+      }
+
+      // Delete Test Data
+      await deleteTestUser(testCurrentUser.id)
 
       expect(response.status).toEqual(201)
-      expect(response.body.data.profile.lineId).toEqual(data.lineId)
-      expect(response.body.data.message).toEqual(
-        'プロフィールの更新に成功しました。'
-      )
+      expect(response.body.data).toEqual(expectedJson)
     })
 
     it('PUT /api/profiles Twitter_IDのみの更新に成功すること。', async () => {
-      const user = await createFirebaseUser()
-      const profile = await createTestProfile(user)
+      // Create Test Data
+      const testCurrentUser = await createFirebaseUser()
+      const profile = await createTestProfile(testCurrentUser)
 
+      // Test Data
       const data = {
         twitterId: 'TestTwitterId',
       }
 
-      const response = (await authCheckMock(
-        '/profiles',
-        'PUT',
-        data
-      )) as TestIResponse<ProfileUpdateApiRes>
+      // Response
+      const response = (await authCheckMock('/profiles', 'PUT', data)) as TestIResponse<ProfileUpdateApiRes>
 
-      await deleteTestUser(user.id)
+      // ExpectedJson Data
+      const expectedJson = {
+        profile: {
+          id: profile.id,
+          lineId: null,
+          twitterId: data.twitterId,
+        },
+        message: 'プロフィールの更新に成功しました。',
+      }
+
+      // Delete Test Data
+      await deleteTestUser(testCurrentUser.id)
 
       expect(response.status).toEqual(201)
-      expect(response.body.data.profile.twitterId).toEqual(data.twitterId)
-      expect(response.body.data.message).toEqual(
-        'プロフィールの更新に成功しました。'
-      )
+      expect(response.body.data).toEqual(expectedJson)
     })
   })
 })

@@ -1,10 +1,6 @@
+import { createTestRelationship, createTestUser, deleteTestUser } from '../common'
 import * as relationshipModel from '../../models/relationship.model'
 import { createFirebaseUser } from '../firebase'
-import {
-  createTestRelationship,
-  createTestUser,
-  deleteTestUser,
-} from '../common'
 
 /***************************
  *    Main
@@ -12,29 +8,27 @@ import {
 describe('Relationship Model Test', () => {
   describe('isFollowingBool Test', () => {
     it('Userをフォローしている場合、Trueを返すこと。', async () => {
-      const currentUser = await createFirebaseUser()
-      const user = await createTestUser()
-      await createTestRelationship(currentUser, user)
+      // Create Test Data
+      const testCurrentUser = await createFirebaseUser()
+      const testUser = await createTestUser()
+      await createTestRelationship(testCurrentUser, testUser)
 
-      const val = await relationshipModel.isFollowingBool(
-        user.id,
-        currentUser.id
-      )
+      const val = await relationshipModel.isFollowingBool(testUser.id, testCurrentUser.id)
 
-      await deleteTestUser(currentUser.id)
+      // Delete Test Data
+      await deleteTestUser(testCurrentUser.id)
 
       expect(val).toEqual(true)
     })
     it('Userをフォローしていない場合、Falseを返すこと。', async () => {
-      const currentUser = await createFirebaseUser()
-      const user = await createTestUser()
+      // Create Test Data
+      const testCurrentUser = await createFirebaseUser()
+      const testUser = await createTestUser()
 
-      const val = await relationshipModel.isFollowingBool(
-        user.id,
-        currentUser.id
-      )
+      const val = await relationshipModel.isFollowingBool(testUser.id, testCurrentUser.id)
 
-      await deleteTestUser(currentUser.id)
+      // Delete Test Data
+      await deleteTestUser(testCurrentUser.id)
 
       expect(val).toEqual(false)
     })
@@ -42,31 +36,28 @@ describe('Relationship Model Test', () => {
 
   describe('isMutualFollowBool Test', () => {
     it('相互フォローの場合、 Trueを返すこと。', async () => {
-      const currentUser = await createFirebaseUser()
-      const user = await createTestUser()
-      await createTestRelationship(currentUser, user)
-      await createTestRelationship(user, currentUser)
+      // Create Test Data
+      const testCurrentUser = await createFirebaseUser()
+      const testUser = await createTestUser()
+      await createTestRelationship(testCurrentUser, testUser)
+      await createTestRelationship(testUser, testCurrentUser)
 
-      const val = await relationshipModel.isMutualFollowBool(
-        user.id,
-        currentUser.id
-      )
+      const val = await relationshipModel.isMutualFollowBool(testUser.id, testCurrentUser.id)
 
-      await deleteTestUser(currentUser.id)
+      // Delete Test Data
+      await deleteTestUser(testCurrentUser.id)
 
       expect(val).toEqual(true)
     })
     it('相互フォローでない場合、 Falseを返すこと。', async () => {
-      const currentUser = await createFirebaseUser()
-      const user = await createTestUser()
-      await createTestRelationship(currentUser, user)
+      const testCurrentUser = await createFirebaseUser()
+      const testUser = await createTestUser()
+      await createTestRelationship(testCurrentUser, testUser)
 
-      const val = await relationshipModel.isMutualFollowBool(
-        user.id,
-        currentUser.id
-      )
+      const val = await relationshipModel.isMutualFollowBool(testUser.id, testCurrentUser.id)
 
-      await deleteTestUser(currentUser.id)
+      // Delete Test Data
+      await deleteTestUser(testCurrentUser.id)
 
       expect(val).toEqual(false)
     })

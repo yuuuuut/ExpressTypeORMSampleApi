@@ -29,12 +29,29 @@ describe('Relationship API Controller Test', () => {
       // Get Test Data
       const currentUser = await getTestUser(testCurrentUser.id)
       const user = await getTestUser(testUser.id)
-      // Delete FirebaseCurrentUser
+
+      // ExpectedJson Data
+      const expectedJson = {
+        followings: [
+          {
+            follow: {
+              id: user.id,
+              displayName: user.displayName,
+              photoURL: user.photoURL,
+              isAdmin: user.isAdmin,
+              followersCount: user.followersCount,
+              followingsCount: user.followingsCount,
+            },
+            id: expect.anything(),
+          },
+        ],
+      }
+
+      // Delete Test Data
       await deleteTestUser(testCurrentUser.id)
 
       expect(response.status).toEqual(200)
-      expect(currentUser.followingsCount).toEqual('1')
-      expect(response.body.data.followings[0].follow).toEqual(user)
+      expect(response.body.data).toEqual(expectedJson)
     })
   })
   describe('Followers Test', () => {
@@ -53,12 +70,29 @@ describe('Relationship API Controller Test', () => {
       // Get Test Data
       const currentUser = await getTestUser(testCurrentUser.id)
       const user = await getTestUser(testUser.id)
-      // Delete FirebaseCurrentUser
+
+      // ExpectedJson Data
+      const expectedJson = {
+        followers: [
+          {
+            user: {
+              id: user.id,
+              displayName: user.displayName,
+              photoURL: user.photoURL,
+              isAdmin: user.isAdmin,
+              followersCount: user.followersCount,
+              followingsCount: user.followingsCount,
+            },
+            id: expect.anything(),
+          },
+        ],
+      }
+
+      // Delete Test Data
       await deleteTestUser(testCurrentUser.id)
 
       expect(response.status).toEqual(200)
-      expect(currentUser.followersCount).toEqual('1')
-      expect(response.body.data.followers[0].user).toEqual(user)
+      expect(response.body.data).toEqual(expectedJson)
     })
   })
   describe('Create Test', () => {
@@ -75,11 +109,17 @@ describe('Relationship API Controller Test', () => {
 
       // Get Test Data
       const currentUser = await getTestUser(testCurrentUser.id)
-      // Delete FirebaseCurrentUser
+
+      // ExpectedJson Data
+      const expectedJson = {
+        message: 'フォローしました。',
+      }
+
+      // Delete Test Data
       await deleteTestUser(testCurrentUser.id)
 
       expect(response.status).toEqual(201)
-      expect(response.body.data.message).toEqual('フォローしました。')
+      expect(response.body.data).toEqual(expectedJson)
       expect(currentUser.followingsCount).toEqual('1')
     })
   })
@@ -99,11 +139,17 @@ describe('Relationship API Controller Test', () => {
 
       // Get Test Data
       const currentUser = await getTestUser(testCurrentUser.id)
+
+      // ExpectedJson Data
+      const expectedJson = {
+        message: 'フォローを解除しました。',
+      }
+
       // Delete FirebaseCurrentUser
       await deleteTestUser(testCurrentUser.id)
 
       expect(response.status).toEqual(200)
-      expect(response.body.data.message).toEqual('フォローを解除しました。')
+      expect(response.body.data).toEqual(expectedJson)
       expect(currentUser.followingsCount).toEqual('0')
     })
   })

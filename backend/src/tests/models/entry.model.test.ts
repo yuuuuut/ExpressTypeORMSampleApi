@@ -1,12 +1,6 @@
+import { createTestEntry, createTestRoom, createTestUser, deleteTestRoom, deleteTestUser } from '../common'
 import { getOpponentUser } from '../../models/entry.model'
 import { createFirebaseUser } from '../firebase'
-import {
-  createTestEntry,
-  createTestRoom,
-  createTestUser,
-  deleteTestRoom,
-  deleteTestUser,
-} from '../common'
 
 /***************************
  *    Main
@@ -14,6 +8,7 @@ import {
 describe('Room Model Test', () => {
   describe('getOpponentUser Test', () => {
     it('正常に動作し、otherEntryを返すこと。', async () => {
+      // Create Test Data
       const currentUser = await createFirebaseUser()
       const user = await createTestUser()
       const room = await createTestRoom()
@@ -22,6 +17,7 @@ describe('Room Model Test', () => {
 
       const otherEntry = await getOpponentUser(room, currentUser)
 
+      // Delete Test Data
       await deleteTestRoom(room.id)
       await deleteTestUser(currentUser.id)
 
