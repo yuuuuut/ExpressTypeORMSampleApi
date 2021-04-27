@@ -22,18 +22,11 @@ const index = async () => {
 const show = async (userId: string, currentUser: User) => {
   const userRepository = getManager().getRepository(User)
   const user = await userRepository.findOne(userId)
-  if (!user)
-    throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })
+  if (!user) throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })
 
   if (user.id !== currentUser.id) {
-    const isFollowing = await relationshipModel.isFollowingBool(
-      userId,
-      currentUser.id
-    )
-    const isMutualFollow = await relationshipModel.isMutualFollowBool(
-      userId,
-      currentUser.id
-    )
+    const isFollowing = await relationshipModel.isFollowingBool(userId, currentUser.id)
+    const isMutualFollow = await relationshipModel.isMutualFollowBool(userId, currentUser.id)
     const { isRoom, roomId } = await isRoomBool(user.id, currentUser.id)
 
     return { user, isFollowing, isMutualFollow, isRoom, roomId }

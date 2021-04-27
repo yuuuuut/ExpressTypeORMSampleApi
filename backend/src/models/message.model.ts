@@ -20,17 +20,12 @@ const index = async (roomId: string) => {
 /**
  * message create model
  */
-const create = async (
-  body: MessageCreateApiReq,
-  roomId: string,
-  currentUser: User
-) => {
+const create = async (body: MessageCreateApiReq, roomId: string, currentUser: User) => {
   const messageRepository = getManager().getRepository(Message)
   const roomRepository = getManager().getRepository(Room)
 
   const room = await roomRepository.findOne(roomId)
-  if (!room)
-    throw Object.assign(new Error('ルームが存在しません。'), { status: 404 })
+  if (!room) throw Object.assign(new Error('ルームが存在しません。'), { status: 404 })
 
   const newMessage = new Message()
   newMessage.kind = body.kind

@@ -33,11 +33,11 @@ const followers = async (userId: string) => {
 /**
  * Relationship model create
  */
-const create = async (id: string, currentUser: User) => {
+const create = async (userId: string, currentUser: User) => {
   const relationshipRepository = getManager().getRepository(Relationship)
   const userRepository = getManager().getRepository(User)
 
-  const followUser = await userRepository.findOne(id)
+  const followUser = await userRepository.findOne(userId)
   if (!followUser) throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })
 
   const relationship = new Relationship()
@@ -50,11 +50,11 @@ const create = async (id: string, currentUser: User) => {
 /**
  * Relationship model destroy
  */
-const destroy = async (id: string, currentUser: User) => {
+const destroy = async (userId: string, currentUser: User) => {
   const relationshipRepository = getManager().getRepository(Relationship)
 
   const relatinoship = await relationshipRepository.findOne({
-    where: { user: currentUser.id, follow: id },
+    where: { user: currentUser.id, follow: userId },
   })
   if (!relatinoship)
     throw Object.assign(new Error('フォロー関係が存在しません。'), {

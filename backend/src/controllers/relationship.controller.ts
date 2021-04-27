@@ -59,11 +59,11 @@ const create = async (req: Request, res: Response) => {
     status: 201,
   }
   const currentUserId = req.currentUserId
-  const id = req.params.id
+  const userId = req.params.id
 
   try {
     const currentUser = await getCuurentUser(currentUserId)
-    await model.create(id, currentUser)
+    await model.create(userId, currentUser)
     response.data = {
       message: 'フォローしました。',
     }
@@ -83,11 +83,11 @@ const destroy = async (req: Request, res: Response) => {
     status: 200,
   }
   const currentUserId = req.currentUserId
-  const id = req.params.id
+  const userId = req.params.id
 
   try {
     const currentUser = await getCuurentUser(currentUserId)
-    await model.destroy(id, currentUser)
+    await model.destroy(userId, currentUser)
     response.data = {
       message: 'フォローを解除しました。',
     }

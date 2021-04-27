@@ -1,13 +1,12 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import cors from 'cors'
+
 import { createConnection } from 'typeorm'
 
 import router from '../src/routes'
 
 dotenv.config()
-
-console.log(process.env.NODE_ENV)
 
 createConnection()
   .then(async (connection) => {
@@ -18,9 +17,8 @@ createConnection()
 
     app.use(express.json())
     app.use(express.urlencoded({ extended: true }))
-    // @ts-ignore
+    //@ts-ignore
     app.use(cors())
-
     app.use(router)
 
     app.listen(PORT, () => console.log(`Server OK http://localhost:${PORT}`))

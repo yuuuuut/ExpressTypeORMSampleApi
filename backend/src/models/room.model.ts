@@ -7,11 +7,10 @@ import { Room, User } from '../entities'
 /**
  * room show model
  */
-const show = async (id: string, currentUser: User) => {
+const show = async (roomId: string, currentUser: User) => {
   const roomRepository = getManager().getRepository(Room)
-  const room = await roomRepository.findOne(id)
-  if (!room)
-    throw Object.assign(new Error('ルームが存在しません。'), { status: 404 })
+  const room = await roomRepository.findOne(roomId)
+  if (!room) throw Object.assign(new Error('ルームが存在しません。'), { status: 404 })
 
   const otherEntry = await entryModel.getOpponentUser(room, currentUser)
 
@@ -26,8 +25,7 @@ const create = async (userId: string, currentUser: User) => {
   const uuid = uuidv4()
 
   const user = await userRepository.findOne(userId)
-  if (!user)
-    throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })
+  if (!user) throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })
 
   const data = await getManager().transaction(async (em) => {
     const newRoom = em.create(Room, {

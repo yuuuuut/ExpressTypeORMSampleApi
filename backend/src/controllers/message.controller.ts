@@ -1,11 +1,7 @@
 import { Request, Response } from 'express'
 
-import {
-  IResponse,
-  MessageCreateApiReq,
-  MessageIndexApiRes,
-  MessageCreateApiRes,
-} from '../types'
+import { IResponse, MessageCreateApiReq, MessageIndexApiRes, MessageCreateApiRes } from '../types'
+
 import { getCuurentUser } from '../models/common.model'
 import * as messageModel from '../models/message.model'
 

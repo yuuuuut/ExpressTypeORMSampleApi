@@ -4,6 +4,7 @@ import { Entry, Room, User } from '../entities'
 
 /**
  * entry show model
+ *
  */
 const show = async (userId: string) => {
   const entryRepository = getManager().getRepository(Entry)
@@ -39,11 +40,7 @@ const isRoomBool = async (userId: string, currentUserId: string) => {
 
   const currentUserEntry = await show(currentUserId)
   const userEntry = await show(userId)
-  if (
-    !currentUserEntry ||
-    !userEntry ||
-    currentUserEntry.room.id !== userEntry.room.id
-  ) {
+  if (!currentUserEntry || !userEntry || currentUserEntry.room.id !== userEntry.room.id) {
     isRoom = false
     roomId = undefined
   } else {
@@ -64,8 +61,7 @@ const getOpponentUser = async (room: Room, currentUser: User) => {
     relations: ['user'],
     select: ['id', 'user'],
   })
-  if (!entry)
-    throw Object.assign(new Error('相手が存在しません。'), { status: 404 })
+  if (!entry) throw Object.assign(new Error('相手が存在しません。'), { status: 404 })
 
   return entry
 }

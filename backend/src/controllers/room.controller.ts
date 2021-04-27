@@ -12,11 +12,11 @@ const show = async (req: Request, res: Response) => {
     status: 200,
   }
   const currentUserId = req.currentUserId
-  const id = req.params.id
+  const roomId = req.params.id
 
   try {
     const currentUser = await getCuurentUser(currentUserId)
-    const data = await roomModel.show(id, currentUser)
+    const data = await roomModel.show(roomId, currentUser)
     response.data = {
       room: data.room,
       otherEntry: data.otherEntry,
