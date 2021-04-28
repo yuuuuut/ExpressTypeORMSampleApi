@@ -7,17 +7,7 @@ import {
   TestIResponse,
 } from '../../types'
 
-import {
-  createTestEntry,
-  createTestMessage,
-  createTestProfile,
-  createTestRoom,
-  createTestUser,
-  deleteTestProfile,
-  deleteTestRoom,
-  deleteTestUser,
-} from '../common'
-
+import { createTestEntry, createTestMessage, createTestProfile, createTestRoom, createTestUser } from '../common'
 import { authCheckMock, createFirebaseUser } from '../firebase'
 
 /***************************
@@ -67,11 +57,6 @@ describe('Message API Controller Test', () => {
         ],
       }
 
-      // Delete Test Data
-      await deleteTestUser(testCurrentUser.id)
-      await deleteTestProfile(testProfile.id)
-      await deleteTestRoom(testRoom.id)
-
       expect(response.status).toEqual(200)
       expect(response.body.data).toEqual(expectedJson)
     })
@@ -120,10 +105,6 @@ describe('Message API Controller Test', () => {
         },
       }
 
-      // Delete Test Data
-      await deleteTestUser(testCurrentUser.id)
-      await deleteTestRoom(testRoom.id)
-
       expect(response.status).toEqual(201)
       expect(response.body.data).toEqual(expectedJson)
     })
@@ -159,10 +140,6 @@ describe('Message API Controller Test', () => {
         },
       }
 
-      // Delete Test Data
-      await deleteTestUser(testCurrentUser.id)
-      await deleteTestRoom(testRoom.id)
-
       expect(response.status).toEqual(201)
       expect(response.body.data).toEqual(expectedJson)
     })
@@ -194,10 +171,6 @@ describe('Message API Controller Test', () => {
           rejected: true,
         },
       }
-
-      // Delete Test Data
-      await deleteTestUser(testCurrentUser.id)
-      await deleteTestRoom(testRoom.id)
 
       expect(response.status).toEqual(201)
       expect(response.body.data).toEqual(expectedJson)

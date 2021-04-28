@@ -1,6 +1,6 @@
 import { TestIResponse, UserCreateApiRes, UserShowApiRes } from '../../types'
-import { Req, createTestUser, deleteTestUser, deleteTestProfile } from '../common'
 import { authCheckMock, createFirebaseUser } from '../firebase'
+import { Req, createTestUser } from '../common'
 
 /***************************
  *    Main
@@ -26,15 +26,12 @@ describe('User API Controller Test', () => {
         },
       }
 
-      // Delete Test Data
-      await deleteTestUser(testCurrentUser.id)
-
       expect(response.status).toEqual(200)
       expect(response.body.data).toEqual(expectedJson)
     })
     it('GET /api/users/:id 他人のUserが取得ができること。', async () => {
       // Create Test Data
-      const testCurrentUser = await createFirebaseUser()
+      await createFirebaseUser()
       const testUser = await createTestUser()
 
       // Response
@@ -54,9 +51,6 @@ describe('User API Controller Test', () => {
           followingsCount: testUser.followingsCount,
         },
       }
-
-      // Delete Test Data
-      await deleteTestUser(testCurrentUser.id)
 
       expect(response.status).toEqual(200)
       expect(response.body.data).toEqual(expectedJson)
@@ -96,12 +90,6 @@ describe('User API Controller Test', () => {
           },
         },
         isCreate: true,
-      }
-
-      // Delete Test Data
-      if (response.body.data.user.profile) {
-        await deleteTestUser(userData.id)
-        await deleteTestProfile(response.body.data.user.profile.id)
       }
 
       expect(response.status).toEqual(201)

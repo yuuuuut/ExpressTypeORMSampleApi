@@ -1,5 +1,5 @@
-import { createTestEntry, createTestRoom, createTestUser, deleteTestRoom, deleteTestUser } from '../common'
 import { RoomCreateApiRes, RoomShowApiRes, TestIResponse } from '../../types'
+import { createTestEntry, createTestRoom, createTestUser } from '../common'
 import { authCheckMock, createFirebaseUser } from '../firebase'
 
 /***************************
@@ -35,10 +35,6 @@ describe('Room Controller Test', () => {
           },
         },
       }
-
-      // Delete Test Data
-      await deleteTestRoom(room.id)
-      await deleteTestUser(testCurrentUser.id)
 
       expect(response.status).toEqual(200)
       expect(response.body.data).toEqual(expectedJson)
@@ -79,10 +75,6 @@ describe('Room Controller Test', () => {
           },
         },
       }
-
-      // Delete Test Data
-      await deleteTestUser(testCurrentUser.id)
-      await deleteTestRoom(response.body.data.room.id)
 
       expect(response.status).toEqual(201)
       expect(response.body.data.currentUserEntry.user).toEqual(expectedJson.currentUserEntry.user)

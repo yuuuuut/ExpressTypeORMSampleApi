@@ -6,7 +6,7 @@ import {
   TestIResponse,
 } from '../../types'
 
-import { createTestRelationship, createTestUser, deleteTestUser, getTestUser } from '../common'
+import { createTestRelationship, createTestUser, getTestUser } from '../common'
 import { authCheckMock, createFirebaseUser } from '../firebase'
 
 /***************************
@@ -27,7 +27,6 @@ describe('Relationship API Controller Test', () => {
       )) as TestIResponse<RelationshipFollowingsApiRes>
 
       // Get Test Data
-      const currentUser = await getTestUser(testCurrentUser.id)
       const user = await getTestUser(testUser.id)
 
       // ExpectedJson Data
@@ -47,9 +46,6 @@ describe('Relationship API Controller Test', () => {
         ],
       }
 
-      // Delete Test Data
-      await deleteTestUser(testCurrentUser.id)
-
       expect(response.status).toEqual(200)
       expect(response.body.data).toEqual(expectedJson)
     })
@@ -68,7 +64,6 @@ describe('Relationship API Controller Test', () => {
       )) as TestIResponse<RelationshipFollowersApiRes>
 
       // Get Test Data
-      const currentUser = await getTestUser(testCurrentUser.id)
       const user = await getTestUser(testUser.id)
 
       // ExpectedJson Data
@@ -87,9 +82,6 @@ describe('Relationship API Controller Test', () => {
           },
         ],
       }
-
-      // Delete Test Data
-      await deleteTestUser(testCurrentUser.id)
 
       expect(response.status).toEqual(200)
       expect(response.body.data).toEqual(expectedJson)
@@ -114,9 +106,6 @@ describe('Relationship API Controller Test', () => {
       const expectedJson = {
         message: 'フォローしました。',
       }
-
-      // Delete Test Data
-      await deleteTestUser(testCurrentUser.id)
 
       expect(response.status).toEqual(201)
       expect(response.body.data).toEqual(expectedJson)
@@ -144,9 +133,6 @@ describe('Relationship API Controller Test', () => {
       const expectedJson = {
         message: 'フォローを解除しました。',
       }
-
-      // Delete FirebaseCurrentUser
-      await deleteTestUser(testCurrentUser.id)
 
       expect(response.status).toEqual(200)
       expect(response.body.data).toEqual(expectedJson)

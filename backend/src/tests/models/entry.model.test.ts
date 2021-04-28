@@ -1,4 +1,4 @@
-import { createTestEntry, createTestRoom, createTestUser, deleteTestRoom, deleteTestUser } from '../common'
+import { createTestEntry, createTestRoom, createTestUser } from '../common'
 import { getOpponentUser } from '../../models/entry.model'
 import { createFirebaseUser } from '../firebase'
 
@@ -16,10 +16,6 @@ describe('Room Model Test', () => {
       await createTestEntry(user, room)
 
       const otherEntry = await getOpponentUser(room, currentUser)
-
-      // Delete Test Data
-      await deleteTestRoom(room.id)
-      await deleteTestUser(currentUser.id)
 
       expect(otherEntry.user).toEqual(user)
     })
