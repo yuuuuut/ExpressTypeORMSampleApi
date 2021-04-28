@@ -18,7 +18,7 @@ const update = async (req: Request, res: Response) => {
     const currentUser = await getCuurentUser(currentUserId)
     const profile = await model.update(currentUser, body)
     response.data = {
-      profile: profile,
+      profile,
       message: 'プロフィールの更新に成功しました。',
     }
   } catch (err) {

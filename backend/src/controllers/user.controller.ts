@@ -14,7 +14,7 @@ const index = async (req: Request, res: Response) => {
 
   try {
     const users = await model.index()
-    response.data = { users: users }
+    response.data = { users }
   } catch (err) {
     response.status = err.status || 500
     response.error = { message: err.message }
@@ -62,7 +62,10 @@ const create = async (req: Request, res: Response) => {
 
   try {
     const { user, isCreate } = await model.create(body)
-    response.data = { user, isCreate }
+    response.data = {
+      user,
+      isCreate,
+    }
   } catch (err) {
     response.status = err.status || 500
     response.error = { message: err.message }

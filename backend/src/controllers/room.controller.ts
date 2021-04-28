@@ -16,10 +16,10 @@ const show = async (req: Request, res: Response) => {
 
   try {
     const currentUser = await getCuurentUser(currentUserId)
-    const data = await roomModel.show(roomId, currentUser)
+    const { room, otherEntry } = await roomModel.show(roomId, currentUser)
     response.data = {
-      room: data.room,
-      otherEntry: data.otherEntry,
+      room,
+      otherEntry,
     }
   } catch (err) {
     response.status = err.status || 500
@@ -41,11 +41,11 @@ const create = async (req: Request, res: Response) => {
 
   try {
     const currentUser = await getCuurentUser(currentUserId)
-    const data = await roomModel.create(userId, currentUser)
+    const { room, currentUserEntry, userEntry } = await roomModel.create(userId, currentUser)
     response.data = {
-      room: data.room,
-      currentUserEntry: data.currentUserEntry,
-      userEntry: data.userEntry,
+      room,
+      currentUserEntry,
+      userEntry,
     }
   } catch (err) {
     response.status = err.status || 500

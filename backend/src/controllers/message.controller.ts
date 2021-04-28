@@ -22,10 +22,8 @@ const index = async (req: Request, res: Response) => {
   const roomId = req.params.id
 
   try {
-    const data = await model.index(roomId)
-    response.data = {
-      messages: data.messages,
-    }
+    const { messages } = await model.index(roomId)
+    response.data = { messages }
   } catch (err) {
     response.status = err.status || 500
     response.error = { message: err.message }
