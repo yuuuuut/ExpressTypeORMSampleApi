@@ -38,7 +38,6 @@ export interface UserCreateApiReq {
 
 export interface UserCreateApiRes {
   user: User
-  profile: Profile | null
   isCreate: boolean
 }
 

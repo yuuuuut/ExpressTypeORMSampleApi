@@ -6,11 +6,8 @@ import { Profile, User } from '../entities'
 /**
  * profile model create
  */
-const create = async (user: User, em: EntityManager) => {
-  const profileData = em.create(Profile, {
-    user: user,
-  })
-
+const create = async (em: EntityManager) => {
+  const profileData = em.create(Profile)
   const profile = await em.save(profileData)
 
   return profile
@@ -21,9 +18,7 @@ const create = async (user: User, em: EntityManager) => {
  */
 const update = async (currentUser: User, body: ProfileUpdateApiReq) => {
   const profileRepository = getManager().getRepository(Profile)
-  const profile = await profileRepository.findOne({
-    where: { user: currentUser.id },
-  })
+  const profile = await profileRepository.findOne(currentUser.profile)
   if (!profile)
     throw Object.assign(new Error('プロフィールが存在しません。'), {
       status: 404,

@@ -61,12 +61,8 @@ const create = async (req: Request, res: Response) => {
   const body = req.body as UserCreateApiReq
 
   try {
-    const data = await model.create(body)
-    response.data = {
-      user: data.user,
-      profile: data.profile,
-      isCreate: data.isCreate,
-    }
+    const { user, isCreate } = await model.create(body)
+    response.data = { user, isCreate }
   } catch (err) {
     response.status = err.status || 500
     response.error = { message: err.message }

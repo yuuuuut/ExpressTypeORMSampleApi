@@ -3,7 +3,7 @@ import dotenv from 'dotenv'
 import axios from 'axios'
 
 import firebaseAdmin from '../libs/firebase'
-import { User } from '../entities'
+import { Profile, User } from '../entities'
 import { Req } from './common'
 
 /***************************
@@ -19,7 +19,7 @@ const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustom
  *   Main
  **************************/
 
-export async function createFirebaseUser() {
+export async function createFirebaseUser(profile?: Profile) {
   const userRepository = getManager().getRepository(User)
   const firebaseUser = await firebaseAdmin.auth().getUser(UID)
 
@@ -27,6 +27,7 @@ export async function createFirebaseUser() {
   newUser.id = firebaseUser.uid
   newUser.displayName = firebaseUser.displayName
   newUser.photoURL = firebaseUser.photoURL
+  newUser.profile = profile || undefined
   const userDate = await userRepository.save(newUser)
 
   const user = await userRepository.findOne(userDate.id)

@@ -10,8 +10,10 @@ import {
 import {
   createTestEntry,
   createTestMessage,
+  createTestProfile,
   createTestRoom,
   createTestUser,
+  deleteTestProfile,
   deleteTestRoom,
   deleteTestUser,
 } from '../common'
@@ -25,7 +27,8 @@ describe('Message API Controller Test', () => {
   describe('Index Test', () => {
     it('GET /api/rooms/:id/messages Messagesの取得ができること', async () => {
       // Create Test Data
-      const testCurrentUser = await createFirebaseUser()
+      const testProfile = await createTestProfile()
+      const testCurrentUser = await createFirebaseUser(testProfile)
       const testUser = await createTestUser()
       const testRoom = await createTestRoom()
       await createTestEntry(testCurrentUser, testRoom)
@@ -43,6 +46,7 @@ describe('Message API Controller Test', () => {
         messages: [
           {
             id: testMessage.id,
+            checked: testMessage.checked,
             kind: testMessage.kind,
             isApproval: testMessage.isApproval,
             rejected: testMessage.rejected,
@@ -53,6 +57,11 @@ describe('Message API Controller Test', () => {
               isAdmin: testCurrentUser.isAdmin,
               followersCount: testCurrentUser.followersCount,
               followingsCount: testCurrentUser.followingsCount,
+              profile: {
+                id: expect.anything(),
+                lineId: testProfile.lineId,
+                twitterId: testProfile.twitterId,
+              },
             },
           },
         ],
@@ -60,6 +69,7 @@ describe('Message API Controller Test', () => {
 
       // Delete Test Data
       await deleteTestUser(testCurrentUser.id)
+      await deleteTestProfile(testProfile.id)
       await deleteTestRoom(testRoom.id)
 
       expect(response.status).toEqual(200)
@@ -92,6 +102,7 @@ describe('Message API Controller Test', () => {
       const expectedJson = {
         message: {
           id: expect.anything(),
+          checked: false,
           kind: data.kind,
           isApproval: false,
           rejected: false,
@@ -141,6 +152,7 @@ describe('Message API Controller Test', () => {
       const expectedJson = {
         message: {
           id: testMessage.id,
+          checked: testMessage.checked,
           kind: testMessage.kind,
           isApproval: true,
           rejected: testMessage.rejected,
@@ -176,6 +188,7 @@ describe('Message API Controller Test', () => {
       const expectedJson = {
         message: {
           id: testMessage.id,
+          checked: testMessage.checked,
           kind: testMessage.kind,
           isApproval: testMessage.isApproval,
           rejected: true,

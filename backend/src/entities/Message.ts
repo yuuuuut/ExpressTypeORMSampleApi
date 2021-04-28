@@ -1,13 +1,4 @@
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryColumn,
-  PrimaryGeneratedColumn,
-} from 'typeorm'
-
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm'
 import { Room, User } from '.'
 
 @Entity('messages')
@@ -23,6 +14,9 @@ export class Message extends BaseEntity {
 
   @Column({ default: false })
   rejected: boolean
+
+  @Column({ default: false, nullable: false })
+  checked: boolean
 
   @ManyToOne((type) => User, (user) => user.messages, {
     nullable: false,

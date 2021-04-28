@@ -11,7 +11,13 @@ const index = async (roomId: string) => {
 
   const messages = await messageRepository.find({
     where: { room: roomId },
-    relations: ['user'],
+    join: {
+      alias: 'message',
+      leftJoinAndSelect: {
+        user: 'message.user',
+        profile: 'user.profile',
+      },
+    },
   })
 
   return { messages }

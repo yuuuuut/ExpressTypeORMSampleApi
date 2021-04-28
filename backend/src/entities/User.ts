@@ -1,5 +1,17 @@
-import { AfterLoad, BaseEntity, Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryColumn } from 'typeorm'
-import { Entry, Message, Notification, Relationship, Tag } from '.'
+import {
+  AfterLoad,
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
+  OneToOne,
+  PrimaryColumn,
+} from 'typeorm'
+
+import { Entry, Message, Notification, Profile, Relationship, Tag } from '.'
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -14,6 +26,10 @@ export class User extends BaseEntity {
 
   @Column({ default: false })
   isAdmin: boolean
+
+  @OneToOne(() => Profile)
+  @JoinColumn({ name: 'profile_id' })
+  profile?: Profile
 
   @OneToMany((type) => Entry, (entries) => entries.user)
   entries: Entry[]

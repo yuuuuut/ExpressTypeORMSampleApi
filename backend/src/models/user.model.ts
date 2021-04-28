@@ -43,22 +43,23 @@ const create = async (body: UserCreateApiReq) => {
 
   const user = await userRepository.findOne(body.id)
   if (!user) {
-    const { user, profile } = await getManager().transaction(async (em) => {
+    const { user } = await getManager().transaction(async (em) => {
+      const profile = await profileModel.create(em)
       const userData = em.create(User, {
         id: body.id,
         displayName: body.displayName,
         photoURL: body.photoURL,
+        profile: profile,
       })
 
       const user = await em.save(userData)
-      const profile = await profileModel.create(user, em)
 
-      return { user, profile }
+      return { user }
     })
 
-    return { user, profile, isCreate: true }
+    return { user, isCreate: true }
   } else {
-    return { user, profile: null, isCreate: false }
+    return { user, isCreate: false }
   }
 }
 

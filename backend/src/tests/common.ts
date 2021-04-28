@@ -21,13 +21,14 @@ async function getTestUser(userId: string) {
 /**
  * Test用Userを作成する。
  */
-async function createTestUser(name?: string) {
+async function createTestUser(name?: string, profile?: Profile) {
   const userRepository = getManager().getRepository(User)
 
   const newUser = new User()
   newUser.id = name || 'TestUser'
   newUser.displayName = 'TestDisName'
   newUser.photoURL = 'TestUserPhoto'
+  newUser.profile = profile || undefined
   const userData = await userRepository.save(newUser)
 
   const user = await userRepository.findOne(userData.id)
@@ -39,11 +40,10 @@ async function createTestUser(name?: string) {
 /**
  * Test用Profileを作成する。
  */
-async function createTestProfile(user: User) {
+async function createTestProfile() {
   const profileRepository = getManager().getRepository(Profile)
 
   const profile = new Profile()
-  profile.user = user
 
   return await profileRepository.save(profile)
 }
@@ -120,6 +120,16 @@ async function deleteTestRoom(id: string) {
   if (room) await roomRepository.delete(id)
 }
 
+/**
+ * Test用Profileを削除する。
+ */
+async function deleteTestProfile(id: number) {
+  const profileRepository = getManager().getRepository(Profile)
+  const profile = await profileRepository.findOne(id)
+
+  if (profile) await profileRepository.delete(id)
+}
+
 export {
   Req,
   getTestUser,
@@ -131,4 +141,5 @@ export {
   createTestMessage,
   deleteTestUser,
   deleteTestRoom,
+  deleteTestProfile,
 }

@@ -1,5 +1,5 @@
 import { TestIResponse, UserCreateApiRes, UserShowApiRes } from '../../types'
-import { Req, createTestUser, deleteTestUser } from '../common'
+import { Req, createTestUser, deleteTestUser, deleteTestProfile } from '../common'
 import { authCheckMock, createFirebaseUser } from '../firebase'
 
 /***************************
@@ -82,10 +82,30 @@ describe('User API Controller Test', () => {
       // Response
       const response = (await Req.post('/users').send(userData)) as TestIResponse<UserCreateApiRes>
 
+      // ExpectedJson Data
+      const expectedJson = {
+        user: {
+          id: userData.id,
+          displayName: userData.displayName,
+          photoURL: userData.photoURL,
+          isAdmin: false,
+          profile: {
+            id: expect.anything(),
+            lineId: null,
+            twitterId: null,
+          },
+        },
+        isCreate: true,
+      }
+
+      // Delete Test Data
+      if (response.body.data.user.profile) {
+        await deleteTestUser(userData.id)
+        await deleteTestProfile(response.body.data.user.profile.id)
+      }
+
       expect(response.status).toEqual(201)
-      expect(response.body.data.user).toEqual({ ...userData, isAdmin: false })
-      expect(response.body.data.isCreate).toEqual(true)
-      expect(response.body.data.profile?.user.id).toEqual(userData.id)
+      expect(response.body.data).toEqual(expectedJson)
     })
 
     it('POST /api/users Userが存在する場合、Userの作成が行われないこと。', async () => {
