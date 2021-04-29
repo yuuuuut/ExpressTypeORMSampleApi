@@ -62,6 +62,14 @@ const UserShowPage = (): JSX.Element => {
     }
   }
 
+  async function getRooms() {
+    const token = localStorage.getItem('@token')
+    if (!token) return
+
+    const response = await roomAPI.index(token)
+    console.log(response)
+  }
+
   useEffect(() => {
     getUser()
   }, [])
@@ -72,6 +80,7 @@ const UserShowPage = (): JSX.Element => {
         <>
           <div>{u.id}</div>
           <div>{u.displayName}</div>
+          <div onClick={getRooms}>Get Rooms</div>
           {isMutualFollow && (
             <div>
               {isRoom ? (

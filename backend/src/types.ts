@@ -1,4 +1,4 @@
-import { Entry, Message, Profile, Relationship, Room, User } from './entities'
+import { Message, Profile, Relationship, Room, User } from './entities'
 
 export interface IResponse<T> {
   status: number
@@ -67,18 +67,16 @@ export interface RelationshipDestroyApiRes {
   message: string
 }
 
+export interface RoomIndexApiRes {
+  rooms: Room[]
+}
+
 export interface RoomShowApiRes {
   room: Room
-  otherEntry: {
-    id: Entry['id']
-    user: Entry['user']
-  }
 }
 
 export interface RoomCreateApiRes {
   room: Room
-  currentUserEntry: Entry
-  userEntry: Entry
 }
 
 export interface MessageCreateApiReq {

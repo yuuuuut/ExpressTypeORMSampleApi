@@ -1,5 +1,5 @@
 import { RoomCreateApiRes, RoomShowApiRes, TestIResponse } from '../../types'
-import { createTestEntry, createTestRoom, createTestUser } from '../common'
+import { createTestRoom, createTestUser } from '../common'
 import { authCheckMock, createFirebaseUser } from '../firebase'
 
 /***************************
@@ -11,28 +11,33 @@ describe('Room Controller Test', () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()
       const testUser = await createTestUser()
-      const room = await createTestRoom()
-      await createTestEntry(testCurrentUser, room)
-      await createTestEntry(testUser, room)
+      const testRoom = await createTestRoom(testUser, testCurrentUser)
 
       // Response
-      const response = (await authCheckMock(`/rooms/${room.id}`, 'GET')) as TestIResponse<RoomShowApiRes>
+      const response = (await authCheckMock(`/rooms/${testRoom.id}`, 'GET')) as TestIResponse<RoomShowApiRes>
 
       // ExpectedJson Data
       const expectedJson = {
         room: {
-          id: room.id,
-        },
-        otherEntry: {
-          id: expect.anything(),
-          user: {
-            id: testUser.id,
-            displayName: testUser.displayName,
-            photoURL: testUser.photoURL,
-            isAdmin: testUser.isAdmin,
-            followingsCount: testUser.followingsCount,
-            followersCount: testUser.followersCount,
-          },
+          id: testRoom.id,
+          users: [
+            {
+              id: testCurrentUser.id,
+              displayName: testCurrentUser.displayName,
+              photoURL: testCurrentUser.photoURL,
+              isAdmin: testCurrentUser.isAdmin,
+              followingsCount: testCurrentUser.followingsCount,
+              followersCount: testCurrentUser.followersCount,
+            },
+            {
+              id: testUser.id,
+              displayName: testUser.displayName,
+              photoURL: testUser.photoURL,
+              isAdmin: testUser.isAdmin,
+              followingsCount: testUser.followingsCount,
+              followersCount: testUser.followersCount,
+            },
+          ],
         },
       }
 
@@ -58,27 +63,31 @@ describe('Room Controller Test', () => {
 
       // ExpectedJson Data
       const expectedJson = {
-        currentUserEntry: {
-          user: {
-            id: testCurrentUser.id,
-            displayName: testCurrentUser.displayName,
-            photoURL: testCurrentUser.photoURL,
-            isAdmin: testCurrentUser.isAdmin,
-          },
-        },
-        userEntry: {
-          user: {
-            id: testUser.id,
-            displayName: testUser.displayName,
-            photoURL: testUser.photoURL,
-            isAdmin: testUser.isAdmin,
-          },
+        room: {
+          id: expect.anything(),
+          users: [
+            {
+              id: testUser.id,
+              displayName: testUser.displayName,
+              photoURL: testUser.photoURL,
+              isAdmin: testUser.isAdmin,
+              followingsCount: testUser.followingsCount,
+              followersCount: testUser.followersCount,
+            },
+            {
+              id: testCurrentUser.id,
+              displayName: testCurrentUser.displayName,
+              photoURL: testCurrentUser.photoURL,
+              isAdmin: testCurrentUser.isAdmin,
+              followingsCount: testCurrentUser.followingsCount,
+              followersCount: testCurrentUser.followersCount,
+            },
+          ],
         },
       }
 
       expect(response.status).toEqual(201)
-      expect(response.body.data.currentUserEntry.user).toEqual(expectedJson.currentUserEntry.user)
-      expect(response.body.data.userEntry.user).toEqual(expectedJson.userEntry.user)
+      expect(response.body.data).toEqual(expectedJson)
     })
   })
 })

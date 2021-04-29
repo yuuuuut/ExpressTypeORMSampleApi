@@ -4,6 +4,10 @@ import { Axios } from './axios'
 /***************************
  *   Types
  **************************/
+interface RoomIndexRes {
+  rooms: Room[]
+}
+
 interface RoomShowRes {
   room: Room
   otherEntry: {
@@ -23,12 +27,22 @@ interface RoomCreateRes {
  **************************/
 
 /**
+ * room index api
+ */
+const index = async (token: string): Promise<AxiosResponse<IResponse<RoomIndexRes>>> => {
+  const response = (await Axios.get(`/rooms`, {
+    headers: {
+      Authorization: 'Bearer ' + token,
+    },
+  })) as AxiosResponse<IResponse<RoomIndexRes>>
+
+  return response
+}
+
+/**
  * room show api
  */
-const show = async (
-  id: string,
-  token: string
-): Promise<AxiosResponse<IResponse<RoomShowRes>>> => {
+const show = async (id: string, token: string): Promise<AxiosResponse<IResponse<RoomShowRes>>> => {
   const response = (await Axios.get(`/rooms/${id}`, {
     headers: {
       Authorization: 'Bearer ' + token,
@@ -41,10 +55,7 @@ const show = async (
 /**
  * room create api
  */
-const create = async (
-  id: string,
-  token: string
-): Promise<AxiosResponse<IResponse<RoomCreateRes>>> => {
+const create = async (id: string, token: string): Promise<AxiosResponse<IResponse<RoomCreateRes>>> => {
   const response = (await Axios.post(
     `/users/${id}/rooms`,
     {},
@@ -58,4 +69,4 @@ const create = async (
   return response
 }
 
-export { show, create }
+export { index, show, create }

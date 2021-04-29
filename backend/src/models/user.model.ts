@@ -3,7 +3,7 @@ import { getManager } from 'typeorm'
 import * as relationshipModel from './relationship.model'
 import * as profileModel from './profile.model'
 import { UserCreateApiReq } from '../types'
-import { isRoomBool } from './entry.model'
+import * as roomModel from './room.model'
 import { User } from '../entities'
 
 /**
@@ -27,7 +27,7 @@ const show = async (userId: string, currentUser: User) => {
   if (user.id !== currentUser.id) {
     const isFollowing = await relationshipModel.isFollowingBool(userId, currentUser.id)
     const isMutualFollow = await relationshipModel.isMutualFollowBool(userId, currentUser.id)
-    const { isRoom, roomId } = await isRoomBool(user.id, currentUser.id)
+    const { isRoom, roomId } = await roomModel.isRoomBool(user.id, currentUser.id)
 
     return { user, isFollowing, isMutualFollow, isRoom, roomId }
   }

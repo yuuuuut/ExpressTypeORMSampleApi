@@ -3,8 +3,10 @@ import { useHistory, useLocation } from 'react-router'
 
 import * as messageAPI from '../../apis/message.api'
 import * as roomAPI from '../../apis/room.api'
+import { useAuth } from '../../contexts/AuthContext'
 
 const RoomShowPage = (): JSX.Element => {
+  const { user } = useAuth()
   const location = useLocation()
   const id = location.pathname.split('/rooms/')[1]
 
@@ -71,6 +73,21 @@ const RoomShowPage = (): JSX.Element => {
     history.go(0)
   }
 
+  const updateMessageRejected = async (messageId: number) => {
+    const token = localStorage.getItem('@token')
+    if (!token) {
+      console.log('None Token')
+      return
+    }
+
+    const response = await messageAPI.update(messageId, 'REJECTED', token)
+    console.log(response)
+    if (!response.data.data) {
+      return
+    }
+    history.go(0)
+  }
+
   useEffect(() => {
     getRoom()
     getMessages()
@@ -94,13 +111,25 @@ const RoomShowPage = (): JSX.Element => {
                             <h3>LINE ID 表示</h3>
                           ) : (
                             <>
-                              <h3>LINE ID の交換を許可しますか??</h3>
-                              <div
-                                onClick={() => updateMessageIsApproval(m.id)}
-                              >
-                                交換しましょう!!
-                              </div>
-                              <div>ごめんなさい...</div>
+                              {m.user.id !== user?.id ? (
+                                <>
+                                  <h3>LINE ID の交換を許可しますか??</h3>
+                                  <div
+                                    onClick={() =>
+                                      updateMessageIsApproval(m.id)
+                                    }
+                                  >
+                                    交換しましょう!!
+                                  </div>
+                                  <div
+                                    onClick={() => updateMessageRejected(m.id)}
+                                  >
+                                    ごめんなさい...
+                                  </div>
+                                </>
+                              ) : (
+                                <h3>LINE IDを送りました。</h3>
+                              )}
                             </>
                           )}
                         </div>

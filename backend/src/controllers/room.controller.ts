@@ -1,8 +1,29 @@
 import { Request, Response } from 'express'
 
-import { IResponse, RoomCreateApiRes, RoomShowApiRes } from '../types'
+import { IResponse, RoomCreateApiRes, RoomIndexApiRes, RoomShowApiRes } from '../types'
 import { getCuurentUser } from '../models/common.model'
-import * as roomModel from '../models/room.model'
+import * as model from '../models/room.model'
+
+/**
+ * room controller index
+ */
+const index = async (req: Request, res: Response) => {
+  const response: IResponse<RoomIndexApiRes> = {
+    status: 200,
+  }
+  const currentUserId = req.currentUserId
+
+  try {
+    const currentUser = await getCuurentUser(currentUserId)
+    const { rooms } = await model.index(currentUser)
+    response.data = { rooms }
+  } catch (err) {
+    response.status = err.status || 500
+    response.error = { message: err.message }
+  }
+
+  return res.status(response.status).json(response)
+}
 
 /**
  * room controller show
@@ -16,11 +37,8 @@ const show = async (req: Request, res: Response) => {
 
   try {
     const currentUser = await getCuurentUser(currentUserId)
-    const { room, otherEntry } = await roomModel.show(roomId, currentUser)
-    response.data = {
-      room,
-      otherEntry,
-    }
+    const { room } = await model.show(roomId, currentUser)
+    response.data = { room }
   } catch (err) {
     response.status = err.status || 500
     response.error = { message: err.message }
@@ -41,12 +59,8 @@ const create = async (req: Request, res: Response) => {
 
   try {
     const currentUser = await getCuurentUser(currentUserId)
-    const { room, currentUserEntry, userEntry } = await roomModel.create(userId, currentUser)
-    response.data = {
-      room,
-      currentUserEntry,
-      userEntry,
-    }
+    const { room } = await model.create(userId, currentUser)
+    response.data = { room }
   } catch (err) {
     response.status = err.status || 500
     response.error = { message: err.message }
@@ -55,4 +69,4 @@ const create = async (req: Request, res: Response) => {
   return res.status(response.status).json(response)
 }
 
-export { show, create }
+export { index, show, create }

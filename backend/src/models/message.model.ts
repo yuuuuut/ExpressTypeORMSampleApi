@@ -8,6 +8,10 @@ import { Message, Room, User } from '../entities'
  */
 const index = async (roomId: string) => {
   const messageRepository = getManager().getRepository(Message)
+  const roomRepository = getManager().getRepository(Room)
+
+  const room = await roomRepository.findOne(roomId)
+  if (!room) throw Object.assign(new Error('ルームが存在しません。'), { status: 404 })
 
   const messages = await messageRepository.find({
     where: { room: roomId },

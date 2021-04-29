@@ -11,7 +11,7 @@ import {
   PrimaryColumn,
 } from 'typeorm'
 
-import { Entry, Message, Notification, Profile, Relationship, Tag } from '.'
+import { Message, Notification, Profile, Relationship, Room, Tag } from '.'
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -30,9 +30,6 @@ export class User extends BaseEntity {
   @OneToOne(() => Profile)
   @JoinColumn({ name: 'profile_id' })
   profile?: Profile
-
-  @OneToMany((type) => Entry, (entries) => entries.user)
-  entries: Entry[]
 
   @OneToMany((type) => Message, (messages) => messages.user)
   messages: Message[]
@@ -84,4 +81,18 @@ export class User extends BaseEntity {
     },
   })
   tags: Tag[]
+
+  @ManyToMany((type) => Room, (room) => room.users)
+  @JoinTable({
+    name: 'entries',
+    joinColumn: {
+      name: 'user_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'room_id',
+      referencedColumnName: 'id',
+    },
+  })
+  rooms: Room[]
 }

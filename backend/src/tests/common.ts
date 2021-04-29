@@ -1,7 +1,7 @@
 import { getManager } from 'typeorm'
 import request from 'supertest'
 
-import { Entry, Message, Profile, Relationship, Room, User } from '../entities'
+import { Message, Profile, Relationship, Room, User } from '../entities'
 
 // API URL
 const Req = request('http://localhost:4000/api')
@@ -58,24 +58,13 @@ async function createTestRelationship(currentUser: User, followUser: User) {
 }
 
 /**
- * Test用Entryを作成する。
- */
-async function createTestEntry(user: User, room: Room) {
-  const entryRepository = getManager().getRepository(Entry)
-  const entry = new Entry()
-  entry.room = room
-  entry.user = user
-
-  return await entryRepository.save(entry)
-}
-
-/**
  * Test用Roomを作成する。
  */
-async function createTestRoom() {
+async function createTestRoom(user: User, currentUser: User) {
   const roomRepository = getManager().getRepository(Room)
   const room = new Room()
   room.id = 'TestRoom'
+  room.users = [user, currentUser]
 
   return await roomRepository.save(room)
 }
@@ -99,7 +88,6 @@ export {
   createTestUser,
   createTestProfile,
   createTestRelationship,
-  createTestEntry,
   createTestRoom,
   createTestMessage,
 }

@@ -7,7 +7,7 @@ import {
   TestIResponse,
 } from '../../types'
 
-import { createTestEntry, createTestMessage, createTestProfile, createTestRoom, createTestUser } from '../common'
+import { createTestMessage, createTestProfile, createTestRoom, createTestUser } from '../common'
 import { authCheckMock, createFirebaseUser } from '../firebase'
 
 /***************************
@@ -20,9 +20,7 @@ describe('Message API Controller Test', () => {
       const testProfile = await createTestProfile()
       const testCurrentUser = await createFirebaseUser(testProfile)
       const testUser = await createTestUser()
-      const testRoom = await createTestRoom()
-      await createTestEntry(testCurrentUser, testRoom)
-      await createTestEntry(testUser, testRoom)
+      const testRoom = await createTestRoom(testUser, testCurrentUser)
       const testMessage = await createTestMessage(testCurrentUser, testRoom)
 
       // Response
@@ -67,9 +65,7 @@ describe('Message API Controller Test', () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()
       const testUser = await createTestUser()
-      const testRoom = await createTestRoom()
-      await createTestEntry(testCurrentUser, testRoom)
-      await createTestEntry(testUser, testRoom)
+      const testRoom = await createTestRoom(testUser, testCurrentUser)
 
       // Test Data
       const data = {
@@ -114,7 +110,8 @@ describe('Message API Controller Test', () => {
     it('PUT /api/messages/:id MessageのisApprovalをTrueにできること。', async () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()
-      const testRoom = await createTestRoom()
+      const testUser = await createTestUser()
+      const testRoom = await createTestRoom(testUser, testCurrentUser)
       const testMessage = await createTestMessage(testCurrentUser, testRoom)
 
       // Test Data
@@ -146,7 +143,8 @@ describe('Message API Controller Test', () => {
     it('PUT /api/messages/:id MessageのrejectedをTrueにできること。', async () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()
-      const testRoom = await createTestRoom()
+      const testUser = await createTestUser()
+      const testRoom = await createTestRoom(testUser, testCurrentUser)
       const testMessage = await createTestMessage(testCurrentUser, testRoom)
 
       // Test Data
