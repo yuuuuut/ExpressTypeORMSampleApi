@@ -1,6 +1,6 @@
-import { ProfileUpdateApiRes, TestIResponse } from '../../types'
-import { authCheckMock, createFirebaseUser } from '../firebase'
-import { createTestProfile } from '../common'
+import { ProfileUpdateApiRes, TestIResponse } from '@/types'
+import { authCheckMock, createFirebaseUser } from '@/tests/firebase'
+import { createTestProfile } from '@/tests/common'
 
 /***************************
  *    Main

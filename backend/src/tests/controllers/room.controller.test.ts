@@ -1,6 +1,6 @@
-import { RoomCreateApiRes, RoomShowApiRes, TestIResponse } from '../../types'
-import { createTestRoom, createTestUser } from '../common'
-import { authCheckMock, createFirebaseUser } from '../firebase'
+import { RoomCreateApiRes, RoomShowApiRes, TestIResponse } from '@/types'
+import { authCheckMock, createFirebaseUser } from '@/tests/firebase'
+import { createTestRoom, createTestUser } from '@/tests/common'
 
 /***************************
  *    Main
@@ -26,12 +26,16 @@ describe('Room Controller Test', () => {
               displayName: testCurrentUser.displayName,
               photoURL: testCurrentUser.photoURL,
               isAdmin: testCurrentUser.isAdmin,
+              followersCount: '0',
+              followingsCount: '0',
             },
             {
               id: testUser.id,
               displayName: testUser.displayName,
               photoURL: testUser.photoURL,
               isAdmin: testUser.isAdmin,
+              followersCount: '0',
+              followingsCount: '0',
             },
           ],
         },
@@ -67,12 +71,16 @@ describe('Room Controller Test', () => {
               displayName: testUser.displayName,
               photoURL: testUser.photoURL,
               isAdmin: testUser.isAdmin,
+              followersCount: '0',
+              followingsCount: '0',
             },
             {
               id: testCurrentUser.id,
               displayName: testCurrentUser.displayName,
               photoURL: testCurrentUser.photoURL,
               isAdmin: testCurrentUser.isAdmin,
+              followersCount: '0',
+              followingsCount: '0',
             },
           ],
         },

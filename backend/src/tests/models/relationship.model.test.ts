@@ -1,9 +1,9 @@
-import { createTestRelationship, createTestUser } from '../common'
-import { createFirebaseUser } from '../firebase'
-import { __local__ } from 'backend/src/models/user.model'
+import { createTestRelationship, createTestUser } from '@/tests/common'
+import { createFirebaseUser } from '@/tests/firebase'
+import { __local__ } from '@/models/user.model'
 
 /***************************
- *    Main
+ *   Main
  **************************/
 describe('Relationship Model Test', () => {
   describe('isFollowingBool Test', () => {
@@ -11,13 +11,12 @@ describe('Relationship Model Test', () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()
       const testUser = await createTestUser()
-      await createTestRelationship(testUser, testCurrentUser)
+      await createTestRelationship(testCurrentUser, testUser)
 
       const val = await __local__.isFollowingBool(testUser.id, testCurrentUser.id)
 
       expect(val).toEqual(true)
     })
-
     it('Userをフォローしていない場合、Falseを返すこと。', async () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()

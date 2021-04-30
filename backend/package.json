@@ -1,6 +1,5 @@
 {
   "name": "backend",
-  "module": "esnext",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -9,7 +8,7 @@
     "dev": "cross-env NODE_ENV=dev nodemon -L",
     "test-dev": "cross-env NODE_ENV=test nodemon -L",
     "ts-node": "ts-node",
-    "test": "ts-node node_modules/jest/bin/jest.js"
+    "test": "jest"
   },
   "dependencies": {
     "axios": "^0.21.1",
@@ -40,6 +39,7 @@
     "jest": "^26.6.3",
     "nodemon": "^2.0.6",
     "supertest": "^6.1.3",
-    "ts-jest": "^26.5.5"
+    "ts-jest": "^26.5.5",
+    "tsconfig-paths": "^3.9.0"
   }
 }

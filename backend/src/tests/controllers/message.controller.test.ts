@@ -5,10 +5,10 @@ import {
   MessageUpdateApiReq,
   MessageUpdateApiRes,
   TestIResponse,
-} from '../../types'
+} from '@/types'
 
-import { createTestMessage, createTestProfile, createTestRoom, createTestUser } from '../common'
-import { authCheckMock, createFirebaseUser } from '../firebase'
+import { createTestMessage, createTestProfile, createTestRoom, createTestUser } from '@/tests/common'
+import { authCheckMock, createFirebaseUser } from '@/tests/firebase'
 
 /***************************
  *    Main
@@ -43,6 +43,8 @@ describe('Message API Controller Test', () => {
               displayName: testCurrentUser.displayName,
               photoURL: testCurrentUser.photoURL,
               isAdmin: testCurrentUser.isAdmin,
+              followersCount: '0',
+              followingsCount: '0',
               profile: {
                 id: expect.anything(),
                 lineId: testProfile.lineId,
@@ -90,6 +92,8 @@ describe('Message API Controller Test', () => {
             displayName: testCurrentUser.displayName,
             photoURL: testCurrentUser.photoURL,
             isAdmin: testCurrentUser.isAdmin,
+            followersCount: '0',
+            followingsCount: '0',
           },
           room: {
             id: testRoom.id,

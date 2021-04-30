@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
 
-import { IResponse, UserCreateApiReq, UserCreateApiRes, UserIndexApiRes, UserShowApiRes } from '../types'
-import { getCuurentUser } from '../models/common.model'
-import * as model from '../models/user.model'
+import { IResponse, UserCreateApiReq, UserCreateApiRes, UserIndexApiRes, UserShowApiRes } from '@/types'
+import { getCuurentUser } from '@/models/common.model'
+import * as model from '@/models/user.model'
 
 /**
  * user controller index
@@ -14,6 +14,7 @@ const index = async (req: Request, res: Response) => {
 
   try {
     const users = await model.index()
+    console.log(users)
     response.data = { users }
   } catch (err) {
     response.status = err.status || 500

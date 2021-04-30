@@ -2,7 +2,7 @@ import { getManager, SelectQueryBuilder } from 'typeorm'
 
 import * as profileModel from './profile.model'
 import { UserCreateApiReq } from '../types'
-import * as roomModel from './room.model'
+import * as roomModel from '@/models/room.model'
 import { Relationship, User } from '../entities'
 
 /**

@@ -4,10 +4,10 @@ import {
   RelationshipFollowersApiRes,
   RelationshipFollowingsApiRes,
   TestIResponse,
-} from '../../types'
+} from '@/types'
 
-import { createTestRelationship, createTestUser, getTestUser } from '../common'
-import { authCheckMock, createFirebaseUser } from '../firebase'
+import { createTestRelationship, createTestUser, getTestUser } from '@/tests/common'
+import { authCheckMock, createFirebaseUser } from '@/tests/firebase'
 
 /***************************
  *    Main
@@ -18,7 +18,7 @@ describe('Relationship API Controller Test', () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()
       const testUser = await createTestUser()
-      await createTestRelationship(testUser, testCurrentUser)
+      await createTestRelationship(testCurrentUser, testUser)
 
       // Response
       const response = (await authCheckMock(
@@ -36,12 +36,12 @@ describe('Relationship API Controller Test', () => {
           {
             id: expect.anything(),
             follower: {
-              id: user.id,
-              displayName: user.displayName,
-              photoURL: user.photoURL,
-              isAdmin: user.isAdmin,
-              followersCount: user.followersCount,
-              followingsCount: user.followingsCount,
+              id: testUser.id,
+              displayName: testUser.displayName,
+              photoURL: testUser.photoURL,
+              isAdmin: testUser.isAdmin,
+              followersCount: '1',
+              followingsCount: '0',
             },
           },
         ],
@@ -125,7 +125,7 @@ describe('Relationship API Controller Test', () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()
       const testUser = await createTestUser()
-      await createTestRelationship(testCurrentUser, testUser)
+      await createTestRelationship(testUser, testCurrentUser)
 
       // Response
       const response = (await authCheckMock(

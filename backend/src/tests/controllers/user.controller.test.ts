@@ -1,6 +1,6 @@
-import { TestIResponse, UserCreateApiRes, UserShowApiRes } from '../../types'
-import { authCheckMock, createFirebaseUser } from '../firebase'
-import { Req, createTestUser } from '../common'
+import { TestIResponse, UserCreateApiRes, UserShowApiRes } from '@/types'
+import { authCheckMock, createFirebaseUser } from '@/tests/firebase'
+import { Req, createTestUser } from '@/tests/common'
 
 /***************************
  *    Main
@@ -21,6 +21,8 @@ describe('User API Controller Test', () => {
           displayName: testCurrentUser.displayName,
           photoURL: testCurrentUser.photoURL,
           isAdmin: testCurrentUser.isAdmin,
+          followersCount: '0',
+          followingsCount: '0',
         },
       }
 
@@ -45,6 +47,8 @@ describe('User API Controller Test', () => {
           displayName: testUser.displayName,
           photoURL: testUser.photoURL,
           isAdmin: testUser.isAdmin,
+          followersCount: '0',
+          followingsCount: '0',
         },
       }
 
