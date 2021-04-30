@@ -1,6 +1,5 @@
-import { getManager } from 'typeorm'
+import { getManager, SelectQueryBuilder } from 'typeorm'
 
-import * as relationshipModel from './relationship.model'
 import * as profileModel from './profile.model'
 import { UserCreateApiReq } from '../types'
 import * as roomModel from './room.model'
@@ -25,8 +24,8 @@ const show = async (userId: string, currentUser: User) => {
   if (!user) throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })
 
   if (user.id !== currentUser.id) {
-    const isFollowing = await relationshipModel.isFollowingBool(userId, currentUser.id)
-    const isMutualFollow = await relationshipModel.isMutualFollowBool(userId, currentUser.id)
+    const isFollowing = await isFollowingBool(user.id, currentUser.id)
+    const isMutualFollow = await isMutualFollowBool(user.id, currentUser.id)
     const { isRoom, roomId } = await roomModel.isRoomBool(user.id, currentUser.id)
 
     return { user, isFollowing, isMutualFollow, isRoom, roomId }
@@ -63,4 +62,92 @@ const create = async (body: UserCreateApiReq) => {
   }
 }
 
-export { index, show, create }
+/**
+ * user model followings
+ */
+const followings = async (userId: string) => {
+  const userRepository = getManager().getRepository(User)
+
+  const user = await userRepository.findOne(userId, {
+    relations: ['followings'],
+  })
+  if (!user) throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })
+
+  const followings = user.followings
+
+  return followings
+}
+
+/**
+ * user model followers
+ */
+const followers = async (userId: string) => {
+  const userRepository = getManager().getRepository(User)
+
+  const user = await userRepository.findOne(userId, {
+    relations: ['followers'],
+  })
+  if (!user) throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })
+
+  console.log(user)
+  const followers = user.followers
+
+  return followers
+}
+
+/**
+ * user model follow
+ */
+const follow = async (userId: string, currentUserId: string) => {
+  const userRepository = getManager().getRepository(User)
+
+  const currentUser = await userRepository.findOne(currentUserId)
+  const user = await userRepository.findOne(userId)
+  if (!user || !currentUser) throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })
+
+  currentUser.followings = [user]
+
+  await userRepository.save(currentUser)
+}
+
+/**
+ * user model unfollow
+ */
+const unfollow = async (userId: string, currentUserId: string) => {
+  const userRepository = getManager().getRepository(User)
+
+  const currentUser = await userRepository.findOne(currentUserId)
+  const user = await userRepository.findOne(userId)
+  if (!user || !currentUser) throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })
+
+  await userRepository.createQueryBuilder('user').relation(User, 'followers').of(user).remove(currentUser)
+}
+
+/**
+ *
+ */
+export const isFollowingBool = async (userId: string, currentUserId: string) => {
+  const userRepository = getManager().getRepository(User)
+
+  const user = await userRepository
+    .createQueryBuilder('user')
+    .leftJoinAndSelect('user.followings', 'followings')
+    .where('user.id = :userId', { userId: currentUserId })
+    .andWhere('followings.id = :followId', { followId: userId })
+    .getCount()
+
+  return Boolean(user)
+}
+
+/**
+ *
+ */
+export const isMutualFollowBool = async (userId: string, currentUserId: string) => {
+  const isFollowing = await isFollowingBool(userId, currentUserId)
+  const isAthorFollowing = await isFollowingBool(currentUserId, userId)
+  const isMutualFollow = isFollowing && isAthorFollowing
+
+  return isMutualFollow
+}
+
+export { index, show, create, followings, followers, follow, unfollow }

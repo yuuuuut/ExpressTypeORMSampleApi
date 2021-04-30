@@ -11,7 +11,7 @@ import {
   PrimaryColumn,
 } from 'typeorm'
 
-import { Message, Notification, Profile, Relationship, Room, Tag } from '.'
+import { Message, Notification, Profile, Room, Tag } from '.'
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -34,6 +34,13 @@ export class User extends BaseEntity {
   @OneToMany((type) => Message, (messages) => messages.user)
   messages: Message[]
 
+  @OneToMany((type) => Notification, (notification) => notification.visiter)
+  active_notifications: Notification[]
+
+  @OneToMany((type) => Notification, (notification) => notification.visited)
+  passive_notifications: Notification[]
+
+  /*
   @OneToMany((type) => Relationship, (followings) => followings.user)
   followings: Relationship[]
 
@@ -61,12 +68,54 @@ export class User extends BaseEntity {
 
     this.followersCount = count
   }
+  */
 
-  @OneToMany((type) => Notification, (notification) => notification.visiter)
-  active_notifications: Notification[]
+  @ManyToMany((type) => User, (user) => user.followings)
+  @JoinTable({
+    name: 'relationships',
+    joinColumn: {
+      name: 'user_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'follow_id',
+      referencedColumnName: 'id',
+    },
+  })
+  followers: User[]
 
-  @OneToMany((type) => Notification, (notification) => notification.visited)
-  passive_notifications: Notification[]
+  @ManyToMany((type) => User, (user) => user.followers)
+  followings: User[]
+
+  /*
+  @ManyToMany((type) => User, (user) => user.followers)
+  @JoinTable({
+    name: 'relationships',
+    joinColumn: {
+      name: 'user_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'follow_id',
+      referencedColumnName: 'id',
+    },
+  })
+  followings: User[]
+
+  @ManyToMany((type) => User, (user) => user.followings)
+  @JoinTable({
+    name: 'relationships',
+    joinColumn: {
+      name: 'follow_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'user_id',
+      referencedColumnName: 'id',
+    },
+  })
+  followers: User[]
+  */
 
   @ManyToMany((type) => Tag, (tag) => tag.users)
   @JoinTable({

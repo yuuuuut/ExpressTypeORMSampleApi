@@ -44,6 +44,34 @@ const Root = (): JSX.Element => {
     console.log(response)
   }
 
+  async function followings(u: string) {
+    const token = localStorage.getItem('@token')
+    if (!token) {
+      console.log('None Token')
+      return
+    }
+
+    console.log(token)
+
+    const response = await relatinoshipAPI.followings(u, token)
+
+    console.log(response)
+  }
+
+  async function unfollow(userId: string) {
+    const token = localStorage.getItem('@token')
+    if (!token) {
+      console.log('None Token')
+      return
+    }
+
+    console.log(token)
+
+    const response = await relatinoshipAPI.unfollow(userId, token)
+
+    console.log(response)
+  }
+
   useEffect(() => {
     getUsers()
   }, [])
@@ -51,11 +79,7 @@ const Root = (): JSX.Element => {
   return (
     <div>
       <h1>Root Page</h1>
-      {user ? (
-        <button onClick={handleSignout}>Logout</button>
-      ) : (
-        <button onClick={handleSignin}>Login</button>
-      )}
+      {user ? <button onClick={handleSignout}>Logout</button> : <button onClick={handleSignin}>Login</button>}
 
       {load ? (
         <div>Loading...</div>
@@ -68,6 +92,8 @@ const Root = (): JSX.Element => {
                   <div>ID:{user.id}</div>
                   <div> Name:{user.displayName}</div>
                   <button onClick={() => follow(user.id)}>Follow</button>
+                  <button onClick={() => unfollow(user.id)}>UnFollow</button>
+                  <button onClick={() => followings(user.id)}>Followings</button>
                 </li>
               ))}
             </>

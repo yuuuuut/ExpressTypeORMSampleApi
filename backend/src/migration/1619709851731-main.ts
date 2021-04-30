@@ -1,7 +1,7 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class main1619659633440 implements MigrationInterface {
-    name = 'main1619659633440'
+export class main1619709851731 implements MigrationInterface {
+    name = 'main1619709851731'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query("CREATE TABLE `tags` (`id` int NOT NULL AUTO_INCREMENT, `name` varchar(255) NOT NULL, UNIQUE INDEX `IDX_d90243459a697eadb8ad56e909` (`name`), PRIMARY KEY (`id`)) ENGINE=InnoDB");
@@ -10,7 +10,7 @@ export class main1619659633440 implements MigrationInterface {
         await queryRunner.query("CREATE TABLE `profiles` (`id` int NOT NULL AUTO_INCREMENT, `line_id` varchar(255) NULL, `twitter_id` varchar(255) NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB");
         await queryRunner.query("CREATE TABLE `messages` (`id` int NOT NULL AUTO_INCREMENT, `kind` varchar(255) NOT NULL, `isApproval` tinyint NOT NULL DEFAULT 0, `rejected` tinyint NOT NULL DEFAULT 0, `checked` tinyint NOT NULL DEFAULT 0, `user_id` varchar(255) NOT NULL, `room_id` varchar(255) NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB");
         await queryRunner.query("CREATE TABLE `notifications` (`id` int NOT NULL AUTO_INCREMENT, `action` varchar(255) NOT NULL, `checked` tinyint NOT NULL DEFAULT 0, `visiter_id` varchar(255) NOT NULL, `visited_id` varchar(255) NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB");
-        await queryRunner.query("CREATE TABLE `relationships` (`id` int NOT NULL AUTO_INCREMENT, `user_id` varchar(255) NOT NULL, `follow_id` varchar(255) NOT NULL, UNIQUE INDEX `IDX_dbd692f907f18013109ab96859` (`user_id`, `follow_id`), PRIMARY KEY (`id`)) ENGINE=InnoDB");
+        await queryRunner.query("CREATE TABLE `relationships` (`user_id` varchar(255) NOT NULL, `follow_id` varchar(255) NOT NULL, INDEX `IDX_19361d881caedba931906f7cf7` (`user_id`), INDEX `IDX_d3d3a815ec8088e28e6d9e57f2` (`follow_id`), PRIMARY KEY (`user_id`, `follow_id`)) ENGINE=InnoDB");
         await queryRunner.query("CREATE TABLE `users_tags` (`user_id` varchar(255) NOT NULL, `tag_id` int NOT NULL, INDEX `IDX_37fe67a713a33c9385ede5782d` (`user_id`), INDEX `IDX_ee316e71a670dca8d696490aee` (`tag_id`), PRIMARY KEY (`user_id`, `tag_id`)) ENGINE=InnoDB");
         await queryRunner.query("CREATE TABLE `entries` (`user_id` varchar(255) NOT NULL, `room_id` varchar(255) NOT NULL, INDEX `IDX_73b250bca5e5a24e1343da5616` (`user_id`), INDEX `IDX_5ca70dfb03e334c366fdd6cead` (`room_id`), PRIMARY KEY (`user_id`, `room_id`)) ENGINE=InnoDB");
         await queryRunner.query("ALTER TABLE `users` ADD CONSTRAINT `FK_23371445bd80cb3e413089551bf` FOREIGN KEY (`profile_id`) REFERENCES `profiles`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION");
@@ -44,7 +44,8 @@ export class main1619659633440 implements MigrationInterface {
         await queryRunner.query("DROP INDEX `IDX_ee316e71a670dca8d696490aee` ON `users_tags`");
         await queryRunner.query("DROP INDEX `IDX_37fe67a713a33c9385ede5782d` ON `users_tags`");
         await queryRunner.query("DROP TABLE `users_tags`");
-        await queryRunner.query("DROP INDEX `IDX_dbd692f907f18013109ab96859` ON `relationships`");
+        await queryRunner.query("DROP INDEX `IDX_d3d3a815ec8088e28e6d9e57f2` ON `relationships`");
+        await queryRunner.query("DROP INDEX `IDX_19361d881caedba931906f7cf7` ON `relationships`");
         await queryRunner.query("DROP TABLE `relationships`");
         await queryRunner.query("DROP TABLE `notifications`");
         await queryRunner.query("DROP TABLE `messages`");
