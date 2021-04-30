@@ -37,8 +37,6 @@ describe('User API Controller Test', () => {
       // Response
       const response = (await authCheckMock(`/users/${testUser.id}`, 'GET')) as TestIResponse<UserShowApiRes>
 
-      console.log(response)
-
       // ExpectedJson Data
       const expectedJson = {
         isFollowing: false,

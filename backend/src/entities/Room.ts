@@ -6,9 +6,9 @@ export class Room extends BaseEntity {
   @PrimaryColumn()
   id: string
 
-  @OneToMany((type) => Message, (messages) => messages.room)
+  @OneToMany(() => Message, (messages) => messages.room)
   messages: Message[]
 
-  @ManyToMany((type) => User, (user) => user.rooms)
+  @ManyToMany(() => User, (user) => user.rooms)
   users: User[]
 }

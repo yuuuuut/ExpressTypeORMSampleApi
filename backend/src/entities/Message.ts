@@ -18,14 +18,14 @@ export class Message extends BaseEntity {
   @Column({ default: false, nullable: false })
   checked: boolean
 
-  @ManyToOne((type) => User, (user) => user.messages, {
+  @ManyToOne(() => User, (user) => user.messages, {
     nullable: false,
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'user_id' })
   user: User
 
-  @ManyToOne((type) => Room, (room) => room.messages, {
+  @ManyToOne(() => Room, (room) => room.messages, {
     nullable: false,
     onDelete: 'CASCADE',
   })

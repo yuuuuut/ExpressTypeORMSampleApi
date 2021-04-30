@@ -1,11 +1,4 @@
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm'
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
 
 import { User } from '.'
 
@@ -20,14 +13,14 @@ export class Notification extends BaseEntity {
   @Column({ default: false, nullable: false })
   checked: boolean
 
-  @ManyToOne((type) => User, (visiter) => visiter.active_notifications, {
+  @ManyToOne(() => User, (visiter) => visiter.active_notifications, {
     nullable: false,
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'visiter_id' })
   visiter: User
 
-  @ManyToOne((type) => User, (visited) => visited.passive_notifications, {
+  @ManyToOne(() => User, (visited) => visited.passive_notifications, {
     nullable: false,
     onDelete: 'CASCADE',
   })

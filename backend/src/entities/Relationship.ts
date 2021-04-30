@@ -1,24 +1,23 @@
 import { BaseEntity, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm'
-
 import { User } from '.'
 
 @Entity('relationships')
-@Unique(['user', 'follow'])
+@Unique(['followed', 'follower'])
 export class Relationship extends BaseEntity {
   @PrimaryGeneratedColumn()
   readonly id: number
 
-  @ManyToOne((type) => User, (user) => user.followings, {
+  @ManyToOne(() => User, (user) => user.followings, {
     nullable: false,
     onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'user_id' })
-  user: User
+  @JoinColumn({ name: 'followed_id' })
+  followed: User
 
-  @ManyToOne((type) => User, (user) => user.followers, {
+  @ManyToOne(() => User, (user) => user.followers, {
     nullable: false,
     onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'follow_id' })
-  follow: User
+  @JoinColumn({ name: 'follower_id' })
+  follower: User
 }

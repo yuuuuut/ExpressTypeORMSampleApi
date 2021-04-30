@@ -1,6 +1,6 @@
 import { createTestRelationship, createTestUser } from '../common'
-import * as relationshipModel from '../../models/relationship.model'
 import { createFirebaseUser } from '../firebase'
+import { __local__ } from 'backend/src/models/user.model'
 
 /***************************
  *    Main
@@ -13,16 +13,17 @@ describe('Relationship Model Test', () => {
       const testUser = await createTestUser()
       await createTestRelationship(testCurrentUser, testUser)
 
-      const val = await relationshipModel.isFollowingBool(testUser.id, testCurrentUser.id)
+      const val = await __local__.isFollowingBool(testUser.id, testCurrentUser.id)
 
       expect(val).toEqual(true)
     })
+
     it('Userをフォローしていない場合、Falseを返すこと。', async () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()
       const testUser = await createTestUser()
 
-      const val = await relationshipModel.isFollowingBool(testUser.id, testCurrentUser.id)
+      const val = await __local__.isFollowingBool(testUser.id, testCurrentUser.id)
 
       expect(val).toEqual(false)
     })
@@ -36,7 +37,7 @@ describe('Relationship Model Test', () => {
       await createTestRelationship(testCurrentUser, testUser)
       await createTestRelationship(testUser, testCurrentUser)
 
-      const val = await relationshipModel.isMutualFollowBool(testUser.id, testCurrentUser.id)
+      const val = await __local__.isMutualFollowBool(testUser.id, testCurrentUser.id)
 
       expect(val).toEqual(true)
     })
@@ -45,7 +46,7 @@ describe('Relationship Model Test', () => {
       const testUser = await createTestUser()
       await createTestRelationship(testCurrentUser, testUser)
 
-      const val = await relationshipModel.isMutualFollowBool(testUser.id, testCurrentUser.id)
+      const val = await __local__.isMutualFollowBool(testUser.id, testCurrentUser.id)
 
       expect(val).toEqual(false)
     })

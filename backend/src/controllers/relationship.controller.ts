@@ -9,7 +9,7 @@ import {
 } from '../types'
 
 import { getCuurentUser } from '../models/common.model'
-import * as model from '../models/relationship.model'
+import * as userModel from '../models/user.model'
 
 /**
  * relationship controlelr followings
@@ -21,7 +21,7 @@ const followings = async (req: Request, res: Response) => {
   const userId = req.params.id
 
   try {
-    const followings = await model.followings(userId)
+    const followings = await userModel.followings(userId)
     response.data = { followings }
   } catch (err) {
     response.status = err.status || 500
@@ -41,7 +41,7 @@ const followers = async (req: Request, res: Response) => {
   const userId = req.params.id
 
   try {
-    const followers = await model.followers(userId)
+    const followers = await userModel.followers(userId)
     response.data = { followers }
   } catch (err) {
     response.status = err.status || 500
@@ -63,7 +63,7 @@ const create = async (req: Request, res: Response) => {
 
   try {
     const currentUser = await getCuurentUser(currentUserId)
-    await model.create(userId, currentUser)
+    await userModel.follow(userId, currentUser)
     response.data = {
       message: 'フォローしました。',
     }
@@ -87,7 +87,7 @@ const destroy = async (req: Request, res: Response) => {
 
   try {
     const currentUser = await getCuurentUser(currentUserId)
-    await model.destroy(userId, currentUser)
+    await userModel.unfollow(userId, currentUser)
     response.data = {
       message: 'フォローを解除しました。',
     }

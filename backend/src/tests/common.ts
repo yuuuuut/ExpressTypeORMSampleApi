@@ -20,10 +20,10 @@ async function getTestUser(userId: string) {
 /**
  * Test用Userを作成する。
  */
-async function createTestUser(name?: string, profile?: Profile) {
+async function createTestUser(id?: string, profile?: Profile) {
   const userRepository = getManager().getRepository(User)
   const newUser = new User()
-  newUser.id = name || 'TestUser'
+  newUser.id = id || 'TestUser'
   newUser.displayName = 'TestDisName'
   newUser.photoURL = 'TestUserPhoto'
   newUser.profile = profile || undefined
@@ -51,8 +51,8 @@ async function createTestProfile() {
 async function createTestRelationship(currentUser: User, followUser: User) {
   const relationshipRepository = getManager().getRepository(Relationship)
   const relationship = new Relationship()
-  relationship.user = currentUser
-  relationship.follow = followUser
+  relationship.followed = currentUser
+  relationship.follower = followUser
 
   await relationshipRepository.save(relationship)
 }
