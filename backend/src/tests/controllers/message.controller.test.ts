@@ -43,8 +43,6 @@ describe('Message API Controller Test', () => {
               displayName: testCurrentUser.displayName,
               photoURL: testCurrentUser.photoURL,
               isAdmin: testCurrentUser.isAdmin,
-              followersCount: testCurrentUser.followersCount,
-              followingsCount: testCurrentUser.followingsCount,
               profile: {
                 id: expect.anything(),
                 lineId: testProfile.lineId,
@@ -92,8 +90,6 @@ describe('Message API Controller Test', () => {
             displayName: testCurrentUser.displayName,
             photoURL: testCurrentUser.photoURL,
             isAdmin: testCurrentUser.isAdmin,
-            followingsCount: testCurrentUser.followingsCount,
-            followersCount: testCurrentUser.followersCount,
           },
           room: {
             id: testRoom.id,

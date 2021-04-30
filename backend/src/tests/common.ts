@@ -55,6 +55,7 @@ async function createTestRelationship(currentUser: User, followUser: User) {
   relationship.follower = followUser
 
   await relationshipRepository.save(relationship)
+  //await userRepository.save(user2)
 }
 
 /**

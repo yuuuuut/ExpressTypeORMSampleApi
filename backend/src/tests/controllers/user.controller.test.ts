@@ -21,8 +21,6 @@ describe('User API Controller Test', () => {
           displayName: testCurrentUser.displayName,
           photoURL: testCurrentUser.photoURL,
           isAdmin: testCurrentUser.isAdmin,
-          followersCount: testCurrentUser.followersCount,
-          followingsCount: testCurrentUser.followingsCount,
         },
       }
 
@@ -47,8 +45,6 @@ describe('User API Controller Test', () => {
           displayName: testUser.displayName,
           photoURL: testUser.photoURL,
           isAdmin: testUser.isAdmin,
-          followersCount: testUser.followersCount,
-          followingsCount: testUser.followingsCount,
         },
       }
 

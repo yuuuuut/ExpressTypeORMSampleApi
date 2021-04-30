@@ -11,9 +11,6 @@ import {
 import { getCuurentUser } from '../models/common.model'
 import * as userModel from '../models/user.model'
 
-/**
- * relationship controlelr followings
- */
 const followings = async (req: Request, res: Response) => {
   const response: IResponse<RelationshipFollowingsApiRes> = {
     status: 200,
@@ -31,9 +28,6 @@ const followings = async (req: Request, res: Response) => {
   return res.status(response.status).json(response)
 }
 
-/**
- * relationship controlelr followers
- */
 const followers = async (req: Request, res: Response) => {
   const response: IResponse<RelationshipFollowersApiRes> = {
     status: 200,
@@ -52,9 +46,9 @@ const followers = async (req: Request, res: Response) => {
 }
 
 /**
- * relationship controller create
+ * relationship controller follow
  */
-const create = async (req: Request, res: Response) => {
+const follow = async (req: Request, res: Response) => {
   const response: IResponse<RelationshipCreateApiRes> = {
     status: 201,
   }
@@ -76,9 +70,9 @@ const create = async (req: Request, res: Response) => {
 }
 
 /**
- * relationship controller destroy
+ * relationship controller unfollow
  */
-const destroy = async (req: Request, res: Response) => {
+const unfollow = async (req: Request, res: Response) => {
   const response: IResponse<RelationshipDestroyApiRes> = {
     status: 200,
   }
@@ -99,4 +93,4 @@ const destroy = async (req: Request, res: Response) => {
   return res.status(response.status).json(response)
 }
 
-export { followings, followers, create, destroy }
+export { followings, followers, follow, unfollow }

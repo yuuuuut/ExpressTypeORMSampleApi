@@ -11,7 +11,7 @@ describe('Relationship Model Test', () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()
       const testUser = await createTestUser()
-      await createTestRelationship(testCurrentUser, testUser)
+      await createTestRelationship(testUser, testCurrentUser)
 
       const val = await __local__.isFollowingBool(testUser.id, testCurrentUser.id)
 
