@@ -45,6 +45,7 @@ describe('Message API Controller Test', () => {
               isAdmin: testCurrentUser.isAdmin,
               followersCount: '0',
               followingsCount: '0',
+              rooms: [],
               profile: {
                 id: expect.anything(),
                 lineId: testProfile.lineId,
@@ -94,6 +95,7 @@ describe('Message API Controller Test', () => {
             isAdmin: testCurrentUser.isAdmin,
             followersCount: '0',
             followingsCount: '0',
+            rooms: [],
           },
           room: {
             id: testRoom.id,

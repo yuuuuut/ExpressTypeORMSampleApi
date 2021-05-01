@@ -13,7 +13,9 @@ const Req = request('http://localhost:4000/api')
 async function getTestUser(userId: string) {
   const userRepository = getManager().getRepository(User)
 
-  const user = await userRepository.findOne(userId)
+  const user = await userRepository.findOne(userId, {
+    relations: ['rooms'],
+  })
   if (!user) throw new Error('Test Failed None User')
 
   return user

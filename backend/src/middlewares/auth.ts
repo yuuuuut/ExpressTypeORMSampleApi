@@ -1,5 +1,5 @@
 import { Response, Request, NextFunction } from 'express'
-import firebase from '../libs/firebase'
+import firebase from '@/libs/firebase'
 
 //ExpressのRequestの型にcurrentUserIdを追加する。
 declare global {
@@ -15,8 +15,7 @@ declare global {
  */
 async function authCheck(req: Request, res: Response, next: NextFunction) {
   const bearToken = req.headers['authorization']
-  if (!bearToken)
-    return res.status(401).json({ message: 'Tokenが存在しません。' })
+  if (!bearToken) return res.status(401).json({ message: 'Tokenが存在しません。' })
 
   const bearer = bearToken.split(' ')
   const token = bearer[1]

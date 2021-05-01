@@ -28,7 +28,6 @@ describe('Relationship API Controller Test', () => {
 
       // Get Test Data
       const currentUser = await getTestUser(testCurrentUser.id)
-      const user = await getTestUser(testUser.id)
 
       // ExpectedJson Data
       const expectedJson = {
@@ -42,6 +41,7 @@ describe('Relationship API Controller Test', () => {
               isAdmin: testUser.isAdmin,
               followersCount: '1',
               followingsCount: '0',
+              rooms: [],
             },
           },
         ],
@@ -86,6 +86,7 @@ describe('Relationship API Controller Test', () => {
               isAdmin: user1.isAdmin,
               followersCount: user1.followersCount,
               followingsCount: user1.followingsCount,
+              rooms: [],
             },
           },
           {
@@ -97,6 +98,7 @@ describe('Relationship API Controller Test', () => {
               isAdmin: user2.isAdmin,
               followersCount: user2.followersCount,
               followingsCount: user2.followingsCount,
+              rooms: [],
             },
           },
           {
@@ -108,6 +110,7 @@ describe('Relationship API Controller Test', () => {
               isAdmin: user3.isAdmin,
               followersCount: user3.followersCount,
               followingsCount: user3.followingsCount,
+              rooms: [],
             },
           },
         ],
@@ -149,6 +152,7 @@ describe('Relationship API Controller Test', () => {
               isAdmin: user.isAdmin,
               followersCount: user.followersCount,
               followingsCount: user.followingsCount,
+              rooms: [],
             },
           },
         ],
@@ -193,6 +197,7 @@ describe('Relationship API Controller Test', () => {
               isAdmin: user1.isAdmin,
               followersCount: user1.followersCount,
               followingsCount: user1.followingsCount,
+              rooms: [],
             },
           },
           {
@@ -204,6 +209,7 @@ describe('Relationship API Controller Test', () => {
               isAdmin: user2.isAdmin,
               followersCount: user2.followersCount,
               followingsCount: user2.followingsCount,
+              rooms: [],
             },
           },
           {
@@ -215,6 +221,7 @@ describe('Relationship API Controller Test', () => {
               isAdmin: user3.isAdmin,
               followersCount: user3.followersCount,
               followingsCount: user3.followingsCount,
+              rooms: [],
             },
           },
         ],

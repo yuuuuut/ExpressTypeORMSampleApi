@@ -23,6 +23,7 @@ describe('User API Controller Test', () => {
           isAdmin: testCurrentUser.isAdmin,
           followersCount: '0',
           followingsCount: '0',
+          rooms: [],
         },
       }
 
@@ -49,6 +50,7 @@ describe('User API Controller Test', () => {
           isAdmin: testUser.isAdmin,
           followersCount: '0',
           followingsCount: '0',
+          rooms: [],
         },
       }
 

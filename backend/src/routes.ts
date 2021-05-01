@@ -1,16 +1,16 @@
 import { Router } from 'express'
 
-import * as relationshipController from './controllers/relationship.controller'
-import * as profileController from './controllers/profile.controller'
-import * as messageController from './controllers/message.controller'
-import * as userController from './controllers/user.controller'
-import * as roomController from './controllers/room.controller'
-import authCheck from './middlewares/auth'
+import * as relationshipController from '@/controllers/relationship.controller'
+import * as profileController from '@/controllers/profile.controller'
+import * as messageController from '@/controllers/message.controller'
+import * as userController from '@/controllers/user.controller'
+import * as roomController from '@/controllers/room.controller'
+import authCheck from '@/middlewares/auth'
 
 const router = Router()
 
 /***************************
- *    /users
+ *   /users
  **************************/
 router.get('/api/users', userController.index)
 router.get('/api/users/:id', authCheck, userController.show)
@@ -22,12 +22,12 @@ router.delete('/api/users/:id/unfollow', authCheck, relationshipController.unfol
 router.post('/api/users/:id/rooms', authCheck, roomController.create)
 
 /***************************
- *    /profiles
+ *   /profiles
  **************************/
 router.put('/api/profiles', authCheck, profileController.update)
 
 /***************************
- *    /rooms
+ *   /rooms
  **************************/
 router.get('/api/rooms', authCheck, roomController.index)
 router.get('/api/rooms/:id', authCheck, roomController.show)
@@ -35,7 +35,7 @@ router.get('/api/rooms/:id/messages', authCheck, messageController.index)
 router.post('/api/rooms/:id/messages', authCheck, messageController.create)
 
 /***************************
- *    /messages
+ *   /messages
  **************************/
 router.put('/api/messages/:id', authCheck, messageController.update)
 

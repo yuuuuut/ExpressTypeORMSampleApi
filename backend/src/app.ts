@@ -4,10 +4,16 @@ import cors from 'cors'
 
 import { createConnection } from 'typeorm'
 
-import router from '../src/routes'
+import router from '@/routes'
 
+/***************************
+ *   Settings
+ **************************/
 dotenv.config()
 
+/***************************
+ *   Main
+ **************************/
 createConnection()
   .then(async (connection) => {
     console.log(connection.options)

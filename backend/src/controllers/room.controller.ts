@@ -1,11 +1,11 @@
 import { Request, Response } from 'express'
 
-import { IResponse, RoomCreateApiRes, RoomIndexApiRes, RoomShowApiRes } from '../types'
-import { getCuurentUser } from '../models/common.model'
-import * as model from '../models/room.model'
+import { IResponse, RoomCreateApiRes, RoomIndexApiRes, RoomShowApiRes } from '@/types'
+import { getCuurentUser } from '@/models/common.model'
+import * as model from '@/models/room.model'
 
 /**
- * room controller index
+ * @description Room Controller Index
  */
 const index = async (req: Request, res: Response) => {
   const response: IResponse<RoomIndexApiRes> = {
@@ -26,18 +26,16 @@ const index = async (req: Request, res: Response) => {
 }
 
 /**
- * room controller show
+ * @description Room Controller Show
  */
 const show = async (req: Request, res: Response) => {
   const response: IResponse<RoomShowApiRes> = {
     status: 200,
   }
-  const currentUserId = req.currentUserId
   const roomId = req.params.id
 
   try {
-    const currentUser = await getCuurentUser(currentUserId)
-    const { room } = await model.show(roomId, currentUser)
+    const { room } = await model.show(roomId)
     response.data = { room }
   } catch (err) {
     response.status = err.status || 500
@@ -48,7 +46,7 @@ const show = async (req: Request, res: Response) => {
 }
 
 /**
- * room controller create
+ * @description Room Controller Create
  */
 const create = async (req: Request, res: Response) => {
   const response: IResponse<RoomCreateApiRes> = {
@@ -59,7 +57,7 @@ const create = async (req: Request, res: Response) => {
 
   try {
     const currentUser = await getCuurentUser(currentUserId)
-    const { room } = await model.create(userId, currentUser)
+    const { room } = await model.create(userId, currentUser.id)
     response.data = { room }
   } catch (err) {
     response.status = err.status || 500

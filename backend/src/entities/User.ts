@@ -95,4 +95,11 @@ export class User extends BaseEntity {
     },
   })
   rooms: Room[]
+
+  @AfterLoad()
+  async nullChecks() {
+    if (!this.rooms) {
+      this.rooms = []
+    }
+  }
 }

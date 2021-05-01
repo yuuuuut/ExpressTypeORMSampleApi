@@ -1,10 +1,11 @@
-import { getManager, SelectQueryBuilder } from 'typeorm'
+import { getManager } from 'typeorm'
 import { v4 as uuidv4 } from 'uuid'
 
-import { Room, User } from '../entities'
+import { Room, User } from '@/entities'
 
 /**
- * room index model
+ * @description ユーザーに紐づくRoomの配列を返します。
+ * @param currentUser CurrentUser Entity
  */
 const index = async (currentUser: User) => {
   const userRepository = getManager().getRepository(User)
@@ -19,10 +20,13 @@ const index = async (currentUser: User) => {
 }
 
 /**
- * room show model
+ * @description Roomを返します。
+ * @param roomId RoomのID。
+ * @param currentUser CurrentUser Entity
  */
-const show = async (roomId: string, currentUser: User) => {
+const show = async (roomId: string) => {
   const roomRepository = getManager().getRepository(Room)
+
   const room = await roomRepository.findOne(roomId, {
     relations: ['users'],
   })
@@ -32,15 +36,17 @@ const show = async (roomId: string, currentUser: User) => {
 }
 
 /**
- * room create model
+ * @description Roomを作成します。
+ * @param userId UserのID。
+ * @param currentUserId CurentUserのID。
  */
-const create = async (userId: string, cu: User) => {
+const create = async (userId: string, currentUserId: string) => {
   const roomRepository = getManager().getRepository(Room)
   const userRepository = getManager().getRepository(User)
   const uuid = uuidv4()
 
   const user = await userRepository.findOne(userId)
-  const currentUser = await userRepository.findOne(cu.id)
+  const currentUser = await userRepository.findOne(currentUserId)
   if (!user || !currentUser) throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })
 
   const newRoom = new Room()
@@ -52,32 +58,24 @@ const create = async (userId: string, cu: User) => {
 }
 
 /**
- * Entry関係が存在するかどうかを返す。
+ * @description Entry関係が存在するかどうかを返します。
+ * @param otherUser User Entity
+ * @param currentUser User Entity
  */
-const isRoomBool = async (userId: string, currentUserId: string) => {
-  let isRoom: boolean, roomId: string | undefined
+const isRoomBool = (otherUser: User, currentUser: User) => {
+  let isRoom = false,
+    roomId: string | undefined
 
-  const roomRepository = getManager().getRepository(Room)
-  const room = await roomRepository.findOne({
-    join: {
-      alias: 'room',
-      leftJoinAndSelect: {
-        users: 'room.users',
-      },
-    },
-    where: (qb: SelectQueryBuilder<Room>) => {
-      qb.where('users.id = :id', { id: userId })
-      qb.andWhere('users.id = :id', { id: currentUserId })
-    },
-  })
-
-  if (!room) {
-    isRoom = false
-    roomId = undefined
-  } else {
-    isRoom = true
-    roomId = room.id
+  for (const ouRoom of otherUser.rooms) {
+    for (const cuRoom of currentUser.rooms) {
+      if (ouRoom.id === cuRoom.id) {
+        isRoom = true
+        roomId = cuRoom.id
+        break
+      }
+    }
   }
+  if (!isRoom) return { isRoom: false, roomId: undefined }
 
   return { isRoom, roomId }
 }

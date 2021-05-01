@@ -28,6 +28,7 @@ describe('Room Controller Test', () => {
               isAdmin: testCurrentUser.isAdmin,
               followersCount: '0',
               followingsCount: '0',
+              rooms: [],
             },
             {
               id: testUser.id,
@@ -36,6 +37,7 @@ describe('Room Controller Test', () => {
               isAdmin: testUser.isAdmin,
               followersCount: '0',
               followingsCount: '0',
+              rooms: [],
             },
           ],
         },
@@ -73,6 +75,7 @@ describe('Room Controller Test', () => {
               isAdmin: testUser.isAdmin,
               followersCount: '0',
               followingsCount: '0',
+              rooms: [],
             },
             {
               id: testCurrentUser.id,
@@ -81,6 +84,7 @@ describe('Room Controller Test', () => {
               isAdmin: testCurrentUser.isAdmin,
               followersCount: '0',
               followingsCount: '0',
+              rooms: [],
             },
           ],
         },
