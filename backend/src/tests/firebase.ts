@@ -2,12 +2,12 @@ import { getManager } from 'typeorm'
 import dotenv from 'dotenv'
 import axios from 'axios'
 
-import firebaseAdmin from '../libs/firebase'
-import { Profile, User } from '../entities'
-import { Req } from './common'
+import firebaseAdmin from '@/libs/firebase'
+import { Profile, User } from '@/entities'
+import { Req } from '@/tests/common'
 
 /***************************
- *
+ *   Settings
  **************************/
 dotenv.config()
 
@@ -19,7 +19,11 @@ const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustom
  *   Main
  **************************/
 
-export async function createFirebaseUser(profile?: Profile) {
+/**
+ * @description Firebaseに存在するUser情報からUserを作成する。
+ *              Profileも必要な場合は渡す。
+ */
+async function createFirebaseUser(profile?: Profile) {
   const userRepository = getManager().getRepository(User)
   const firebaseUser = await firebaseAdmin.auth().getUser(UID)
 
@@ -36,23 +40,17 @@ export async function createFirebaseUser(profile?: Profile) {
   return user
 }
 
-export async function authCheckMock(checkURL: string, type: 'GET' | 'POST' | 'PUT' | 'DELETE', data?: any) {
+/**
+ * @description Auth Middleware をパスしてResponseを返す。
+ * @param checkURL テストするURL。
+ * @param type テストするリクエストタイプ。
+ * @param data POSTまたはPUTの際に渡すData。
+ * @returns Response
+ */
+async function authCheckMock(checkURL: string, type: 'GET' | 'POST' | 'PUT' | 'DELETE', data?: any) {
   let response: any
 
-  const token = await firebaseAdmin.auth().createCustomToken(UID)
-  const tokenRes = await axios({
-    method: 'POST',
-    url,
-    data: {
-      token: token,
-      returnSecureToken: true,
-    },
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-
-  const authToken = await tokenRes.data.idToken
+  const authToken = await getCuurentUserToken()
 
   switch (type) {
     case 'GET':
@@ -79,3 +77,25 @@ export async function authCheckMock(checkURL: string, type: 'GET' | 'POST' | 'PU
 
   return response
 }
+
+/**
+ * @description Firebaseに保存されているUserの有効なTokenを返す。
+ */
+async function getCuurentUserToken() {
+  const token = await firebaseAdmin.auth().createCustomToken(UID)
+  const tokenRes = await axios({
+    method: 'POST',
+    url,
+    data: {
+      token: token,
+      returnSecureToken: true,
+    },
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+
+  return await tokenRes.data.idToken
+}
+
+export { createFirebaseUser, authCheckMock }

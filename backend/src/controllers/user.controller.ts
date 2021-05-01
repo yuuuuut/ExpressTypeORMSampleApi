@@ -5,7 +5,7 @@ import { getCuurentUser } from '@/models/common.model'
 import * as model from '@/models/user.model'
 
 /**
- * user controller index
+ * @description User Controller Index
  */
 const index = async (req: Request, res: Response) => {
   const response: IResponse<UserIndexApiRes> = {
@@ -14,7 +14,6 @@ const index = async (req: Request, res: Response) => {
 
   try {
     const users = await model.index()
-    console.log(users)
     response.data = { users }
   } catch (err) {
     response.status = err.status || 500
@@ -25,7 +24,7 @@ const index = async (req: Request, res: Response) => {
 }
 
 /**
- * user controller show
+ * @description User Controller Show
  */
 const show = async (req: Request, res: Response) => {
   const response: IResponse<UserShowApiRes> = {
@@ -36,7 +35,7 @@ const show = async (req: Request, res: Response) => {
 
   try {
     const currentUser = await getCuurentUser(currentUserId)
-    const data = await model.show(userId, currentUser)
+    const data = await model.show(userId, currentUser.id)
     response.data = {
       user: data.user,
       isFollowing: data.isFollowing,
@@ -53,7 +52,7 @@ const show = async (req: Request, res: Response) => {
 }
 
 /**
- * user controller create
+ * @description User Controller Create
  */
 const create = async (req: Request, res: Response) => {
   const response: IResponse<UserCreateApiRes> = {

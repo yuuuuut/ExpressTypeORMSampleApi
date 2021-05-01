@@ -5,10 +5,10 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc",
+    "ts-node": "ts-node",
     "dev": "cross-env NODE_ENV=dev nodemon -L",
     "test-dev": "cross-env NODE_ENV=test nodemon -L",
-    "ts-node": "ts-node",
-    "test": "jest"
+    "test": "cross-env NODE_ENV=test jest"
   },
   "dependencies": {
     "axios": "^0.21.1",

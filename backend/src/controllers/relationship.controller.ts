@@ -57,7 +57,7 @@ const follow = async (req: Request, res: Response) => {
 
   try {
     const currentUser = await getCuurentUser(currentUserId)
-    await userModel.follow(userId, currentUser)
+    await userModel.follow(userId, currentUser.id)
     response.data = {
       message: 'フォローしました。',
     }
@@ -81,7 +81,7 @@ const unfollow = async (req: Request, res: Response) => {
 
   try {
     const currentUser = await getCuurentUser(currentUserId)
-    await userModel.unfollow(userId, currentUser)
+    await userModel.unfollow(userId, currentUser.id)
     response.data = {
       message: 'フォローを解除しました。',
     }

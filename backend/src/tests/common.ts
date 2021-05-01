@@ -1,16 +1,18 @@
 import { getManager } from 'typeorm'
 import request from 'supertest'
 
-import { Message, Profile, Relationship, Room, User } from '../entities'
+import { Message, Profile, Relationship, Room, User } from '@/entities'
 
 // API URL
 const Req = request('http://localhost:4000/api')
 
 /**
- * TestUser取得する。
+ * @description TestUser取得する。
+ * @param userId UserのID。
  */
 async function getTestUser(userId: string) {
   const userRepository = getManager().getRepository(User)
+
   const user = await userRepository.findOne(userId)
   if (!user) throw new Error('Test Failed None User')
 
@@ -18,12 +20,15 @@ async function getTestUser(userId: string) {
 }
 
 /**
- * Test用Userを作成する。
+ * @description Test用Userを作成する。
+ * @param userId UserのID。
+ * @param profile Profile Entity
  */
-async function createTestUser(id?: string, profile?: Profile) {
+async function createTestUser(userId?: string, profile?: Profile) {
   const userRepository = getManager().getRepository(User)
+
   const newUser = new User()
-  newUser.id = id || 'TestUser'
+  newUser.id = userId || 'TestUser'
   newUser.displayName = 'TestDisName'
   newUser.photoURL = 'TestUserPhoto'
   newUser.profile = profile || undefined
@@ -36,33 +41,37 @@ async function createTestUser(id?: string, profile?: Profile) {
 }
 
 /**
- * Test用Profileを作成する。
+ * @description Test用Profileを作成する。
  */
 async function createTestProfile() {
   const profileRepository = getManager().getRepository(Profile)
+
   const profile = new Profile()
 
   return await profileRepository.save(profile)
 }
 
 /**
- * Test用Relationshipを作成する。
+ * @description Test用Relationshipを作成する。
  */
 async function createTestRelationship(currentUser: User, followUser: User) {
   const relationshipRepository = getManager().getRepository(Relationship)
+
   const relationship = new Relationship()
   relationship.followed = currentUser
   relationship.follower = followUser
 
   await relationshipRepository.save(relationship)
-  //await userRepository.save(user2)
 }
 
 /**
- * Test用Roomを作成する。
+ * @description Test用Roomを作成する。
+ * @param user User Entity
+ * @param currentUser User Entity
  */
 async function createTestRoom(user: User, currentUser: User) {
   const roomRepository = getManager().getRepository(Room)
+
   const room = new Room()
   room.id = 'TestRoom'
   room.users = [user, currentUser]
@@ -71,10 +80,13 @@ async function createTestRoom(user: User, currentUser: User) {
 }
 
 /**
- * Test用Messageを作成する。
+ * @description Test用Messageを作成する。
+ * @param user User Entity
+ * @param room Room Entity
  */
 async function createTestMessage(user: User, room: Room) {
   const messageRepository = getManager().getRepository(Message)
+
   const message = new Message()
   message.kind = 'LINE'
   message.user = user

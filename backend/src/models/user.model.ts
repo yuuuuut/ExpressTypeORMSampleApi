@@ -1,9 +1,10 @@
-import { getManager, SelectQueryBuilder } from 'typeorm'
+import { getManager } from 'typeorm'
 
-import * as profileModel from './profile.model'
-import { UserCreateApiReq } from '../types'
+import * as profileModel from '@/models/profile.model'
 import * as roomModel from '@/models/room.model'
-import { Relationship, User } from '../entities'
+
+import { Relationship, User } from '@/entities'
+import { UserCreateApiReq } from '@/types'
 
 /**
  * @description ユーザーの配列を返します。
@@ -16,17 +17,20 @@ const index = async () => {
 }
 
 /**
- * @description ユーザーを返します。
+ * @description Userを返します。
+ * @param userId UserのID。
+ * @param currentUserId CurrentUserのID。
  */
-const show = async (userId: string, currentUser: User) => {
+const show = async (userId: string, currentUserId: string) => {
   const userRepository = getManager().getRepository(User)
+
   const user = await userRepository.findOne(userId)
   if (!user) throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })
 
-  if (user.id !== currentUser.id) {
-    const isFollowing = await isFollowingBool(user.id, currentUser.id)
-    const isMutualFollow = await isMutualFollowBool(user.id, currentUser.id)
-    const { isRoom, roomId } = await roomModel.isRoomBool(user.id, currentUser.id)
+  if (user.id !== currentUserId) {
+    const isFollowing = await isFollowingBool(user.id, currentUserId)
+    const isMutualFollow = await isMutualFollowBool(user.id, currentUserId)
+    const { isRoom, roomId } = await roomModel.isRoomBool(user.id, currentUserId)
 
     return { user, isFollowing, isMutualFollow, isRoom, roomId }
   }
@@ -35,7 +39,8 @@ const show = async (userId: string, currentUser: User) => {
 }
 
 /**
- * @description Userを作成します。
+ * @description Userとそれに紐づくProfileを作成します。
+ * @param body id | displayName | photoURL
  */
 const create = async (body: UserCreateApiReq) => {
   const userRepository = getManager().getRepository(User)
@@ -50,12 +55,10 @@ const create = async (body: UserCreateApiReq) => {
         photoURL: body.photoURL,
         profile: profile,
       })
-
       const user = await em.save(userData)
 
       return { user }
     })
-
     return { user, isCreate: true }
   } else {
     return { user, isCreate: false }
@@ -64,6 +67,7 @@ const create = async (body: UserCreateApiReq) => {
 
 /**
  * @description フォローしているユーザーの配列を返します。
+ * @param userId UserのID。
  */
 const followings = async (userId: string) => {
   const userRepository = getManager().getRepository(User)
@@ -78,6 +82,7 @@ const followings = async (userId: string) => {
 
 /**
  * @description フォローされているユーザーの配列を返します。
+ * @param userId UserのID。
  */
 const followers = async (userId: string) => {
   const userRepository = getManager().getRepository(User)
@@ -92,29 +97,36 @@ const followers = async (userId: string) => {
 
 /**
  * @description フォロー関係を作成します。
+ * @param userId UserのID。
+ * @param currentUserId CurrentUserのID。
  */
-const follow = async (userId: string, currentUser: User) => {
+const follow = async (userId: string, currentUserId: string) => {
   const relationshipRepository = getManager().getRepository(Relationship)
   const userRepository = getManager().getRepository(User)
 
+  const currentUser = await userRepository.findOne(currentUserId)
   const otherUser = await userRepository.findOne(userId)
-  if (!otherUser) throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })
+  if (!currentUser || !otherUser) throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })
+  if (currentUser.id === otherUser.id)
+    throw Object.assign(new Error('自分をフォローすることはできません。'), { status: 500 })
 
   const relationship = new Relationship()
   relationship.followed = currentUser
   relationship.follower = otherUser
 
-  await relationshipRepository.save(relationship)
+  return await relationshipRepository.save(relationship)
 }
 
 /**
  * @description フォロー関係を削除します。
+ * @param userId UserのID。
+ * @param currentUserId CurrentUserのID。
  */
-const unfollow = async (userId: string, currentUser: User) => {
+const unfollow = async (userId: string, currentUserId: string) => {
   const relationshipRepository = getManager().getRepository(Relationship)
 
   const relationship = await relationshipRepository.findOne({
-    where: { followed: currentUser.id, follower: userId },
+    where: { followed: currentUserId, follower: userId },
   })
 
   if (!relationship)
@@ -122,7 +134,7 @@ const unfollow = async (userId: string, currentUser: User) => {
       status: 404,
     })
 
-  await relationshipRepository.delete(relationship)
+  return await relationshipRepository.delete(relationship)
 }
 
 /**

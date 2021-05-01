@@ -249,6 +249,20 @@ describe('Relationship API Controller Test', () => {
 
       expect(response.status).toEqual(201)
       expect(response.body.data).toEqual(expectedJson)
+      expect(currentUser.followingsCount).toEqual('1')
+    })
+    it('POST /api/users/:id/follow 自分をフォローできないこと。', async () => {
+      // Create Test Data
+      const testCurrentUser = await createFirebaseUser()
+
+      // Response
+      const response = (await authCheckMock(
+        `/users/${testCurrentUser.id}/follow`,
+        'POST'
+      )) as TestIResponse<RelationshipCreateApiRes>
+
+      expect(response.status).toEqual(500)
+      expect(response.body.error?.message).toEqual('自分をフォローすることはできません。')
     })
   })
 
@@ -275,7 +289,7 @@ describe('Relationship API Controller Test', () => {
 
       expect(response.status).toEqual(200)
       expect(response.body.data).toEqual(expectedJson)
-      //expect(currentUser.followingsCount).toEqual('0')
+      expect(currentUser.followingsCount).toEqual('0')
     })
   })
 })
