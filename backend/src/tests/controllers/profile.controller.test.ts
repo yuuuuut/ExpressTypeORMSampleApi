@@ -3,11 +3,11 @@ import { authCheckMock, createFirebaseUser } from '@/tests/firebase'
 import { createTestProfile } from '@/tests/common'
 
 /***************************
- *    Main
+ *   Main
  **************************/
 describe('Profile API Controller Test', () => {
-  describe('Update Test', () => {
-    it('PUT /api/profiles Profileの更新に成功すること。', async () => {
+  describe('PUT /api/profiles', () => {
+    it('Profileの更新に成功すること。', async () => {
       // Create Test Data
       const testProfile = await createTestProfile()
       await createFirebaseUser(testProfile)
@@ -35,7 +35,7 @@ describe('Profile API Controller Test', () => {
       expect(response.body.data).toEqual(expectedJson)
     })
 
-    it('PUT /api/profiles LINE_IDのみの更新に成功すること。', async () => {
+    it('LINE_IDのみの更新に成功すること。', async () => {
       // Create Test Data
       const testProfile = await createTestProfile()
       await createFirebaseUser(testProfile)
@@ -62,7 +62,7 @@ describe('Profile API Controller Test', () => {
       expect(response.body.data).toEqual(expectedJson)
     })
 
-    it('PUT /api/profiles Twitter_IDのみの更新に成功すること。', async () => {
+    it('Twitter_IDのみの更新に成功すること。', async () => {
       // Create Test Data
       const testProfile = await createTestProfile()
       await createFirebaseUser(testProfile)

@@ -1,28 +1,29 @@
 import { EntityManager, getManager } from 'typeorm'
 
-import { ProfileUpdateApiReq } from '../types'
-import { Profile, User } from '../entities'
+import { ProfileUpdateApiReq } from '@/types'
+import { Profile, User } from '@/entities'
 
 /**
- * profile model create
+ * @description Profileを作成します。
+ * @param em TypeORM EntityManager
  */
 const create = async (em: EntityManager) => {
   const profileData = em.create(Profile)
-  const profile = await em.save(profileData)
-
-  return profile
+  return await em.save(profileData)
 }
 
 /**
- * profile model update
+ * @description ProfileをUpdateします。
+ * @param currentUser User Entity
+ * @param body lineId | twitterId
  */
 const update = async (currentUser: User, body: ProfileUpdateApiReq) => {
   const profileRepository = getManager().getRepository(Profile)
+
   const profile = await profileRepository.findOne(currentUser.profile)
-  if (!profile)
-    throw Object.assign(new Error('プロフィールが存在しません。'), {
-      status: 404,
-    })
+  if (!profile) {
+    throw Object.assign(new Error('プロフィールが存在しません。'), { status: 404 })
+  }
 
   profile.lineId = body.lineId
   profile.twitterId = body.twitterId

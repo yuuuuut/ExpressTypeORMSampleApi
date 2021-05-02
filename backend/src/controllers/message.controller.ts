@@ -7,13 +7,13 @@ import {
   MessageCreateApiRes,
   MessageUpdateApiRes,
   MessageUpdateApiReq,
-} from '../types'
+} from '@/types'
 
-import { getCuurentUser } from '../models/common.model'
-import * as model from '../models/message.model'
+import { getCuurentUser } from '@/models/common.model'
+import * as model from '@/models/message.model'
 
 /**
- * message controller index
+ * @description Message Controller Index
  */
 const index = async (req: Request, res: Response) => {
   const response: IResponse<MessageIndexApiRes> = {
@@ -33,7 +33,7 @@ const index = async (req: Request, res: Response) => {
 }
 
 /**
- * message controller create
+ * @description Message Controller Create
  */
 const create = async (req: Request, res: Response) => {
   const response: IResponse<MessageCreateApiRes> = {
@@ -56,7 +56,7 @@ const create = async (req: Request, res: Response) => {
 }
 
 /**
- * message controller update
+ * @description Message Controller Update
  */
 const update = async (req: Request, res: Response) => {
   const response: IResponse<MessageUpdateApiRes> = {
@@ -66,7 +66,7 @@ const update = async (req: Request, res: Response) => {
   const body = req.body as MessageUpdateApiReq
 
   try {
-    const message = await model.update(messageId, body)
+    const message = await model.update(Number(messageId), body)
     response.data = { message }
   } catch (err) {
     response.status = err.status || 500

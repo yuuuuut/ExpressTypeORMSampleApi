@@ -1,11 +1,11 @@
 import { Request, Response } from 'express'
 
-import { IResponse, ProfileUpdateApiReq, ProfileUpdateApiRes } from '../types'
-import { getCuurentUser } from '../models/common.model'
-import * as model from '../models/profile.model'
+import { IResponse, ProfileUpdateApiReq, ProfileUpdateApiRes } from '@/types'
+import { getCuurentUser } from '@/models/common.model'
+import * as model from '@/models/profile.model'
 
 /**
- * profile controller update
+ * @description Profile Controller Update
  */
 const update = async (req: Request, res: Response) => {
   const response: IResponse<ProfileUpdateApiRes> = {

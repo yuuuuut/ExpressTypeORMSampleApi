@@ -14,8 +14,8 @@ import { authCheckMock, createFirebaseUser } from '@/tests/firebase'
  *    Main
  **************************/
 describe('Message API Controller Test', () => {
-  describe('Index Test', () => {
-    it('GET /api/rooms/:id/messages Messagesの取得ができること', async () => {
+  describe('GET /api/rooms/:id/messages', () => {
+    it('Messagesの取得ができること', async () => {
       // Create Test Data
       const testProfile = await createTestProfile()
       const testCurrentUser = await createFirebaseUser(testProfile)
@@ -61,10 +61,81 @@ describe('Message API Controller Test', () => {
       expect(response.status).toEqual(200)
       expect(response.body.data).toEqual(expectedJson)
     })
+    it('複数のMessagesの取得ができること', async () => {
+      // Create Test Data
+      const testProfile1 = await createTestProfile()
+      const testProfile2 = await createTestProfile()
+      const testCurrentUser = await createFirebaseUser(testProfile1)
+      const testUser = await createTestUser('TestUser', testProfile2)
+      const testRoom = await createTestRoom(testUser, testCurrentUser)
+      const testMessage1 = await createTestMessage(testCurrentUser, testRoom)
+      const testMessage2 = await createTestMessage(testUser, testRoom)
+
+      // Response
+      const response = (await authCheckMock(
+        `/rooms/${testRoom.id}/messages`,
+        'GET'
+      )) as TestIResponse<MessageIndexApiRes>
+
+      // ExpectedJson Data
+      const expectedJson = {
+        messages: [
+          {
+            id: testMessage1.id,
+            checked: testMessage1.checked,
+            kind: testMessage1.kind,
+            isApproval: testMessage1.isApproval,
+            rejected: testMessage1.rejected,
+            user: {
+              id: testCurrentUser.id,
+              displayName: testCurrentUser.displayName,
+              photoURL: testCurrentUser.photoURL,
+              isAdmin: testCurrentUser.isAdmin,
+              followers: testCurrentUser.followers,
+              followings: testCurrentUser.followings,
+              followersCount: testCurrentUser.followersCount,
+              followingsCount: testCurrentUser.followingsCount,
+              rooms: [],
+              profile: {
+                id: expect.anything(),
+                lineId: testProfile1.lineId,
+                twitterId: testProfile1.twitterId,
+              },
+            },
+          },
+          {
+            id: testMessage2.id,
+            checked: testMessage2.checked,
+            kind: testMessage2.kind,
+            isApproval: testMessage2.isApproval,
+            rejected: testMessage2.rejected,
+            user: {
+              id: testUser.id,
+              displayName: testUser.displayName,
+              photoURL: testUser.photoURL,
+              isAdmin: testUser.isAdmin,
+              followers: testUser.followers,
+              followings: testUser.followings,
+              followersCount: testUser.followersCount,
+              followingsCount: testUser.followingsCount,
+              rooms: [],
+              profile: {
+                id: expect.anything(),
+                lineId: testProfile2.lineId,
+                twitterId: testProfile2.twitterId,
+              },
+            },
+          },
+        ],
+      }
+
+      expect(response.status).toEqual(200)
+      expect(response.body.data).toEqual(expectedJson)
+    })
   })
 
-  describe('Create Test', () => {
-    it('POST /api/rooms/:id/messages Messageの作成ができること。', async () => {
+  describe('POST /api/rooms/:id/messages', () => {
+    it('Messageの作成ができること。', async () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()
       const testUser = await createTestUser()
@@ -112,8 +183,8 @@ describe('Message API Controller Test', () => {
     })
   })
 
-  describe('Update Test', () => {
-    it('PUT /api/messages/:id MessageのisApprovalをTrueにできること。', async () => {
+  describe('PUT /api/messages/:id', () => {
+    it('MessageのisApprovalをTrueにできること。', async () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()
       const testUser = await createTestUser()
@@ -146,7 +217,7 @@ describe('Message API Controller Test', () => {
       expect(response.status).toEqual(201)
       expect(response.body.data).toEqual(expectedJson)
     })
-    it('PUT /api/messages/:id MessageのrejectedをTrueにできること。', async () => {
+    it('MessageのrejectedをTrueにできること。', async () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()
       const testUser = await createTestUser()

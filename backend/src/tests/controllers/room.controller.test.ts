@@ -6,8 +6,8 @@ import { createTestRoom, createTestUser } from '@/tests/common'
  *    Main
  **************************/
 describe('Room Controller Test', () => {
-  describe('Show Test', () => {
-    it('GET /api/rooms/:id Roomの取得ができること。', async () => {
+  describe('GET /api/rooms/:id', () => {
+    it('Roomの取得ができること。', async () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()
       const testUser = await createTestUser()
@@ -50,7 +50,7 @@ describe('Room Controller Test', () => {
       expect(response.status).toEqual(200)
       expect(response.body.data).toEqual(expectedJson)
     })
-    it('GET /api/rooms/:id Roomが存在しない場合取得ができないこと。', async () => {
+    it('Roomが存在しない場合取得ができないこと。', async () => {
       // Response
       const response = (await authCheckMock(`/rooms/NotRoom`, 'GET')) as TestIResponse<RoomShowApiRes>
 
@@ -58,8 +58,8 @@ describe('Room Controller Test', () => {
     })
   })
 
-  describe('Create Test', () => {
-    it('POST /api/users/:id/rooms Roomの作成ができること。', async () => {
+  describe('POST /api/users/:id/rooms', () => {
+    it('Roomの作成ができること。', async () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()
       const testUser = await createTestUser()
