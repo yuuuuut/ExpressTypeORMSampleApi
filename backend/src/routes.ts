@@ -15,10 +15,9 @@ const router = Router()
 router.get('/api/users', userController.index)
 router.get('/api/users/:id', authCheck, userController.show)
 router.post('/api/users', userController.create)
-router.get('/api/users/:id/followings', authCheck, relationshipController.followings)
-router.get('/api/users/:id/followers', authCheck, relationshipController.followers)
-router.post('/api/users/:id/follow', authCheck, relationshipController.follow)
-router.delete('/api/users/:id/unfollow', authCheck, relationshipController.unfollow)
+router.get('/api/users/:id/relationships', authCheck, relationshipController.index)
+router.post('/api/users/:id/relationships', authCheck, relationshipController.create)
+router.delete('/api/users/:id/relationships', authCheck, relationshipController.destroy)
 router.post('/api/users/:id/rooms', authCheck, roomController.create)
 
 /***************************

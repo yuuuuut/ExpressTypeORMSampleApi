@@ -2,9 +2,8 @@ import { getManager } from 'typeorm'
 
 import * as profileModel from '@/models/profile.model'
 import * as roomModel from '@/models/room.model'
-
+import * as types from '@/types'
 import { User } from '@/entities'
-import { UserCreateApiReq } from '@/types'
 
 /**
  * @description ユーザーの配列を返します。
@@ -49,7 +48,7 @@ const show = async (userId: string, currentUserId: string) => {
  * @description Userとそれに紐づくProfileを作成します。
  * @param body id | displayName | photoURL
  */
-const create = async (body: UserCreateApiReq) => {
+const create = async (body: types.UserCreateApiReq) => {
   const userRepository = getManager().getRepository(User)
 
   const user = await userRepository.findOne(body.id)
@@ -113,6 +112,10 @@ const follow = async (userId: string, currentUserId: string) => {
   }
 
   const [currentUser, user] = await getUserAndRelationships(userId, currentUserId)
+  const isFollowing = await isFollowingBool(user.id, currentUser.id)
+  if (isFollowing) {
+    throw Object.assign(new Error('既にフォローしています。'), { status: 500 })
+  }
 
   user.followers.push(currentUser)
   await user.save()

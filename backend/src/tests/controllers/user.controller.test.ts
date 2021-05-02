@@ -6,8 +6,8 @@ import { Req, createTestUser } from '@/tests/common'
  *    Main
  **************************/
 describe('User API Controller Test', () => {
-  describe('Show Test', () => {
-    it('GET /api/users/:id currentUserの取得ができること。', async () => {
+  describe('GET /api/users/:id', () => {
+    it('currentUserの取得ができること。', async () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()
 
@@ -32,7 +32,7 @@ describe('User API Controller Test', () => {
       expect(response.status).toEqual(200)
       expect(response.body.data).toEqual(expectedJson)
     })
-    it('GET /api/users/:id 他人のUserが取得ができること。', async () => {
+    it('他人のUserが取得ができること。', async () => {
       // Create Test Data
       await createFirebaseUser()
       const testUser = await createTestUser()
@@ -61,7 +61,7 @@ describe('User API Controller Test', () => {
       expect(response.status).toEqual(200)
       expect(response.body.data).toEqual(expectedJson)
     })
-    it('GET /api/users/:id Userが存在しない場合Userの取得ができないこと。', async () => {
+    it('Userが存在しない場合Userの取得ができないこと。', async () => {
       // Response
       const response = (await authCheckMock(`/users/NotUser`, 'GET')) as TestIResponse<UserShowApiRes>
 
@@ -70,8 +70,8 @@ describe('User API Controller Test', () => {
     })
   })
 
-  describe('Create Test', () => {
-    it('POST /api/users Userの作成ができること。', async () => {
+  describe('POST /api/users', () => {
+    it('Userの作成ができること。', async () => {
       // Test Data
       const userData = {
         id: 'TestUser',
@@ -102,7 +102,7 @@ describe('User API Controller Test', () => {
       expect(response.body.data).toEqual(expectedJson)
     })
 
-    it('POST /api/users Userが存在する場合、Userの作成が行われないこと。', async () => {
+    it('Userが存在する場合、Userの作成が行われないこと。', async () => {
       // Create Test Data
       const testUser = await createTestUser()
 

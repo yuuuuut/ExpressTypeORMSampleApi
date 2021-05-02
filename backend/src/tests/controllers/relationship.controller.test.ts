@@ -1,20 +1,13 @@
-import {
-  RelationshipCreateApiRes,
-  RelationshipDestroyApiRes,
-  RelationshipFollowersApiRes,
-  RelationshipFollowingsApiRes,
-  TestIResponse,
-} from '@/types'
-
+import { RelationshipCreateApiRes, RelationshipDestroyApiRes, RelationshipIndexApiRes, TestIResponse } from '@/types'
 import { createTestRelationship, createTestUser, getTestUser } from '@/tests/common'
 import { authCheckMock, createFirebaseUser } from '@/tests/firebase'
 
 /***************************
- *    Main
+ *   Main
  **************************/
 describe('Relationship API Controller Test', () => {
-  describe('Followings Test', () => {
-    it('GET /api/users/:id/followings フォローしているユーザーの一覧の取得ができること。', async () => {
+  describe('GET /api/users/:id/relationships', () => {
+    it('フォローしているユーザーの一覧の取得ができること。', async () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()
       const testUser = await createTestUser()
@@ -22,11 +15,9 @@ describe('Relationship API Controller Test', () => {
 
       // Response
       const response = (await authCheckMock(
-        `/users/${testCurrentUser.id}/followings`,
+        `/users/${testCurrentUser.id}/relationships`,
         'GET'
-      )) as TestIResponse<RelationshipFollowingsApiRes>
-
-      console.log(response.body)
+      )) as TestIResponse<RelationshipIndexApiRes>
 
       // Get Test Data
       const currentUser = await getTestUser(testCurrentUser.id)
@@ -46,6 +37,7 @@ describe('Relationship API Controller Test', () => {
             rooms: [],
           },
         ],
+        followers: [],
       }
 
       expect(response.status).toEqual(200)
@@ -53,7 +45,7 @@ describe('Relationship API Controller Test', () => {
       expect(currentUser.followingsCount).toEqual('1')
       expect(currentUser.followersCount).toEqual('0')
     })
-    it('GET /api/users/:id/followings 3人フォローしている場合、そのユーザーの一覧の取得ができること。', async () => {
+    it('3人フォローしている場合、そのユーザーの一覧の取得ができること。', async () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()
       const testUser1 = await createTestUser('user1')
@@ -65,9 +57,9 @@ describe('Relationship API Controller Test', () => {
 
       // Response
       const response = (await authCheckMock(
-        `/users/${testCurrentUser.id}/followings`,
+        `/users/${testCurrentUser.id}/relationships`,
         'GET'
-      )) as TestIResponse<RelationshipFollowingsApiRes>
+      )) as TestIResponse<RelationshipIndexApiRes>
 
       // Get Test Data
       const currentUser = await getTestUser(testCurrentUser.id)
@@ -112,6 +104,7 @@ describe('Relationship API Controller Test', () => {
             rooms: [],
           },
         ],
+        followers: [],
       }
 
       expect(response.status).toEqual(200)
@@ -119,10 +112,7 @@ describe('Relationship API Controller Test', () => {
       expect(currentUser.followingsCount).toEqual('3')
       expect(currentUser.followersCount).toEqual('0')
     })
-  })
-
-  describe('Followers Test', () => {
-    it('GET /api/users/:id/followers フォローされているユーザーの一覧の取得ができること。', async () => {
+    it('フォローされているユーザーの一覧の取得ができること。', async () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()
       const testUser = await createTestUser()
@@ -130,29 +120,29 @@ describe('Relationship API Controller Test', () => {
 
       // Response
       const response = (await authCheckMock(
-        `/users/${testCurrentUser.id}/followers`,
+        `/users/${testCurrentUser.id}/relationships`,
         'GET'
-      )) as TestIResponse<RelationshipFollowersApiRes>
+      )) as TestIResponse<RelationshipIndexApiRes>
 
       // Get Test Data
       const currentUser = await getTestUser(testCurrentUser.id)
-      const user = await getTestUser(testUser.id)
 
       // ExpectedJson Data
       const expectedJson = {
         followers: [
           {
-            id: user.id,
-            displayName: user.displayName,
-            photoURL: user.photoURL,
-            isAdmin: user.isAdmin,
-            followers: user.followers,
-            followings: user.followings,
-            followersCount: user.followersCount,
-            followingsCount: user.followingsCount,
+            id: testUser.id,
+            displayName: testUser.displayName,
+            photoURL: testUser.photoURL,
+            isAdmin: testUser.isAdmin,
+            followers: testUser.followers,
+            followings: testUser.followings,
+            followersCount: '0',
+            followingsCount: '1',
             rooms: [],
           },
         ],
+        followings: [],
       }
 
       expect(response.status).toEqual(200)
@@ -160,7 +150,7 @@ describe('Relationship API Controller Test', () => {
       expect(currentUser.followingsCount).toEqual('0')
       expect(currentUser.followersCount).toEqual('1')
     })
-    it('GET /api/users/:id/followers 3人からフォローされている場合、そのユーザーの一覧の取得ができること。', async () => {
+    it('3人からフォローされている場合、そのユーザーの一覧の取得ができること。', async () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()
       const testUser1 = await createTestUser('user1')
@@ -172,9 +162,9 @@ describe('Relationship API Controller Test', () => {
 
       // Response
       const response = (await authCheckMock(
-        `/users/${testCurrentUser.id}/followers`,
+        `/users/${testCurrentUser.id}/relationships`,
         'GET'
-      )) as TestIResponse<RelationshipFollowersApiRes>
+      )) as TestIResponse<RelationshipIndexApiRes>
 
       // Get Test Data
       const currentUser = await getTestUser(testCurrentUser.id)
@@ -219,6 +209,7 @@ describe('Relationship API Controller Test', () => {
             rooms: [],
           },
         ],
+        followings: [],
       }
 
       expect(response.status).toEqual(200)
@@ -226,17 +217,68 @@ describe('Relationship API Controller Test', () => {
       expect(currentUser.followingsCount).toEqual('0')
       expect(currentUser.followersCount).toEqual('3')
     })
+    it('相互フォローしているユーザーがいる場合の一覧の取得ができること。', async () => {
+      // Create Test Data
+      const testCurrentUser = await createFirebaseUser()
+      const testUser = await createTestUser()
+      await createTestRelationship(testCurrentUser.id, testUser.id)
+      await createTestRelationship(testUser.id, testCurrentUser.id)
+
+      // Response
+      const response = (await authCheckMock(
+        `/users/${testCurrentUser.id}/relationships`,
+        'GET'
+      )) as TestIResponse<RelationshipIndexApiRes>
+
+      // Get Test Data
+      const currentUser = await getTestUser(testCurrentUser.id)
+
+      // ExpectedJson Data
+      const expectedJson = {
+        followers: [
+          {
+            id: testUser.id,
+            displayName: testUser.displayName,
+            photoURL: testUser.photoURL,
+            isAdmin: testUser.isAdmin,
+            followers: testUser.followers,
+            followings: testUser.followings,
+            followersCount: '1',
+            followingsCount: '1',
+            rooms: [],
+          },
+        ],
+        followings: [
+          {
+            id: testUser.id,
+            displayName: testUser.displayName,
+            photoURL: testUser.photoURL,
+            isAdmin: testUser.isAdmin,
+            followers: testUser.followers,
+            followings: testUser.followings,
+            followersCount: '1',
+            followingsCount: '1',
+            rooms: [],
+          },
+        ],
+      }
+
+      expect(response.status).toEqual(200)
+      expect(response.body.data).toEqual(expectedJson)
+      expect(currentUser.followingsCount).toEqual('1')
+      expect(currentUser.followersCount).toEqual('1')
+    })
   })
 
-  describe('Create Test', () => {
-    it('POST /api/users/:id/follow フォローの作成ができること。', async () => {
+  describe('POST /api/users/:id/relationships', () => {
+    it('フォローの作成ができること。', async () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()
       const testUser = await createTestUser()
 
       // Response
       const response = (await authCheckMock(
-        `/users/${testUser.id}/follow`,
+        `/users/${testUser.id}/relationships`,
         'POST'
       )) as TestIResponse<RelationshipCreateApiRes>
 
@@ -252,13 +294,28 @@ describe('Relationship API Controller Test', () => {
       expect(response.body.data).toEqual(expectedJson)
       expect(currentUser.followingsCount).toEqual('1')
     })
-    it('POST /api/users/:id/follow 自分をフォローできないこと。', async () => {
+    it('既にフォローしている場合、フォローの作成ができないこと。', async () => {
+      // Create Test Data
+      const testCurrentUser = await createFirebaseUser()
+      const testUser = await createTestUser()
+      await createTestRelationship(testCurrentUser.id, testUser.id)
+
+      // Response
+      const response = (await authCheckMock(
+        `/users/${testUser.id}/relationships`,
+        'POST'
+      )) as TestIResponse<RelationshipCreateApiRes>
+
+      expect(response.status).toEqual(500)
+      expect(response.body.error?.message).toEqual('既にフォローしています。')
+    })
+    it('自分自身をフォローできないこと。', async () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()
 
       // Response
       const response = (await authCheckMock(
-        `/users/${testCurrentUser.id}/follow`,
+        `/users/${testCurrentUser.id}/relationships`,
         'POST'
       )) as TestIResponse<RelationshipCreateApiRes>
 
@@ -267,8 +324,8 @@ describe('Relationship API Controller Test', () => {
     })
   })
 
-  describe('Destroy Test', () => {
-    it('DELETE /api/users/:id/unfollow フォローの解除ができること。', async () => {
+  describe('DELETE /api/users/:id/relationships', () => {
+    it(' フォローの解除ができること。', async () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()
       const testUser = await createTestUser()
@@ -276,7 +333,7 @@ describe('Relationship API Controller Test', () => {
 
       // Response
       const response = (await authCheckMock(
-        `/users/${testUser.id}/unfollow`,
+        `/users/${testUser.id}/relationships`,
         'DELETE'
       )) as TestIResponse<RelationshipDestroyApiRes>
 

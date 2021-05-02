@@ -14,6 +14,7 @@ const index = async (currentUser: User) => {
     relations: ['rooms'],
   })
   if (!user) throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })
+
   const rooms = user.rooms
 
   return { rooms }
@@ -46,8 +47,14 @@ const create = async (userId: string, currentUserId: string) => {
   const uuid = uuidv4()
 
   const user = await userRepository.findOne(userId)
+  if (!user) {
+    throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })
+  }
+
   const currentUser = await userRepository.findOne(currentUserId)
-  if (!user || !currentUser) throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })
+  if (!currentUser) {
+    throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })
+  }
 
   const newRoom = new Room()
   newRoom.id = uuid

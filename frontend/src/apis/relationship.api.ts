@@ -2,7 +2,7 @@ import { AxiosResponse } from 'axios'
 import { Axios } from './axios'
 
 const followings = async (id: string, token: string): Promise<AxiosResponse> => {
-  const response = (await Axios.get(`users/${id}/followers`, {
+  const response = (await Axios.get(`users/${id}/relationships`, {
     headers: {
       Authorization: 'Bearer ' + token,
     },
@@ -16,7 +16,7 @@ const followings = async (id: string, token: string): Promise<AxiosResponse> => 
  */
 const create = async (id: string, token: string): Promise<AxiosResponse> => {
   const response = (await Axios.post(
-    `users/${id}/follow`,
+    `users/${id}/relationships`,
     {},
     {
       headers: {
@@ -29,7 +29,7 @@ const create = async (id: string, token: string): Promise<AxiosResponse> => {
 }
 
 const unfollow = async (id: string, token: string): Promise<AxiosResponse> => {
-  const response = (await Axios.delete(`users/${id}/unfollow`, {
+  const response = (await Axios.delete(`users/${id}/relationships`, {
     headers: {
       Authorization: 'Bearer ' + token,
     },

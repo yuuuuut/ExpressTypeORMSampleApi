@@ -51,11 +51,8 @@ export interface ProfileUpdateApiRes {
   message: string
 }
 
-export interface RelationshipFollowingsApiRes {
+export interface RelationshipIndexApiRes {
   followings: User[]
-}
-
-export interface RelationshipFollowersApiRes {
   followers: User[]
 }
 
