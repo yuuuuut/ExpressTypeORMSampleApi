@@ -18,13 +18,15 @@ describe('Relationship API Controller Test', () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()
       const testUser = await createTestUser()
-      await createTestRelationship(testCurrentUser, testUser)
+      await createTestRelationship(testCurrentUser.id, testUser.id)
 
       // Response
       const response = (await authCheckMock(
         `/users/${testCurrentUser.id}/followings`,
         'GET'
       )) as TestIResponse<RelationshipFollowingsApiRes>
+
+      console.log(response.body)
 
       // Get Test Data
       const currentUser = await getTestUser(testCurrentUser.id)
@@ -33,16 +35,15 @@ describe('Relationship API Controller Test', () => {
       const expectedJson = {
         followings: [
           {
-            id: expect.anything(),
-            follower: {
-              id: testUser.id,
-              displayName: testUser.displayName,
-              photoURL: testUser.photoURL,
-              isAdmin: testUser.isAdmin,
-              followersCount: '1',
-              followingsCount: '0',
-              rooms: [],
-            },
+            id: testUser.id,
+            displayName: testUser.displayName,
+            photoURL: testUser.photoURL,
+            isAdmin: testUser.isAdmin,
+            followers: testUser.followers,
+            followings: testUser.followings,
+            followersCount: '1',
+            followingsCount: '0',
+            rooms: [],
           },
         ],
       }
@@ -58,9 +59,9 @@ describe('Relationship API Controller Test', () => {
       const testUser1 = await createTestUser('user1')
       const testUser2 = await createTestUser('user2')
       const testUser3 = await createTestUser('user3')
-      await createTestRelationship(testCurrentUser, testUser1)
-      await createTestRelationship(testCurrentUser, testUser2)
-      await createTestRelationship(testCurrentUser, testUser3)
+      await createTestRelationship(testCurrentUser.id, testUser1.id)
+      await createTestRelationship(testCurrentUser.id, testUser2.id)
+      await createTestRelationship(testCurrentUser.id, testUser3.id)
 
       // Response
       const response = (await authCheckMock(
@@ -78,40 +79,37 @@ describe('Relationship API Controller Test', () => {
       const expectedJson = {
         followings: [
           {
-            id: expect.anything(),
-            follower: {
-              id: user1.id,
-              displayName: user1.displayName,
-              photoURL: user1.photoURL,
-              isAdmin: user1.isAdmin,
-              followersCount: user1.followersCount,
-              followingsCount: user1.followingsCount,
-              rooms: [],
-            },
+            id: user1.id,
+            displayName: user1.displayName,
+            photoURL: user1.photoURL,
+            isAdmin: user1.isAdmin,
+            followers: user1.followers,
+            followings: user1.followings,
+            followersCount: user1.followersCount,
+            followingsCount: user1.followingsCount,
+            rooms: [],
           },
           {
-            id: expect.anything(),
-            follower: {
-              id: user2.id,
-              displayName: user2.displayName,
-              photoURL: user2.photoURL,
-              isAdmin: user2.isAdmin,
-              followersCount: user2.followersCount,
-              followingsCount: user2.followingsCount,
-              rooms: [],
-            },
+            id: user2.id,
+            displayName: user2.displayName,
+            photoURL: user2.photoURL,
+            isAdmin: user2.isAdmin,
+            followers: user2.followers,
+            followings: user2.followings,
+            followersCount: user2.followersCount,
+            followingsCount: user2.followingsCount,
+            rooms: [],
           },
           {
-            id: expect.anything(),
-            follower: {
-              id: user3.id,
-              displayName: user3.displayName,
-              photoURL: user3.photoURL,
-              isAdmin: user3.isAdmin,
-              followersCount: user3.followersCount,
-              followingsCount: user3.followingsCount,
-              rooms: [],
-            },
+            id: user3.id,
+            displayName: user3.displayName,
+            photoURL: user3.photoURL,
+            isAdmin: user3.isAdmin,
+            followers: user3.followers,
+            followings: user3.followings,
+            followersCount: user3.followersCount,
+            followingsCount: user3.followingsCount,
+            rooms: [],
           },
         ],
       }
@@ -128,7 +126,7 @@ describe('Relationship API Controller Test', () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()
       const testUser = await createTestUser()
-      await createTestRelationship(testUser, testCurrentUser)
+      await createTestRelationship(testUser.id, testCurrentUser.id)
 
       // Response
       const response = (await authCheckMock(
@@ -144,16 +142,15 @@ describe('Relationship API Controller Test', () => {
       const expectedJson = {
         followers: [
           {
-            id: expect.anything(),
-            followed: {
-              id: user.id,
-              displayName: user.displayName,
-              photoURL: user.photoURL,
-              isAdmin: user.isAdmin,
-              followersCount: user.followersCount,
-              followingsCount: user.followingsCount,
-              rooms: [],
-            },
+            id: user.id,
+            displayName: user.displayName,
+            photoURL: user.photoURL,
+            isAdmin: user.isAdmin,
+            followers: user.followers,
+            followings: user.followings,
+            followersCount: user.followersCount,
+            followingsCount: user.followingsCount,
+            rooms: [],
           },
         ],
       }
@@ -169,9 +166,9 @@ describe('Relationship API Controller Test', () => {
       const testUser1 = await createTestUser('user1')
       const testUser2 = await createTestUser('user2')
       const testUser3 = await createTestUser('user3')
-      await createTestRelationship(testUser1, testCurrentUser)
-      await createTestRelationship(testUser2, testCurrentUser)
-      await createTestRelationship(testUser3, testCurrentUser)
+      await createTestRelationship(testUser1.id, testCurrentUser.id)
+      await createTestRelationship(testUser2.id, testCurrentUser.id)
+      await createTestRelationship(testUser3.id, testCurrentUser.id)
 
       // Response
       const response = (await authCheckMock(
@@ -189,40 +186,37 @@ describe('Relationship API Controller Test', () => {
       const expectedJson = {
         followers: [
           {
-            id: expect.anything(),
-            followed: {
-              id: user1.id,
-              displayName: user1.displayName,
-              photoURL: user1.photoURL,
-              isAdmin: user1.isAdmin,
-              followersCount: user1.followersCount,
-              followingsCount: user1.followingsCount,
-              rooms: [],
-            },
+            id: user1.id,
+            displayName: user1.displayName,
+            photoURL: user1.photoURL,
+            isAdmin: user1.isAdmin,
+            followers: user1.followers,
+            followings: user1.followings,
+            followersCount: user1.followersCount,
+            followingsCount: user1.followingsCount,
+            rooms: [],
           },
           {
-            id: expect.anything(),
-            followed: {
-              id: user2.id,
-              displayName: user2.displayName,
-              photoURL: user2.photoURL,
-              isAdmin: user2.isAdmin,
-              followersCount: user2.followersCount,
-              followingsCount: user2.followingsCount,
-              rooms: [],
-            },
+            id: user2.id,
+            displayName: user2.displayName,
+            photoURL: user2.photoURL,
+            isAdmin: user2.isAdmin,
+            followers: user2.followers,
+            followings: user2.followings,
+            followersCount: user2.followersCount,
+            followingsCount: user2.followingsCount,
+            rooms: [],
           },
           {
-            id: expect.anything(),
-            followed: {
-              id: user3.id,
-              displayName: user3.displayName,
-              photoURL: user3.photoURL,
-              isAdmin: user3.isAdmin,
-              followersCount: user3.followersCount,
-              followingsCount: user3.followingsCount,
-              rooms: [],
-            },
+            id: user3.id,
+            displayName: user3.displayName,
+            photoURL: user3.photoURL,
+            isAdmin: user3.isAdmin,
+            followers: user3.followers,
+            followings: user3.followings,
+            followersCount: user3.followersCount,
+            followingsCount: user3.followingsCount,
+            rooms: [],
           },
         ],
       }
@@ -269,7 +263,7 @@ describe('Relationship API Controller Test', () => {
       )) as TestIResponse<RelationshipCreateApiRes>
 
       expect(response.status).toEqual(500)
-      expect(response.body.error?.message).toEqual('自分をフォローすることはできません。')
+      expect(response.body.error?.message).toEqual('自分自身をフォローすることはできません。')
     })
   })
 
@@ -278,7 +272,7 @@ describe('Relationship API Controller Test', () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()
       const testUser = await createTestUser()
-      await createTestRelationship(testCurrentUser, testUser)
+      await createTestRelationship(testCurrentUser.id, testUser.id)
 
       // Response
       const response = (await authCheckMock(

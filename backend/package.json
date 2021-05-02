@@ -8,7 +8,8 @@
     "ts-node": "ts-node",
     "dev": "cross-env NODE_ENV=dev nodemon -L",
     "test-dev": "cross-env NODE_ENV=test nodemon -L",
-    "test": "cross-env NODE_ENV=test jest"
+    "test": "cross-env NODE_ENV=test jest",
+    "revert": "cross-env NODE_ENV=test ts-node ./node_modules/.bin/typeorm migration:revert"
   },
   "dependencies": {
     "axios": "^0.21.1",

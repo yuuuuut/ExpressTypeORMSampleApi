@@ -21,6 +21,8 @@ describe('User Model Test', () => {
           displayName: testCurrentUser.displayName,
           photoURL: testCurrentUser.photoURL,
           isAdmin: testCurrentUser.isAdmin,
+          followers: [],
+          followings: [],
           followersCount: '0',
           followingsCount: '0',
           rooms: [],
@@ -47,6 +49,8 @@ describe('User Model Test', () => {
           displayName: testUser.displayName,
           photoURL: testUser.photoURL,
           isAdmin: testUser.isAdmin,
+          followers: [],
+          followings: [],
           followersCount: '0',
           followingsCount: '0',
           rooms: [],
@@ -63,7 +67,7 @@ describe('User Model Test', () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()
       const testUser = await createTestUser()
-      await createTestRelationship(testCurrentUser, testUser)
+      await createTestRelationship(testCurrentUser.id, testUser.id)
 
       const val = await userModel.show(testUser.id, testCurrentUser.id)
 
@@ -74,6 +78,8 @@ describe('User Model Test', () => {
           displayName: testUser.displayName,
           photoURL: testUser.photoURL,
           isAdmin: testUser.isAdmin,
+          followers: [],
+          followings: [],
           followersCount: '1',
           followingsCount: '0',
           rooms: [],
@@ -90,8 +96,8 @@ describe('User Model Test', () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()
       const testUser = await createTestUser()
-      await createTestRelationship(testCurrentUser, testUser)
-      await createTestRelationship(testUser, testCurrentUser)
+      await createTestRelationship(testCurrentUser.id, testUser.id)
+      await createTestRelationship(testUser.id, testCurrentUser.id)
 
       const val = await userModel.show(testUser.id, testCurrentUser.id)
 
@@ -102,6 +108,8 @@ describe('User Model Test', () => {
           displayName: testUser.displayName,
           photoURL: testUser.photoURL,
           isAdmin: testUser.isAdmin,
+          followers: [],
+          followings: [],
           followersCount: '1',
           followingsCount: '1',
           rooms: [],
@@ -118,8 +126,8 @@ describe('User Model Test', () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()
       const testUser = await createTestUser()
-      await createTestRelationship(testCurrentUser, testUser)
-      await createTestRelationship(testUser, testCurrentUser)
+      await createTestRelationship(testCurrentUser.id, testUser.id)
+      await createTestRelationship(testUser.id, testCurrentUser.id)
       const testRoom = await createTestRoom(testCurrentUser, testUser)
 
       const val = await userModel.show(testUser.id, testCurrentUser.id)
@@ -131,6 +139,8 @@ describe('User Model Test', () => {
           displayName: testUser.displayName,
           photoURL: testUser.photoURL,
           isAdmin: testUser.isAdmin,
+          followers: [],
+          followings: [],
           followersCount: '1',
           followingsCount: '1',
           rooms: [
@@ -198,6 +208,8 @@ describe('User Model Test', () => {
           displayName: testCurrentUser.displayName,
           photoURL: testCurrentUser.photoURL,
           isAdmin: testCurrentUser.isAdmin,
+          followers: [],
+          followings: [],
           followersCount: '0',
           followingsCount: '0',
           rooms: [],
@@ -214,23 +226,22 @@ describe('User Model Test', () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()
       const testUser = await createTestUser()
-      await createTestRelationship(testCurrentUser, testUser)
+      await createTestRelationship(testCurrentUser.id, testUser.id)
 
       const val = await userModel.followings(testCurrentUser.id)
 
       // ExpectedJson Data
       const expectedJson = [
         {
-          id: expect.anything(),
-          follower: {
-            id: testUser.id,
-            displayName: testUser.displayName,
-            photoURL: testUser.photoURL,
-            isAdmin: testUser.isAdmin,
-            followersCount: '1',
-            followingsCount: '0',
-            rooms: [],
-          },
+          id: testUser.id,
+          displayName: testUser.displayName,
+          photoURL: testUser.photoURL,
+          isAdmin: testUser.isAdmin,
+          followers: testUser.followers,
+          followings: testUser.followings,
+          followersCount: '1',
+          followingsCount: '0',
+          rooms: [],
         },
       ]
 
@@ -246,12 +257,49 @@ describe('User Model Test', () => {
     })
   })
 
+  describe('getUserAndRelationships Test', () => {
+    it('正しい戻り値を返すこと。', async () => {
+      // Create Test Data
+      const testCurrentUser = await createFirebaseUser()
+      const testUser = await createTestUser()
+      await createTestRelationship(testCurrentUser.id, testUser.id)
+
+      const val = await __local__.getUserAndRelationships(testUser.id, testCurrentUser.id)
+
+      // ExpectedJson Data
+      const expectedJson = [
+        {
+          id: testCurrentUser.id,
+          displayName: testCurrentUser.displayName,
+          photoURL: testCurrentUser.photoURL,
+          isAdmin: testCurrentUser.isAdmin,
+          followers: testCurrentUser.followers,
+          followings: testCurrentUser.followings,
+          followersCount: testCurrentUser.followersCount,
+          followingsCount: testCurrentUser.followingsCount,
+          rooms: testCurrentUser.rooms,
+        },
+        {
+          id: testUser.id,
+          displayName: testUser.displayName,
+          photoURL: testUser.photoURL,
+          isAdmin: testUser.isAdmin,
+          followers: testUser.followers,
+          followings: testUser.followings,
+          followersCount: testUser.followersCount,
+          followingsCount: testUser.followingsCount,
+          rooms: testUser.rooms,
+        },
+      ]
+    })
+  })
+
   describe('isFollowingBool Test', () => {
     it('Userをフォローしている場合、Trueを返すこと。', async () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()
       const testUser = await createTestUser()
-      await createTestRelationship(testCurrentUser, testUser)
+      await createTestRelationship(testCurrentUser.id, testUser.id)
 
       const val = await __local__.isFollowingBool(testUser.id, testCurrentUser.id)
 
@@ -273,8 +321,8 @@ describe('User Model Test', () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()
       const testUser = await createTestUser()
-      await createTestRelationship(testCurrentUser, testUser)
-      await createTestRelationship(testUser, testCurrentUser)
+      await createTestRelationship(testCurrentUser.id, testUser.id)
+      await createTestRelationship(testUser.id, testCurrentUser.id)
 
       const val = await __local__.isMutualFollowBool(testUser.id, testCurrentUser.id)
 
@@ -283,7 +331,7 @@ describe('User Model Test', () => {
     it('相互フォローでない場合、 Falseを返すこと。', async () => {
       const testCurrentUser = await createFirebaseUser()
       const testUser = await createTestUser()
-      await createTestRelationship(testCurrentUser, testUser)
+      await createTestRelationship(testCurrentUser.id, testUser.id)
 
       const val = await __local__.isMutualFollowBool(testUser.id, testCurrentUser.id)
 

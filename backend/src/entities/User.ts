@@ -11,7 +11,7 @@ import {
   PrimaryColumn,
 } from 'typeorm'
 
-import { Message, Notification, Profile, Relationship, Room, Tag } from '.'
+import { Message, Notification, Profile, Room, Tag } from '.'
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -40,33 +40,27 @@ export class User extends BaseEntity {
   @OneToMany(() => Notification, (notification) => notification.visited)
   passive_notifications: Notification[]
 
-  @OneToMany(() => Relationship, (followings) => followings.followed)
-  followings: Relationship[]
-
   followingsCount: number
-  @AfterLoad()
-  async countFollowings() {
-    const { count } = await Relationship.createQueryBuilder('relationship')
-      .where('relationship.followed = :id', { id: this.id })
-      .select('COUNT(*)', 'count')
-      .getRawOne()
-
-    this.followingsCount = count
-  }
-
-  @OneToMany(() => Relationship, (followers) => followers.follower)
-  followers: Relationship[]
 
   followersCount: number
-  @AfterLoad()
-  async countFollowers() {
-    const { count } = await Relationship.createQueryBuilder('relationship')
-      .where('relationship.follower = :id', { id: this.id })
-      .select('COUNT(*)', 'count')
-      .getRawOne()
 
-    this.followersCount = count
-  }
+  @ManyToMany(() => User, (user) => user.followers)
+  followings: User[]
+
+  @ManyToMany(() => User, (user) => user.followings)
+  @JoinTable({
+    name: 'relationships',
+
+    joinColumn: {
+      name: 'followed_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'follower_id',
+      referencedColumnName: 'id',
+    },
+  })
+  followers: User[]
 
   @ManyToMany(() => Tag, (tag) => tag.users)
   @JoinTable({
@@ -101,5 +95,35 @@ export class User extends BaseEntity {
     if (!this.rooms) {
       this.rooms = []
     }
+
+    if (!this.followings) {
+      this.followings = []
+    }
+
+    if (!this.followers) {
+      this.followers = []
+    }
+  }
+
+  @AfterLoad()
+  async countFollowings() {
+    const { count } = await User.createQueryBuilder('user')
+      .leftJoinAndSelect('user.followers', 'follower')
+      .where('follower.id = :id', { id: this.id })
+      .select('COUNT(*)', 'count')
+      .getRawOne()
+
+    this.followingsCount = count
+  }
+
+  @AfterLoad()
+  async countFollowers() {
+    const { count } = await User.createQueryBuilder('user')
+      .leftJoinAndSelect('user.followings', 'followed')
+      .where('followed.id = :id', { id: this.id })
+      .select('COUNT(*)', 'count')
+      .getRawOne()
+
+    this.followersCount = count
   }
 }

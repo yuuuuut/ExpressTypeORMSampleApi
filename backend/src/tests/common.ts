@@ -1,7 +1,7 @@
 import { getManager } from 'typeorm'
 import request from 'supertest'
 
-import { Message, Profile, Relationship, Room, User } from '@/entities'
+import { Message, Profile, Room, User } from '@/entities'
 
 // API URL
 const Req = request('http://localhost:4000/api')
@@ -37,7 +37,7 @@ async function createTestUser(userId?: string, profile?: Profile) {
   const userData = await userRepository.save(newUser)
 
   const user = await userRepository.findOne(userData.id)
-  if (!user) throw new Error('Test Failed')
+  if (!user) throw new Error('Test Failed: createTestUser')
 
   return user
 }
@@ -55,15 +55,24 @@ async function createTestProfile() {
 
 /**
  * @description Test用Relationshipを作成する。
+ * @param currentUserId CurrentUserのID。
+ * @param userId UserのID。
  */
-async function createTestRelationship(currentUser: User, followUser: User) {
-  const relationshipRepository = getManager().getRepository(Relationship)
+async function createTestRelationship(currentUserId: string, userId: string) {
+  const userRepository = getManager().getRepository(User)
 
-  const relationship = new Relationship()
-  relationship.followed = currentUser
-  relationship.follower = followUser
+  const currentUser = await userRepository.findOne(currentUserId, {
+    relations: ['followings', 'followers'],
+  })
+  if (!currentUser) throw new Error('Test Failed: createTestRelationship')
 
-  await relationshipRepository.save(relationship)
+  const user = await userRepository.findOne(userId, {
+    relations: ['followings', 'followers'],
+  })
+  if (!user) throw new Error('Test Failed: createTestRelationship')
+
+  user.followers.push(currentUser)
+  await user.save()
 }
 
 /**
