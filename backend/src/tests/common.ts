@@ -1,7 +1,7 @@
 import { getManager } from 'typeorm'
 import request from 'supertest'
 
-import { Message, Profile, Room, User } from '@/entities'
+import { Message, Profile, Room, Tag, User } from '@/entities'
 
 // API URL
 const Req = request('http://localhost:4000/api')
@@ -106,6 +106,21 @@ async function createTestMessage(user: User, room: Room) {
   return await messageRepository.save(message)
 }
 
+/**
+ * @description Test用Tagを作成する。
+ */
+async function createTestTag() {
+  const tag1 = new Tag()
+  tag1.name = 'ゲーム'
+  const t1 = await tag1.save()
+
+  const tag2 = new Tag()
+  tag2.name = '読書'
+  const t2 = await tag2.save()
+
+  return [t1, t2]
+}
+
 export {
   Req,
   getTestUser,
@@ -114,4 +129,5 @@ export {
   createTestRelationship,
   createTestRoom,
   createTestMessage,
+  createTestTag,
 }

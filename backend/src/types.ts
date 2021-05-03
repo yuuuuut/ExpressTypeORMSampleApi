@@ -1,4 +1,4 @@
-import { Message, Profile, Room, User } from './entities'
+import { Message, Profile, Room, Tag, User } from '@/entities'
 
 export interface IResponse<T> {
   status: number
@@ -94,4 +94,8 @@ export interface MessageUpdateApiReq {
 
 export interface MessageUpdateApiRes {
   message: Message
+}
+
+export interface TagIndexRes {
+  tags: Tag[]
 }

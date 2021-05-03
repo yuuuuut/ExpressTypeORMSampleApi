@@ -5,6 +5,7 @@ import * as profileController from '@/controllers/profile.controller'
 import * as messageController from '@/controllers/message.controller'
 import * as userController from '@/controllers/user.controller'
 import * as roomController from '@/controllers/room.controller'
+import * as tagController from '@/controllers/tag.controller'
 import authCheck from '@/middlewares/auth'
 
 const router = Router()
@@ -37,5 +38,10 @@ router.post('/api/rooms/:id/messages', authCheck, messageController.create)
  *   /messages
  **************************/
 router.put('/api/messages/:id', authCheck, messageController.update)
+
+/***************************
+ *   /tags
+ **************************/
+router.get('/api/tags', tagController.index)
 
 export default router
