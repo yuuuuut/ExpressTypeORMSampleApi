@@ -43,5 +43,6 @@ router.put('/api/messages/:id', authCheck, messageController.update)
  *   /tags
  **************************/
 router.get('/api/tags', tagController.index)
+router.get('/api/tags/:id', tagController.show)
 
 export default router

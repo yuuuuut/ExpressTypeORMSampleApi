@@ -99,3 +99,7 @@ export interface MessageUpdateApiRes {
 export interface TagIndexRes {
   tags: Tag[]
 }
+
+export interface TagShowRes {
+  tag: Tag
+}

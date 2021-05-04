@@ -1,6 +1,6 @@
 import { ProfileUpdateApiRes, TestIResponse } from '@/types'
 import { authCheckMock, createFirebaseUser } from '@/tests/firebase'
-import { createTestProfile } from '@/tests/common'
+import { addProfileTestUser, createTestProfile } from '@/tests/common'
 
 /***************************
  *   Main
@@ -10,7 +10,8 @@ describe('Profile API Controller Test', () => {
     it('Profileの更新に成功すること。', async () => {
       // Create Test Data
       const testProfile = await createTestProfile()
-      await createFirebaseUser(testProfile)
+      const testCurrentUser = await createFirebaseUser()
+      await addProfileTestUser(testCurrentUser, testProfile)
 
       // Test Data
       const data = {
@@ -38,7 +39,8 @@ describe('Profile API Controller Test', () => {
     it('LINE_IDのみの更新に成功すること。', async () => {
       // Create Test Data
       const testProfile = await createTestProfile()
-      await createFirebaseUser(testProfile)
+      const testCurrentUser = await createFirebaseUser()
+      await addProfileTestUser(testCurrentUser, testProfile)
 
       // Test Data
       const data = {
@@ -65,7 +67,8 @@ describe('Profile API Controller Test', () => {
     it('Twitter_IDのみの更新に成功すること。', async () => {
       // Create Test Data
       const testProfile = await createTestProfile()
-      await createFirebaseUser(testProfile)
+      const testCurrentUser = await createFirebaseUser()
+      await addProfileTestUser(testCurrentUser, testProfile)
 
       // Test Data
       const data = {

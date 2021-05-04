@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import * as userAPI from '../apis/user.api'
 import * as relatinoshipAPI from '../apis/relationship.api'
 import { useAuth } from '../contexts/AuthContext'
+import axios from 'axios'
 
 const Root = (): JSX.Element => {
   const { user, signin, signout } = useAuth()
@@ -72,8 +73,15 @@ const Root = (): JSX.Element => {
     console.log(response)
   }
 
+  async function a() {
+    const response = await axios.get('http://localhost:4000/api/tags/41')
+
+    console.log(response)
+  }
+
   useEffect(() => {
     getUsers()
+    a()
   }, [])
 
   return (

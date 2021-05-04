@@ -2,6 +2,15 @@ import { createConnections, getConnection } from 'typeorm'
 
 beforeAll(async () => {
   await createConnections()
+
+  const connection = getConnection()
+  const entities = connection.entityMetadatas
+
+  for (let entity of entities) {
+    const repository = connection.getRepository(entity.name)
+    await repository.query(`DELETE FROM ${entity.tableName}`)
+    await repository.query(`ALTER TABLE ${entity.tableName} AUTO_INCREMENT = 1`)
+  }
 })
 
 afterEach(async () => {
@@ -11,6 +20,7 @@ afterEach(async () => {
   for (let entity of entities) {
     const repository = connection.getRepository(entity.name)
     await repository.query(`DELETE FROM ${entity.tableName}`)
+    await repository.query(`ALTER TABLE ${entity.tableName} AUTO_INCREMENT = 1`)
   }
 })
 

@@ -13,4 +13,19 @@ const index = async () => {
   return tags
 }
 
-export { index }
+/**
+ * @description Tagを返します。
+ * @param tagId TagのID。
+ */
+const show = async (tagId: string) => {
+  const tagRepository = getManager().getRepository(Tag)
+
+  const tag = await tagRepository.findOne(tagId, {
+    relations: ['users', 'users.tags'],
+  })
+  if (!tag) throw Object.assign(new Error('Tagが存在しません。'), { status: 404 })
+
+  return tag
+}
+
+export { index, show }

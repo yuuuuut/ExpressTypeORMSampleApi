@@ -26,20 +26,32 @@ async function getTestUser(userId: string) {
  * @param userId UserのID。
  * @param profile Profile Entity
  */
-async function createTestUser(userId?: string, profile?: Profile) {
+async function createTestUser(userId?: string) {
   const userRepository = getManager().getRepository(User)
 
   const newUser = new User()
   newUser.id = userId || 'TestUser'
   newUser.displayName = 'TestDisName'
   newUser.photoURL = 'TestUserPhoto'
-  newUser.profile = profile || undefined
+
   const userData = await userRepository.save(newUser)
 
   const user = await userRepository.findOne(userData.id)
   if (!user) throw new Error('Test Failed: createTestUser')
 
   return user
+}
+
+async function addProfileTestUser(user: User, profile: Profile) {
+  user.profile = profile
+
+  return await user.save()
+}
+
+async function addTagTestUser(user: User, tags: Tag[]) {
+  user.tags = tags
+
+  return await user.save()
 }
 
 /**
@@ -109,22 +121,20 @@ async function createTestMessage(user: User, room: Room) {
 /**
  * @description Test用Tagを作成する。
  */
-async function createTestTag() {
-  const tag1 = new Tag()
-  tag1.name = 'ゲーム'
-  const t1 = await tag1.save()
+async function createTestTag(name: string) {
+  const newTag = new Tag()
 
-  const tag2 = new Tag()
-  tag2.name = '読書'
-  const t2 = await tag2.save()
+  newTag.name = name
 
-  return [t1, t2]
+  return await newTag.save()
 }
 
 export {
   Req,
   getTestUser,
   createTestUser,
+  addProfileTestUser,
+  addTagTestUser,
   createTestProfile,
   createTestRelationship,
   createTestRoom,

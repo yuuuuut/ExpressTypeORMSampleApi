@@ -7,7 +7,13 @@ import {
   TestIResponse,
 } from '@/types'
 
-import { createTestMessage, createTestProfile, createTestRoom, createTestUser } from '@/tests/common'
+import {
+  addProfileTestUser,
+  createTestMessage,
+  createTestProfile,
+  createTestRoom,
+  createTestUser,
+} from '@/tests/common'
 import { authCheckMock, createFirebaseUser } from '@/tests/firebase'
 
 /***************************
@@ -18,8 +24,9 @@ describe('Message API Controller Test', () => {
     it('Messagesの取得ができること', async () => {
       // Create Test Data
       const testProfile = await createTestProfile()
-      const testCurrentUser = await createFirebaseUser(testProfile)
+      const testCurrentUser = await createFirebaseUser()
       const testUser = await createTestUser()
+      await addProfileTestUser(testCurrentUser, testProfile)
       const testRoom = await createTestRoom(testUser, testCurrentUser)
       const testMessage = await createTestMessage(testCurrentUser, testRoom)
 
@@ -65,8 +72,10 @@ describe('Message API Controller Test', () => {
       // Create Test Data
       const testProfile1 = await createTestProfile()
       const testProfile2 = await createTestProfile()
-      const testCurrentUser = await createFirebaseUser(testProfile1)
-      const testUser = await createTestUser('TestUser', testProfile2)
+      const testCurrentUser = await createFirebaseUser()
+      const testUser = await createTestUser('TestUser')
+      await addProfileTestUser(testCurrentUser, testProfile1)
+      await addProfileTestUser(testUser, testProfile2)
       const testRoom = await createTestRoom(testUser, testCurrentUser)
       const testMessage1 = await createTestMessage(testCurrentUser, testRoom)
       const testMessage2 = await createTestMessage(testUser, testRoom)

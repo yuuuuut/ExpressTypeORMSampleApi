@@ -2,9 +2,10 @@ import { getManager } from 'typeorm'
 import dotenv from 'dotenv'
 import axios from 'axios'
 
-import firebaseAdmin from '@/libs/firebase'
-import { Profile, User } from '@/entities'
+import { User } from '@/entities'
 import { Req } from '@/tests/common'
+
+import firebaseAdmin from '@/libs/firebase'
 
 /***************************
  *   Settings
@@ -23,7 +24,7 @@ const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustom
  * @description Firebaseに存在するUser情報からUserを作成する。
  *              Profileも必要な場合は渡す。
  */
-async function createFirebaseUser(profile?: Profile) {
+async function createFirebaseUser() {
   const userRepository = getManager().getRepository(User)
   const firebaseUser = await firebaseAdmin.auth().getUser(UID)
 
@@ -31,7 +32,6 @@ async function createFirebaseUser(profile?: Profile) {
   newUser.id = firebaseUser.uid
   newUser.displayName = firebaseUser.displayName
   newUser.photoURL = firebaseUser.photoURL
-  newUser.profile = profile || undefined
   const userDate = await userRepository.save(newUser)
 
   const user = await userRepository.findOne(userDate.id)
