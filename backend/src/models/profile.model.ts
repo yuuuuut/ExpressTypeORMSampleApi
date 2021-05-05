@@ -25,8 +25,8 @@ const update = async (currentUser: User, body: ProfileUpdateApiReq) => {
     throw Object.assign(new Error('プロフィールが存在しません。'), { status: 404 })
   }
 
-  profile.lineId = body.lineId
-  profile.twitterId = body.twitterId
+  profile.lineId = body.lineId || profile.lineId
+  profile.twitterId = body.twitterId || profile.twitterId
 
   await profileRepository.save(profile)
 

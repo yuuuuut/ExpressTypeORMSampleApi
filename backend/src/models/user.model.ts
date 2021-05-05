@@ -2,6 +2,7 @@ import { getManager } from 'typeorm'
 
 import * as profileModel from '@/models/profile.model'
 import * as roomModel from '@/models/room.model'
+import * as tagModel from '@/models/tag.model'
 import * as types from '@/types'
 import { User } from '@/entities'
 
@@ -69,6 +70,29 @@ const create = async (body: types.UserCreateApiReq) => {
   } else {
     return { user, isCreate: false }
   }
+}
+
+/**
+ * UserをUpdateします。
+ * @param currentUserId CurrentUserのID。
+ * @param body UserUpdateReq
+ */
+const update = async (currentUserId: string, body: types.UserUpdateReq) => {
+  const userRepository = getManager().getRepository(User)
+
+  const currentUser = await userRepository.findOne(currentUserId)
+  if (!currentUser) {
+    throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })
+  }
+
+  if (!body.tagIds) return currentUser
+
+  const tags = await tagModel.updateUserGetTags(body.tagIds)
+
+  currentUser.tags = tags
+  await currentUser.save()
+
+  return currentUser
 }
 
 /**
@@ -193,7 +217,7 @@ const isMutualFollowBool = async (userId: string, currentUserId: string) => {
   return isMutualFollow
 }
 
-export { index, show, create, followings, followers, follow, unfollow }
+export { index, show, create, update, followings, followers, follow, unfollow }
 
 export const __local__ = {
   getUserAndRelationships,

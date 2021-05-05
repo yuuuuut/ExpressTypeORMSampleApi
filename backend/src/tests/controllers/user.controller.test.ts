@@ -1,6 +1,6 @@
-import { TestIResponse, UserCreateApiRes, UserShowApiRes } from '@/types'
 import { authCheckMock, createFirebaseUser } from '@/tests/firebase'
-import { Req, createTestUser } from '@/tests/common'
+import { Req, createTestUser, createTestTag } from '@/tests/common'
+import { TestIResponse, UserCreateApiRes, UserShowApiRes, UserUpdateReq, UserUpdateRes } from '@/types'
 
 /***************************
  *    Main
@@ -118,6 +118,116 @@ describe('User API Controller Test', () => {
 
       expect(response.status).toEqual(201)
       expect(response.body.data.isCreate).toEqual(false)
+    })
+  })
+
+  describe('PUT /api/users/:id', () => {
+    it('Userの更新ができること。', async () => {
+      // Create Test Data
+      const testCurrentUser = await createFirebaseUser()
+      const tag1 = await createTestTag('ゲーム')
+      const tag2 = await createTestTag('読書')
+
+      // Test Data
+      const data = {
+        tagIds: [tag1.id, tag2.id],
+      } as UserUpdateReq
+
+      // Response
+      const response = (await authCheckMock(
+        `/users/${testCurrentUser.id}`,
+        'PUT',
+        data
+      )) as TestIResponse<UserUpdateRes>
+
+      // ExpectedJson Data
+      const expectedJson = {
+        user: {
+          ...testCurrentUser,
+          followers: [],
+          followings: [],
+          followersCount: '0',
+          followingsCount: '0',
+          rooms: [],
+          tags: [
+            {
+              id: tag1.id,
+              name: tag1.name,
+            },
+            {
+              id: tag2.id,
+              name: tag2.name,
+            },
+          ],
+        },
+        message: 'Userを更新しました。',
+      }
+
+      expect(response.status).toEqual(201)
+      expect(response.body.data).toEqual(expectedJson)
+    })
+    it('Userの更新後に更新しても値が変わらないこと。', async () => {
+      // Create Test Data
+      const testCurrentUser = await createFirebaseUser()
+      const tag1 = await createTestTag('ゲーム')
+      const tag2 = await createTestTag('読書')
+
+      // Test Data
+      const data = {
+        tagIds: [tag1.id, tag2.id],
+      } as UserUpdateReq
+
+      // Response
+      const response = (await authCheckMock(
+        `/users/${testCurrentUser.id}`,
+        'PUT',
+        data
+      )) as TestIResponse<UserUpdateRes>
+
+      // ExpectedJson Data
+      const expectedJson = {
+        user: {
+          ...testCurrentUser,
+          followers: [],
+          followings: [],
+          followersCount: '0',
+          followingsCount: '0',
+          rooms: [],
+          tags: [
+            {
+              id: tag1.id,
+              name: tag1.name,
+            },
+            {
+              id: tag2.id,
+              name: tag2.name,
+            },
+          ],
+        },
+        message: 'Userを更新しました。',
+      }
+
+      expect(response.status).toEqual(201)
+      expect(response.body.data).toEqual(expectedJson)
+
+      // Response
+      const response2 = (await authCheckMock(`/users/${testCurrentUser.id}`, 'PUT', {})) as TestIResponse<UserUpdateRes>
+
+      // ExpectedJson Data
+      const expectedJson2 = {
+        user: {
+          ...testCurrentUser,
+          followers: [],
+          followings: [],
+          followersCount: '0',
+          followingsCount: '0',
+          rooms: [],
+        },
+        message: 'Userを更新しました。',
+      }
+
+      expect(response2.status).toEqual(201)
+      expect(response2.body.data).toEqual(expectedJson2)
     })
   })
 })

@@ -41,6 +41,15 @@ export interface UserCreateApiRes {
   isCreate: boolean
 }
 
+export interface UserUpdateReq {
+  tagIds: number[]
+}
+
+export interface UserUpdateRes {
+  user: User
+  message: string
+}
+
 export interface ProfileUpdateApiReq {
   lineId: Profile['lineId']
   twitterId: Profile['twitterId']
