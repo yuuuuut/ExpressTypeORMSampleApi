@@ -322,6 +322,32 @@ describe('Relationship API Controller Test', () => {
       expect(response.status).toEqual(500)
       expect(response.body.error?.message).toEqual('自分自身をフォローすることはできません。')
     })
+    it('異なる5人のユーザーをフォローした場合、6人目でErrorが発生すること。', async () => {
+      // Create Test Data
+      const users = []
+      for (let i = 1; i < 7; i++) {
+        const user = await createTestUser(String(i))
+        console.log(user)
+        users.push(user)
+      }
+
+      console.log(users)
+
+      await authCheckMock(`/users/${users[0].id}/relationships`, 'POST')
+      await authCheckMock(`/users/${users[1].id}/relationships`, 'POST')
+      await authCheckMock(`/users/${users[2].id}/relationships`, 'POST')
+      await authCheckMock(`/users/${users[3].id}/relationships`, 'POST')
+      await authCheckMock(`/users/${users[4].id}/relationships`, 'POST')
+
+      // Response
+      const response = (await authCheckMock(
+        `/users/${users[5].id}/relationships`,
+        'POST'
+      )) as TestIResponse<RelationshipCreateApiRes>
+
+      expect(response.status).toEqual(500)
+      expect(response.body.error?.message).toEqual('今日のフォロー上限に達しました。')
+    })
   })
 
   describe('DELETE /api/users/:id/relationships', () => {

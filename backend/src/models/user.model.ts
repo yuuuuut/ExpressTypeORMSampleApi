@@ -1,10 +1,12 @@
 import { getManager } from 'typeorm'
+import Redis from 'ioredis'
+
+import { User } from '@/entities'
 
 import * as profileModel from '@/models/profile.model'
 import * as roomModel from '@/models/room.model'
 import * as tagModel from '@/models/tag.model'
 import * as types from '@/types'
-import { User } from '@/entities'
 
 /**
  * @description ユーザーの配列を返します。
@@ -18,8 +20,8 @@ const index = async () => {
 
 /**
  * @description Userを返します。
- * @param userId UserのID。
- * @param currentUserId CurrentUserのID。
+ * @param userId UserのID
+ * @param currentUserId CurrentUserのID
  */
 const show = async (userId: string, currentUserId: string) => {
   const userRepository = getManager().getRepository(User)
@@ -46,8 +48,8 @@ const show = async (userId: string, currentUserId: string) => {
 }
 
 /**
- * @description Userとそれに紐づくProfileを作成します。
- * @param body id | displayName | photoURL
+ * @description Userとそれに紐づくProfileを作成します
+ * @param body UserCreateApiReq
  */
 const create = async (body: types.UserCreateApiReq) => {
   const userRepository = getManager().getRepository(User)
@@ -74,7 +76,7 @@ const create = async (body: types.UserCreateApiReq) => {
 
 /**
  * UserをUpdateします。
- * @param currentUserId CurrentUserのID。
+ * @param currentUserId CurrentUserのID
  * @param body UserUpdateReq
  */
 const update = async (currentUserId: string, body: types.UserUpdateReq) => {
@@ -97,7 +99,7 @@ const update = async (currentUserId: string, body: types.UserUpdateReq) => {
 
 /**
  * @description フォローしているユーザーの配列を返します。
- * @param userId UserのID。
+ * @param userId UserのID
  */
 const followings = async (userId: string) => {
   const userRepository = getManager().getRepository(User)
@@ -112,7 +114,7 @@ const followings = async (userId: string) => {
 
 /**
  * @description フォローされているユーザーの配列を返します。
- * @param userId UserのID。
+ * @param userId UserのID
  */
 const followers = async (userId: string) => {
   const userRepository = getManager().getRepository(User)
@@ -127,8 +129,8 @@ const followers = async (userId: string) => {
 
 /**
  * @description フォロー関係を作成します。
- * @param userId UserのID。
- * @param currentUserId CurrentUserのID。
+ * @param userId UserのID
+ * @param currentUserId CurrentUserのID
  */
 const follow = async (userId: string, currentUserId: string) => {
   if (userId === currentUserId) {
@@ -147,8 +149,8 @@ const follow = async (userId: string, currentUserId: string) => {
 
 /**
  * @description フォロー関係を削除します。
- * @param userId UserのID。
- * @param currentUserId CurrentUserのID。
+ * @param userId UserのID
+ * @param currentUserId CurrentUserのID
  */
 const unfollow = async (userId: string, currentUserId: string) => {
   if (userId === currentUserId) {
@@ -167,8 +169,8 @@ const unfollow = async (userId: string, currentUserId: string) => {
 
 /**
  * @description followingsとfollowersの関係を持ったCurrentUserとUserを配列で返します。
- * @param userId UserのID。
- * @param currentUserId CurrentUserのID。
+ * @param userId UserのID
+ * @param currentUserId CurrentUserのID
  */
 const getUserAndRelationships = async (userId: string, currentUserId: string) => {
   const userRepository = getManager().getRepository(User)
@@ -192,8 +194,8 @@ const getUserAndRelationships = async (userId: string, currentUserId: string) =>
 
 /**
  * @description フォロー関係が存在するかBooleanを返します。
- * @param userId UserのID。
- * @param currentUserId CurrentUserのID。
+ * @param userId UserのID
+ * @param currentUserId CurrentUserのID
  */
 const isFollowingBool = async (userId: string, currentUserId: string) => {
   const [currentUser, user] = await getUserAndRelationships(userId, currentUserId)
@@ -206,8 +208,8 @@ const isFollowingBool = async (userId: string, currentUserId: string) => {
 
 /**
  * @description 相互関係のフォローが存在するかBooleanを返します。
- * @param userId UserのID。
- * @param currentUserId CurrentUserのID。
+ * @param userId UserのID
+ * @param currentUserId CurrentUserのID
  */
 const isMutualFollowBool = async (userId: string, currentUserId: string) => {
   const isFollowing = await isFollowingBool(userId, currentUserId)
@@ -217,7 +219,28 @@ const isMutualFollowBool = async (userId: string, currentUserId: string) => {
   return isMutualFollow
 }
 
-export { index, show, create, update, followings, followers, follow, unfollow }
+/**
+ * @description 一日の中で、異なるユーザー6人目をフォローしようとした際に、Errorを発生させる。
+ * @param redis Redis
+ * @param userId UserのID
+ * @param currentUserId CurrentUserのID
+ */
+const checkTodayFollowCount = async (redis: Redis.Redis, userId: string, currentUserId: string) => {
+  const redisFollowIds = await redis.lrange(`follow-${currentUserId}`, 0, -1)
+  const redisFollowIdsLen = await redis.llen(`follow-${currentUserId}`)
+
+  if (!redisFollowIds.includes(userId)) {
+    if (redisFollowIdsLen > 4) {
+      throw Object.assign(new Error('今日のフォロー上限に達しました。'), { status: 500 })
+    }
+    await redis.pipeline().lpush(`follow-${currentUserId}`, userId).expire(`follow-${currentUserId}`, 60).exec()
+  }
+  const newRedisFollowIds = await redis.lrange(`follow-${currentUserId}`, 0, -1)
+
+  return newRedisFollowIds
+}
+
+export { index, show, create, update, followings, followers, follow, unfollow, checkTodayFollowCount }
 
 export const __local__ = {
   getUserAndRelationships,

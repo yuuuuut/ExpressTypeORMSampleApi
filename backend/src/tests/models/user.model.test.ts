@@ -1,7 +1,10 @@
-import { createTestRelationship, createTestRoom, createTestUser } from '@/tests/common'
 import { createFirebaseUser } from '@/tests/firebase'
 import * as userModel from '@/models/user.model'
 import { __local__ } from '@/models/user.model'
+import { createTestRelationship, createTestRoom, createTestUser } from '@/tests/common'
+
+// Redis Mock
+const RedisMock = require('ioredis-mock')
 
 /***************************
  *   Main
@@ -35,6 +38,7 @@ describe('User Model Test', () => {
 
       expect(val).toEqual(expectedJson)
     })
+
     it('userIdが他人の場合の戻り値が正しいこと。', async () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()
@@ -336,6 +340,80 @@ describe('User Model Test', () => {
       const val = await __local__.isMutualFollowBool(testUser.id, testCurrentUser.id)
 
       expect(val).toEqual(false)
+    })
+  })
+
+  describe('checkTodayFollowCount Test', () => {
+    it('Redisの Follow List Length が0の場合、正常に動作すること。', async () => {
+      // Create Test Data
+      const testCurrentUser = await createFirebaseUser()
+      const testUser = await createTestUser()
+
+      // Redis Mock
+      const data = { data: { [`follow-${testCurrentUser.id}`]: [] } }
+      const redisMock = new RedisMock(data)
+
+      const val = await userModel.checkTodayFollowCount(redisMock, testUser.id, testCurrentUser.id)
+
+      expect(val).toEqual([testUser.id])
+    })
+    it('Redisの Follow List Length が4の場合、正常に動作すること。', async () => {
+      // Create Test Data
+      const testCurrentUser = await createFirebaseUser()
+      const testUser = await createTestUser()
+
+      // Redis Mock
+      const dummyIds = ['1', '2', '3', '4']
+      const data = { data: { [`follow-${testCurrentUser.id}`]: dummyIds } }
+      const redisMock = new RedisMock(data)
+
+      const val = await userModel.checkTodayFollowCount(redisMock, testUser.id, testCurrentUser.id)
+
+      expect(val).toEqual([testUser.id, ...dummyIds])
+    })
+    it('Redisの Follow List Length が5の場合、Errorが発生すること。', async () => {
+      // Create Test Data
+      const testCurrentUser = await createFirebaseUser()
+      const testUser = await createTestUser()
+
+      // Redis Mock
+      const dummyIds = ['1', '2', '3', '4', '5']
+      const data = { data: { [`follow-${testCurrentUser.id}`]: dummyIds } }
+      const redisMock = new RedisMock(data)
+
+      await expect(userModel.checkTodayFollowCount(redisMock, testUser.id, testCurrentUser.id)).rejects.toThrow(
+        '今日のフォロー上限に達しました。'
+      )
+    })
+    it('Redisの Follow List に既に存在するIDの場合、配列に追加しないこと。', async () => {
+      // Create Test Data
+      const testCurrentUser = await createFirebaseUser()
+      const testUser = await createTestUser()
+
+      // Redis Mock
+      const dummyIds = [testUser.id]
+      const data = { data: { [`follow-${testCurrentUser.id}`]: dummyIds } }
+      const redisMock = new RedisMock(data)
+
+      const val = await userModel.checkTodayFollowCount(redisMock, testUser.id, testCurrentUser.id)
+
+      expect(val).toEqual([testUser.id])
+      expect(val.length).toEqual(dummyIds.length)
+    })
+    it('Redisの Follow List に既に存在するIDの場合、配列に追加しないこと。', async () => {
+      // Create Test Data
+      const testCurrentUser = await createFirebaseUser()
+      const testUser = await createTestUser()
+
+      // Redis Mock
+      const dummyIds = ['1', '2', '3', testUser.id]
+      const data = { data: { [`follow-${testCurrentUser.id}`]: dummyIds } }
+      const redisMock = new RedisMock(data)
+
+      const val = await userModel.checkTodayFollowCount(redisMock, testUser.id, testCurrentUser.id)
+
+      expect(val).toEqual([...dummyIds])
+      expect(val.length).toEqual(dummyIds.length)
     })
   })
 })

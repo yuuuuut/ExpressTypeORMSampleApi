@@ -3,6 +3,7 @@ import { Request, Response } from 'express'
 import { IResponse, RelationshipCreateApiRes, RelationshipDestroyApiRes, RelationshipIndexApiRes } from '../types'
 import { getCuurentUser } from '../models/common.model'
 import * as userModel from '../models/user.model'
+import redis from '@/libs/redis'
 
 /**
  * @description Relationship Controller Index
@@ -36,8 +37,8 @@ const create = async (req: Request, res: Response) => {
   const userId = req.params.id
 
   try {
-    const currentUser = await getCuurentUser(currentUserId)
-    await userModel.follow(userId, currentUser.id)
+    await userModel.checkTodayFollowCount(redis, userId, currentUserId)
+    await userModel.follow(userId, currentUserId)
     response.data = {
       message: 'フォローしました。',
     }
