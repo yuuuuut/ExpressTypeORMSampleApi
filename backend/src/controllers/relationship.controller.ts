@@ -37,7 +37,7 @@ const create = async (req: Request, res: Response) => {
   const userId = req.params.id
 
   try {
-    await userModel.checkTodayFollowCount(redis, userId, currentUserId)
+    //await userModel.checkTodayFollowCount(redis, userId, currentUserId)
     await userModel.follow(userId, currentUserId)
     response.data = {
       message: 'フォローしました。',

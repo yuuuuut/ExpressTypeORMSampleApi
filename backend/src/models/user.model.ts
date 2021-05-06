@@ -2,6 +2,7 @@ import { getManager } from 'typeorm'
 import Redis from 'ioredis'
 
 import { User } from '@/entities'
+import redis from '@/libs/redis'
 
 import * as profileModel from '@/models/profile.model'
 import * as roomModel from '@/models/room.model'
@@ -137,6 +138,8 @@ const follow = async (userId: string, currentUserId: string) => {
     throw Object.assign(new Error('自分自身をフォローすることはできません。'), { status: 500 })
   }
 
+  await checkTodayFollowCount(redis, userId, currentUserId)
+
   const [currentUser, user] = await getUserAndRelationships(userId, currentUserId)
   const isFollowing = await isFollowingBool(user.id, currentUser.id)
   if (isFollowing) {
@@ -240,10 +243,11 @@ const checkTodayFollowCount = async (redis: Redis.Redis, userId: string, current
   return newRedisFollowIds
 }
 
-export { index, show, create, update, followings, followers, follow, unfollow, checkTodayFollowCount }
+export { index, show, create, update, followings, followers, follow, unfollow }
 
 export const __local__ = {
   getUserAndRelationships,
   isFollowingBool,
   isMutualFollowBool,
+  checkTodayFollowCount,
 }

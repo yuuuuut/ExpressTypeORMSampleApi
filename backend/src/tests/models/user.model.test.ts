@@ -261,6 +261,25 @@ describe('User Model Test', () => {
     })
   })
 
+  describe('follow Test', () => {
+    it('followするユーザーが自分自身の場合、Errorが発生すること。', async () => {
+      // Create Test Data
+      const testCurrentUser = await createFirebaseUser()
+
+      await expect(userModel.follow(testCurrentUser.id, testCurrentUser.id)).rejects.toThrow(
+        '自分自身をフォローすることはできません。'
+      )
+    })
+    it('followするユーザーが既にフォローされている場合、Errorが発生すること。', async () => {
+      // Create Test Data
+      const testCurrentUser = await createFirebaseUser()
+      const testUser = await createTestUser()
+      await createTestRelationship(testCurrentUser.id, testUser.id)
+
+      await expect(userModel.follow(testUser.id, testCurrentUser.id)).rejects.toThrow('既にフォローしています。')
+    })
+  })
+
   describe('getUserAndRelationships Test', () => {
     it('正しい戻り値を返すこと。', async () => {
       // Create Test Data
@@ -353,7 +372,7 @@ describe('User Model Test', () => {
       const data = { data: { [`follow-${testCurrentUser.id}`]: [] } }
       const redisMock = new RedisMock(data)
 
-      const val = await userModel.checkTodayFollowCount(redisMock, testUser.id, testCurrentUser.id)
+      const val = await __local__.checkTodayFollowCount(redisMock, testUser.id, testCurrentUser.id)
 
       expect(val).toEqual([testUser.id])
     })
@@ -367,7 +386,7 @@ describe('User Model Test', () => {
       const data = { data: { [`follow-${testCurrentUser.id}`]: dummyIds } }
       const redisMock = new RedisMock(data)
 
-      const val = await userModel.checkTodayFollowCount(redisMock, testUser.id, testCurrentUser.id)
+      const val = await __local__.checkTodayFollowCount(redisMock, testUser.id, testCurrentUser.id)
 
       expect(val).toEqual([testUser.id, ...dummyIds])
     })
@@ -381,7 +400,7 @@ describe('User Model Test', () => {
       const data = { data: { [`follow-${testCurrentUser.id}`]: dummyIds } }
       const redisMock = new RedisMock(data)
 
-      await expect(userModel.checkTodayFollowCount(redisMock, testUser.id, testCurrentUser.id)).rejects.toThrow(
+      await expect(__local__.checkTodayFollowCount(redisMock, testUser.id, testCurrentUser.id)).rejects.toThrow(
         '今日のフォロー上限に達しました。'
       )
     })
@@ -395,7 +414,7 @@ describe('User Model Test', () => {
       const data = { data: { [`follow-${testCurrentUser.id}`]: dummyIds } }
       const redisMock = new RedisMock(data)
 
-      const val = await userModel.checkTodayFollowCount(redisMock, testUser.id, testCurrentUser.id)
+      const val = await __local__.checkTodayFollowCount(redisMock, testUser.id, testCurrentUser.id)
 
       expect(val).toEqual([testUser.id])
       expect(val.length).toEqual(dummyIds.length)
@@ -410,7 +429,7 @@ describe('User Model Test', () => {
       const data = { data: { [`follow-${testCurrentUser.id}`]: dummyIds } }
       const redisMock = new RedisMock(data)
 
-      const val = await userModel.checkTodayFollowCount(redisMock, testUser.id, testCurrentUser.id)
+      const val = await __local__.checkTodayFollowCount(redisMock, testUser.id, testCurrentUser.id)
 
       expect(val).toEqual([...dummyIds])
       expect(val.length).toEqual(dummyIds.length)
