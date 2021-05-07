@@ -165,6 +165,19 @@ describe('User API Controller Test', () => {
       expect(response.status).toEqual(201)
       expect(response.body.data).toEqual(expectedJson)
     })
+    it('CurrentUserでないと更新ができないこと。', async () => {
+      // Create Test Data
+      const testCurrentUser = await createFirebaseUser()
+      const testUser = await createTestUser()
+
+      // Response
+      const response = (await authCheckMock(`/users/${testUser.id}`, 'PUT', {})) as TestIResponse<UserUpdateRes>
+
+      console.log(response)
+
+      expect(response.status).toEqual(403)
+      expect(response.body.error?.message).toEqual('権限のないユーザーです。')
+    })
     it('Userの更新後に更新しても値が変わらないこと。', async () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()

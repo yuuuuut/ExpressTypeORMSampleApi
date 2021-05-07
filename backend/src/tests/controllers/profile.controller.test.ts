@@ -1,5 +1,5 @@
 import { authCheckMock, createFirebaseUser } from '@/tests/firebase'
-import { addProfileTestUser, createTestProfile } from '@/tests/common'
+import { addProfileTestUser, createTestProfile, createTestUser } from '@/tests/common'
 
 /***************************
  *   Main
@@ -34,6 +34,32 @@ describe('Profile API Controller Test', () => {
       expect(response.status).toEqual(201)
       expect(response.body.data).toEqual(expectedJson)
     })
+
+    /*
+    it('CurrentUserでないとProfileの更新ができないこと。', async () => {
+      // Create Test Data
+      const testProfile = await createTestProfile()
+      const testCurrentUser = await createFirebaseUser()
+      const testUser = await createTestUser()
+      await addProfileTestUser(testCurrentUser, testProfile)
+
+      // Response
+      const response = (await authCheckMock('/profiles', 'PUT', {})) as TestIResponse<ProfileUpdateRes>
+
+      // ExpectedJson Data
+      const expectedJson = {
+        profile: {
+          id: expect.anything(),
+          lineId: data.lineId,
+          twitterId: data.twitterId,
+        },
+        message: 'プロフィールの更新に成功しました。',
+      }
+
+      expect(response.status).toEqual(201)
+      expect(response.body.data).toEqual(expectedJson)
+    })
+    */
 
     it('Bodyが空だった場合はProfileを現在のままにすること。', async () => {
       // Create Test Data

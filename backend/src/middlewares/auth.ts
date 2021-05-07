@@ -6,7 +6,7 @@ import firebase from '@/libs/firebase'
  */
 async function authCheck(req: Request, res: Response, next: NextFunction) {
   const bearToken = req.headers['authorization']
-  if (!bearToken) return res.status(401).json({ message: 'Tokenが存在しません。' })
+  if (!bearToken) return res.status(401).json({ error: { message: 'Tokenが存在しません。' } })
 
   const bearer = bearToken.split(' ')
   const token = bearer[1]
@@ -16,8 +16,19 @@ async function authCheck(req: Request, res: Response, next: NextFunction) {
     req.currentUserId = decoded.uid
     next()
   } catch (err) {
-    res.status(403).json({ message: err })
+    res.status(403).json({ error: { message: err } })
   }
 }
 
-export default authCheck
+async function isCurrentUser(req: Request, res: Response, next: NextFunction) {
+  const currentUserId = req.currentUserId
+  const id = req.params.id
+
+  if (currentUserId !== id) {
+    return res.status(403).json({ error: { message: '権限のないユーザーです。' } })
+  }
+
+  next()
+}
+
+export { authCheck, isCurrentUser }
