@@ -1,22 +1,19 @@
 import { Request, Response } from 'express'
 
-import { IResponse, ProfileUpdateApiReq, ProfileUpdateApiRes } from '@/types'
-import { getCuurentUser } from '@/models/common.model'
 import * as model from '@/models/profile.model'
 
 /**
  * @description Profile Controller Update
  */
 const update = async (req: Request, res: Response) => {
-  const response: IResponse<ProfileUpdateApiRes> = {
+  const response: IResponse<ProfileUpdateRes> = {
     status: 201,
   }
   const currentUserId = req.currentUserId
-  const body = req.body as ProfileUpdateApiReq
+  const body = req.body as ProfileUpdateReq
 
   try {
-    const currentUser = await getCuurentUser(currentUserId)
-    const profile = await model.update(currentUser, body)
+    const profile = await model.update(currentUserId, body)
     response.data = {
       profile,
       message: 'プロフィールの更新に成功しました。',

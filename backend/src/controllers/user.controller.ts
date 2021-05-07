@@ -1,15 +1,12 @@
 import { Request, Response } from 'express'
 
-import { getCuurentUser } from '@/models/common.model'
 import * as model from '@/models/user.model'
-import * as types from '@/types'
-//import IResponse, * as types from '@/types'
 
 /**
  * @description User Controller Index
  */
 const index = async (req: Request, res: Response) => {
-  const response: types.IResponse<types.UserIndexApiRes> = {
+  const response: IResponse<UserIndexRes> = {
     status: 200,
   }
 
@@ -28,15 +25,14 @@ const index = async (req: Request, res: Response) => {
  * @description User Controller Show
  */
 const show = async (req: Request, res: Response) => {
-  const response: types.IResponse<types.UserShowApiRes> = {
+  const response: IResponse<UserShowRes> = {
     status: 200,
   }
   const currentUserId = req.currentUserId
   const userId = req.params.id
 
   try {
-    const currentUser = await getCuurentUser(currentUserId)
-    const data = await model.show(userId, currentUser.id)
+    const data = await model.show(userId, currentUserId)
     response.data = {
       user: data.user,
       isFollowing: data.isFollowing,
@@ -56,10 +52,10 @@ const show = async (req: Request, res: Response) => {
  * @description User Controller Create
  */
 const create = async (req: Request, res: Response) => {
-  const response: types.IResponse<types.UserCreateApiRes> = {
+  const response: IResponse<UserCreateRes> = {
     status: 201,
   }
-  const body = req.body as types.UserCreateApiReq
+  const body = req.body as UserCreateReq
 
   try {
     const { user, isCreate } = await model.create(body)
@@ -79,15 +75,14 @@ const create = async (req: Request, res: Response) => {
  * @description User Controller Update
  */
 const update = async (req: Request, res: Response) => {
-  const response: types.IResponse<types.UserUpdateRes> = {
+  const response: IResponse<UserUpdateRes> = {
     status: 201,
   }
   const userId = req.params.id
-  const body = req.body as types.UserUpdateReq
+  const body = req.body as UserUpdateReq
 
   try {
-    const currentUser = await getCuurentUser(userId)
-    const user = await model.update(currentUser.id, body)
+    const user = await model.update(userId, body)
     response.data = {
       user,
       message: 'Userを更新しました。',

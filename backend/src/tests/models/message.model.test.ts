@@ -1,6 +1,5 @@
 import { createTestMessage, createTestRoom, createTestUser } from '@/tests/common'
 import { createFirebaseUser } from '@/tests/firebase'
-import { MessageUpdateApiReq } from '@/types'
 import * as model from '@/models/message.model'
 
 /***************************
@@ -17,9 +16,9 @@ describe('Message Model Test', () => {
 
       const body = {
         type: 'IS_APPROVAL',
-      } as MessageUpdateApiReq
+      } as MessageUpdateReq
 
-      const val = await model.update(testMessage.id, body)
+      const val = await model.update(body, String(testMessage.id))
 
       // ExpectedJson Data
       const expectedJson = {
@@ -41,9 +40,9 @@ describe('Message Model Test', () => {
 
       const body = {
         type: 'REJECTED',
-      } as MessageUpdateApiReq
+      } as MessageUpdateReq
 
-      const val = await model.update(testMessage.id, body)
+      const val = await model.update(body, String(testMessage.id))
 
       // ExpectedJson Data
       const expectedJson = {

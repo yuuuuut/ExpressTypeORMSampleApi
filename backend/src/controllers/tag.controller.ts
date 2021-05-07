@@ -1,6 +1,5 @@
 import { Request, Response } from 'express'
 
-import { IResponse, TagIndexRes, TagShowRes } from '@/types'
 import * as model from '@/models/tag.model'
 
 /**

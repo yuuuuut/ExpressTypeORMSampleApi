@@ -7,7 +7,6 @@ import redis from '@/libs/redis'
 import * as profileModel from '@/models/profile.model'
 import * as roomModel from '@/models/room.model'
 import * as tagModel from '@/models/tag.model'
-import * as types from '@/types'
 
 /**
  * @description ユーザーの配列を返します。
@@ -52,7 +51,7 @@ const show = async (userId: string, currentUserId: string) => {
  * @description Userとそれに紐づくProfileを作成します
  * @param body UserCreateApiReq
  */
-const create = async (body: types.UserCreateApiReq) => {
+const create = async (body: UserCreateReq) => {
   const userRepository = getManager().getRepository(User)
 
   const user = await userRepository.findOne(body.id)
@@ -80,10 +79,10 @@ const create = async (body: types.UserCreateApiReq) => {
  * @param currentUserId CurrentUserのID
  * @param body UserUpdateReq
  */
-const update = async (currentUserId: string, body: types.UserUpdateReq) => {
+const update = async (userId: string, body: UserUpdateReq) => {
   const userRepository = getManager().getRepository(User)
 
-  const currentUser = await userRepository.findOne(currentUserId)
+  const currentUser = await userRepository.findOne(userId)
   if (!currentUser) {
     throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })
   }

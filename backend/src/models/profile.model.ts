@@ -1,6 +1,5 @@
 import { EntityManager, getManager } from 'typeorm'
 
-import { ProfileUpdateApiReq } from '@/types'
 import { Profile, User } from '@/entities'
 
 /**
@@ -15,10 +14,16 @@ const create = async (em: EntityManager) => {
 /**
  * @description ProfileをUpdateします。
  * @param currentUser User Entity
- * @param body lineId | twitterId
+ * @param body ProfileUpdateApiReq
  */
-const update = async (currentUser: User, body: ProfileUpdateApiReq) => {
+const update = async (currentUserId: string, body: ProfileUpdateReq) => {
   const profileRepository = getManager().getRepository(Profile)
+  const userRepository = getManager().getRepository(User)
+
+  const currentUser = await userRepository.findOne(currentUserId)
+  if (!currentUser) {
+    throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })
+  }
 
   const profile = await profileRepository.findOne(currentUser.profile)
   if (!profile) {

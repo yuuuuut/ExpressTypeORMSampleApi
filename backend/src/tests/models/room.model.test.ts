@@ -13,7 +13,7 @@ describe('Room Model Test', () => {
       const testUser = await createTestUser()
       const testRoom = await createTestRoom(testUser, testCurrentUser)
 
-      const val = await roomModel.index(testCurrentUser)
+      const val = await roomModel.index(testCurrentUser.id)
 
       // ExpectedJson Data
       const expectedJson = {

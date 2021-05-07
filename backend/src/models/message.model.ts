@@ -1,6 +1,5 @@
 import { getManager } from 'typeorm'
 
-import { MessageCreateApiReq, MessageUpdateApiReq } from '@/types'
 import { Message, Room, User } from '@/entities'
 
 /**
@@ -33,12 +32,16 @@ const index = async (roomId: string) => {
  * @param roomId RoomのID。
  * @param currentUser User Entity
  */
-const create = async (body: MessageCreateApiReq, roomId: string, currentUser: User) => {
+const create = async (body: MessageCreateReq, roomId: string, currentUserId: string) => {
   const messageRepository = getManager().getRepository(Message)
   const roomRepository = getManager().getRepository(Room)
+  const userRepository = getManager().getRepository(User)
 
   const room = await roomRepository.findOne(roomId)
   if (!room) throw Object.assign(new Error('ルームが存在しません。'), { status: 404 })
+
+  const currentUser = await userRepository.findOne(currentUserId)
+  if (!currentUser) throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })
 
   const newMessage = new Message()
   newMessage.kind = body.kind
@@ -55,7 +58,7 @@ const create = async (body: MessageCreateApiReq, roomId: string, currentUser: Us
  * @param messageId MessageのID。
  * @param body MessageUpdateApiReq
  */
-const update = async (messageId: number, body: MessageUpdateApiReq) => {
+const update = async (body: MessageUpdateReq, messageId: string) => {
   const messageRepository = getManager().getRepository(Message)
 
   let message = await messageRepository.findOne(messageId)

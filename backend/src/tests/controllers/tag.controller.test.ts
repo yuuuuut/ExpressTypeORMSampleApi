@@ -1,6 +1,5 @@
 import { addTagTestUser, createTestTag, createTestUser, Req } from '@/tests/common'
 import { createFirebaseUser } from '@/tests//firebase'
-import { TagIndexRes, TestIResponse } from '@/types'
 
 /***************************
  *    Main

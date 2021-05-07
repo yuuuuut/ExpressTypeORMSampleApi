@@ -1,15 +1,12 @@
 import { Request, Response } from 'express'
 
-import { IResponse, RelationshipCreateApiRes, RelationshipDestroyApiRes, RelationshipIndexApiRes } from '../types'
-import { getCuurentUser } from '../models/common.model'
 import * as userModel from '../models/user.model'
-import redis from '@/libs/redis'
 
 /**
  * @description Relationship Controller Index
  */
 const index = async (req: Request, res: Response) => {
-  const response: IResponse<RelationshipIndexApiRes> = {
+  const response: IResponse<RelationshipIndexRes> = {
     status: 200,
   }
   const userId = req.params.id
@@ -30,14 +27,13 @@ const index = async (req: Request, res: Response) => {
  * @description Relationship Controller Create
  */
 const create = async (req: Request, res: Response) => {
-  const response: IResponse<RelationshipCreateApiRes> = {
+  const response: IResponse<RelationshipCreateRes> = {
     status: 201,
   }
   const currentUserId = req.currentUserId
   const userId = req.params.id
 
   try {
-    //await userModel.checkTodayFollowCount(redis, userId, currentUserId)
     await userModel.follow(userId, currentUserId)
     response.data = {
       message: 'フォローしました。',
@@ -54,15 +50,14 @@ const create = async (req: Request, res: Response) => {
  * @description Relationship Controller Destroy
  */
 const destroy = async (req: Request, res: Response) => {
-  const response: IResponse<RelationshipDestroyApiRes> = {
+  const response: IResponse<RelationshipDestroyRes> = {
     status: 200,
   }
   const currentUserId = req.currentUserId
   const userId = req.params.id
 
   try {
-    const currentUser = await getCuurentUser(currentUserId)
-    await userModel.unfollow(userId, currentUser.id)
+    await userModel.unfollow(userId, currentUserId)
     response.data = {
       message: 'フォローを解除しました。',
     }

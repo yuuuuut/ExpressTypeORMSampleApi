@@ -1,15 +1,6 @@
 import { Response, Request, NextFunction } from 'express'
 import firebase from '@/libs/firebase'
 
-//ExpressのRequestの型にcurrentUserIdを追加する。
-declare global {
-  namespace Express {
-    interface Request {
-      currentUserId: string
-    }
-  }
-}
-
 /**
  * Tokenが存在するか、有効なTokenかチェックする。
  */

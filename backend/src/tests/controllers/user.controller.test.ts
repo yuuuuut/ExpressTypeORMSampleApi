@@ -1,6 +1,5 @@
 import { authCheckMock, createFirebaseUser } from '@/tests/firebase'
 import { Req, createTestUser, createTestTag } from '@/tests/common'
-import { TestIResponse, UserCreateApiRes, UserShowApiRes, UserUpdateReq, UserUpdateRes } from '@/types'
 
 /***************************
  *    Main
@@ -12,7 +11,7 @@ describe('User API Controller Test', () => {
       const testCurrentUser = await createFirebaseUser()
 
       // Response
-      const response = (await authCheckMock(`/users/${testCurrentUser.id}`, 'GET')) as TestIResponse<UserShowApiRes>
+      const response = (await authCheckMock(`/users/${testCurrentUser.id}`, 'GET')) as TestIResponse<UserShowRes>
 
       // ExpectedJson Data
       const expectedJson = {
@@ -38,7 +37,7 @@ describe('User API Controller Test', () => {
       const testUser = await createTestUser()
 
       // Response
-      const response = (await authCheckMock(`/users/${testUser.id}`, 'GET')) as TestIResponse<UserShowApiRes>
+      const response = (await authCheckMock(`/users/${testUser.id}`, 'GET')) as TestIResponse<UserShowRes>
 
       // ExpectedJson Data
       const expectedJson = {
@@ -63,7 +62,7 @@ describe('User API Controller Test', () => {
     })
     it('Userが存在しない場合Userの取得ができないこと。', async () => {
       // Response
-      const response = (await authCheckMock(`/users/NotUser`, 'GET')) as TestIResponse<UserShowApiRes>
+      const response = (await authCheckMock(`/users/NotUser`, 'GET')) as TestIResponse<UserShowRes>
 
       expect(response.status).toEqual(404)
       expect(response.body.error?.message).toEqual('ユーザーが存在しません。')
@@ -80,7 +79,7 @@ describe('User API Controller Test', () => {
       }
 
       // Response
-      const response = (await Req.post('/users').send(userData)) as TestIResponse<UserCreateApiRes>
+      const response = (await Req.post('/users').send(userData)) as TestIResponse<UserCreateRes>
 
       // ExpectedJson Data
       const expectedJson = {
@@ -114,7 +113,7 @@ describe('User API Controller Test', () => {
       }
 
       // Response
-      const response = (await Req.post('/users').send(newUser)) as TestIResponse<UserCreateApiRes>
+      const response = (await Req.post('/users').send(newUser)) as TestIResponse<UserCreateRes>
 
       expect(response.status).toEqual(201)
       expect(response.body.data.isCreate).toEqual(false)

@@ -1,4 +1,3 @@
-import { ProfileUpdateApiRes, TestIResponse } from '@/types'
 import { authCheckMock, createFirebaseUser } from '@/tests/firebase'
 import { addProfileTestUser, createTestProfile } from '@/tests/common'
 
@@ -20,7 +19,7 @@ describe('Profile API Controller Test', () => {
       }
 
       // Response
-      const response = (await authCheckMock('/profiles', 'PUT', data)) as TestIResponse<ProfileUpdateApiRes>
+      const response = (await authCheckMock('/profiles', 'PUT', data)) as TestIResponse<ProfileUpdateRes>
 
       // ExpectedJson Data
       const expectedJson = {
@@ -49,7 +48,7 @@ describe('Profile API Controller Test', () => {
       }
 
       // Response
-      const response = (await authCheckMock('/profiles', 'PUT', data)) as TestIResponse<ProfileUpdateApiRes>
+      const response = (await authCheckMock('/profiles', 'PUT', data)) as TestIResponse<ProfileUpdateRes>
 
       // ExpectedJson Data
       const expectedJson = {
@@ -65,7 +64,7 @@ describe('Profile API Controller Test', () => {
       expect(response.body.data).toEqual(expectedJson)
 
       // Response
-      const response2 = (await authCheckMock('/profiles', 'PUT', {})) as TestIResponse<ProfileUpdateApiRes>
+      const response2 = (await authCheckMock('/profiles', 'PUT', {})) as TestIResponse<ProfileUpdateRes>
 
       // ExpectedJson Data
       const expectedJson2 = {
@@ -93,7 +92,7 @@ describe('Profile API Controller Test', () => {
       }
 
       // Response
-      const response = (await authCheckMock('/profiles', 'PUT', data)) as TestIResponse<ProfileUpdateApiRes>
+      const response = (await authCheckMock('/profiles', 'PUT', data)) as TestIResponse<ProfileUpdateRes>
 
       // ExpectedJson Data
       const expectedJson = {
@@ -121,7 +120,7 @@ describe('Profile API Controller Test', () => {
       }
 
       // Response
-      const response = (await authCheckMock('/profiles', 'PUT', data)) as TestIResponse<ProfileUpdateApiRes>
+      const response = (await authCheckMock('/profiles', 'PUT', data)) as TestIResponse<ProfileUpdateRes>
 
       // ExpectedJson Data
       const expectedJson = {

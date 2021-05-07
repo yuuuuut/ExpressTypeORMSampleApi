@@ -7,10 +7,10 @@ import { Room, User } from '@/entities'
  * @description ユーザーに紐づくRoomの配列を返します。
  * @param currentUser CurrentUser Entity
  */
-const index = async (currentUser: User) => {
+const index = async (currentUserId: string) => {
   const userRepository = getManager().getRepository(User)
 
-  const user = await userRepository.findOne(currentUser.id, {
+  const user = await userRepository.findOne(currentUserId, {
     relations: ['rooms'],
   })
   if (!user) throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })

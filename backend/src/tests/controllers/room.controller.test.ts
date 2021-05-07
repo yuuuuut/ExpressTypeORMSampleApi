@@ -1,4 +1,3 @@
-import { RoomCreateApiRes, RoomShowApiRes, TestIResponse } from '@/types'
 import { authCheckMock, createFirebaseUser } from '@/tests/firebase'
 import { createTestRoom, createTestUser } from '@/tests/common'
 
@@ -14,7 +13,7 @@ describe('Room Controller Test', () => {
       const testRoom = await createTestRoom(testUser, testCurrentUser)
 
       // Response
-      const response = (await authCheckMock(`/rooms/${testRoom.id}`, 'GET')) as TestIResponse<RoomShowApiRes>
+      const response = (await authCheckMock(`/rooms/${testRoom.id}`, 'GET')) as TestIResponse<RoomShowRes>
 
       // ExpectedJson Data
       const expectedJson = {
@@ -52,7 +51,7 @@ describe('Room Controller Test', () => {
     })
     it('Roomが存在しない場合取得ができないこと。', async () => {
       // Response
-      const response = (await authCheckMock(`/rooms/NotRoom`, 'GET')) as TestIResponse<RoomShowApiRes>
+      const response = (await authCheckMock(`/rooms/NotRoom`, 'GET')) as TestIResponse<RoomShowRes>
 
       expect(response.status).toEqual(404)
     })
@@ -65,7 +64,7 @@ describe('Room Controller Test', () => {
       const testUser = await createTestUser()
 
       // Response
-      const response = (await authCheckMock(`/users/${testUser.id}/rooms`, 'POST')) as TestIResponse<RoomCreateApiRes>
+      const response = (await authCheckMock(`/users/${testUser.id}/rooms`, 'POST')) as TestIResponse<RoomCreateRes>
 
       // ExpectedJson Data
       const expectedJson = {
