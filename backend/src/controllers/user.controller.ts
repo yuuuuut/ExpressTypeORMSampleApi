@@ -3,7 +3,7 @@ import { Request, Response } from 'express'
 import * as model from '@/models/user.model'
 
 /**
- * @description User Controller Index
+ * user controller index
  */
 const index = async (req: Request, res: Response) => {
   const response: IResponse<UserIndexRes> = {
@@ -22,7 +22,7 @@ const index = async (req: Request, res: Response) => {
 }
 
 /**
- * @description User Controller Show
+ * user controller show
  */
 const show = async (req: Request, res: Response) => {
   const response: IResponse<UserShowRes> = {
@@ -49,7 +49,7 @@ const show = async (req: Request, res: Response) => {
 }
 
 /**
- * @description User Controller Create
+ * user controller create
  */
 const create = async (req: Request, res: Response) => {
   const response: IResponse<UserCreateRes> = {
@@ -72,7 +72,7 @@ const create = async (req: Request, res: Response) => {
 }
 
 /**
- * @description User Controller Update
+ * user controller update
  */
 const update = async (req: Request, res: Response) => {
   const response: IResponse<UserUpdateRes> = {

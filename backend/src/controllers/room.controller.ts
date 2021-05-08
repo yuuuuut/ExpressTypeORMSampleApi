@@ -3,7 +3,7 @@ import { Request, Response } from 'express'
 import * as model from '@/models/room.model'
 
 /**
- * @description Room Controller Index
+ * room controller index
  */
 const index = async (req: Request, res: Response) => {
   const response: IResponse<RoomIndexRes> = {
@@ -23,7 +23,7 @@ const index = async (req: Request, res: Response) => {
 }
 
 /**
- * @description Room Controller Show
+ * room controller show
  */
 const show = async (req: Request, res: Response) => {
   const response: IResponse<RoomShowRes> = {
@@ -43,7 +43,7 @@ const show = async (req: Request, res: Response) => {
 }
 
 /**
- * @description Room Controller Create
+ * room controller create
  */
 const create = async (req: Request, res: Response) => {
   const response: IResponse<RoomCreateRes> = {

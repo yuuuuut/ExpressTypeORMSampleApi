@@ -3,7 +3,7 @@ import { Request, Response } from 'express'
 import * as userModel from '../models/user.model'
 
 /**
- * @description Relationship Controller Index
+ * relationship controller index
  */
 const index = async (req: Request, res: Response) => {
   const response: IResponse<RelationshipIndexRes> = {
@@ -24,7 +24,7 @@ const index = async (req: Request, res: Response) => {
 }
 
 /**
- * @description Relationship Controller Create
+ * relationship controller create
  */
 const create = async (req: Request, res: Response) => {
   const response: IResponse<RelationshipCreateRes> = {
@@ -47,7 +47,7 @@ const create = async (req: Request, res: Response) => {
 }
 
 /**
- * @description Relationship Controller Destroy
+ * relationship controller destroy
  */
 const destroy = async (req: Request, res: Response) => {
   const response: IResponse<RelationshipDestroyRes> = {

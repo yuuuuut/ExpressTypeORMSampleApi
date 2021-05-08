@@ -2,28 +2,20 @@ import { getManager } from 'typeorm'
 import { v4 as uuidv4 } from 'uuid'
 
 import { Room, User } from '@/entities'
+import { getUser } from './common.model'
 
 /**
- * @description ユーザーに紐づくRoomの配列を返します。
- * @param currentUser CurrentUser Entity
+ * room model index
  */
 const index = async (currentUserId: string) => {
-  const userRepository = getManager().getRepository(User)
-
-  const user = await userRepository.findOne(currentUserId, {
-    relations: ['rooms'],
-  })
-  if (!user) throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })
-
-  const rooms = user.rooms
+  const currentUser = await getUser(currentUserId, ['rooms'])
+  const rooms = currentUser.rooms
 
   return { rooms }
 }
 
 /**
- * @description Roomを返します。
- * @param roomId RoomのID。
- * @param currentUser CurrentUser Entity
+ * room model show
  */
 const show = async (roomId: string) => {
   const roomRepository = getManager().getRepository(Room)
@@ -37,24 +29,14 @@ const show = async (roomId: string) => {
 }
 
 /**
- * @description Roomを作成します。
- * @param userId UserのID。
- * @param currentUserId CurentUserのID。
+ * room model create
  */
 const create = async (userId: string, currentUserId: string) => {
   const roomRepository = getManager().getRepository(Room)
-  const userRepository = getManager().getRepository(User)
   const uuid = uuidv4()
 
-  const user = await userRepository.findOne(userId)
-  if (!user) {
-    throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })
-  }
-
-  const currentUser = await userRepository.findOne(currentUserId)
-  if (!currentUser) {
-    throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })
-  }
+  const currentUser = await getUser(currentUserId)
+  const user = await getUser(userId)
 
   const newRoom = new Room()
   newRoom.id = uuid
@@ -65,7 +47,7 @@ const create = async (userId: string, currentUserId: string) => {
 }
 
 /**
- * @description Entry関係が存在するかどうかを返します。
+ * Entry関係が存在するかどうかを返します。
  * @param otherUser User Entity
  * @param currentUser User Entity
  */

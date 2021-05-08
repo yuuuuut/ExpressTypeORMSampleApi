@@ -3,7 +3,7 @@ import { Request, Response } from 'express'
 import * as model from '@/models/profile.model'
 
 /**
- * @description Profile Controller Update
+ * profile controller update
  */
 const update = async (req: Request, res: Response) => {
   const response: IResponse<ProfileUpdateRes> = {

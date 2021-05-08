@@ -3,7 +3,7 @@ import { getManager, In } from 'typeorm'
 import { Tag } from '@/entities'
 
 /**
- * @description Tagの配列を返します。
+ * tag model index
  */
 const index = async () => {
   const tagRepository = getManager().getRepository(Tag)
@@ -14,8 +14,7 @@ const index = async () => {
 }
 
 /**
- * @description Tagを返します。
- * @param tagId TagのID。
+ * tag model show
  */
 const show = async (tagId: string) => {
   const tagRepository = getManager().getRepository(Tag)

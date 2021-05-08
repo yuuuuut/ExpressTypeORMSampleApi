@@ -3,7 +3,7 @@ import { Request, Response } from 'express'
 import * as model from '@/models/tag.model'
 
 /**
- * @description Tag Controller Index
+ * tag controller index
  */
 const index = async (req: Request, res: Response) => {
   const response: IResponse<TagIndexRes> = {
@@ -22,7 +22,7 @@ const index = async (req: Request, res: Response) => {
 }
 
 /**
- * @description Tag Controller Show
+ * tag controller show
  */
 const show = async (req: Request, res: Response) => {
   const response: IResponse<TagShowRes> = {

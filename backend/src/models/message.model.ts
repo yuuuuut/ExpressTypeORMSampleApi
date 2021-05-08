@@ -1,9 +1,10 @@
 import { getManager } from 'typeorm'
 
-import { Message, Room, User } from '@/entities'
+import { Message, Room } from '@/entities'
+import { getUser } from './common.model'
 
 /**
- * @description Roomに所属するMessageの配列を返します。
+ * Roomに所属するMessageの配列を返します。
  * @param roomId RoomのID。
  */
 const index = async (roomId: string) => {
@@ -27,7 +28,7 @@ const index = async (roomId: string) => {
 }
 
 /**
- * @description Messageを作成します。
+ * Messageを作成します。
  * @param body MessageCreateApiReq
  * @param roomId RoomのID。
  * @param currentUser User Entity
@@ -35,13 +36,11 @@ const index = async (roomId: string) => {
 const create = async (body: MessageCreateReq, roomId: string, currentUserId: string) => {
   const messageRepository = getManager().getRepository(Message)
   const roomRepository = getManager().getRepository(Room)
-  const userRepository = getManager().getRepository(User)
 
   const room = await roomRepository.findOne(roomId)
   if (!room) throw Object.assign(new Error('ルームが存在しません。'), { status: 404 })
 
-  const currentUser = await userRepository.findOne(currentUserId)
-  if (!currentUser) throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })
+  const currentUser = await getUser(currentUserId)
 
   const newMessage = new Message()
   newMessage.kind = body.kind
@@ -54,7 +53,7 @@ const create = async (body: MessageCreateReq, roomId: string, currentUserId: str
 }
 
 /**
- * @description Messageの状態をbody.typeによって変更します。
+ * Messageの状態をbody.typeによって変更します。
  * @param messageId MessageのID。
  * @param body MessageUpdateApiReq
  */

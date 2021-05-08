@@ -1,9 +1,10 @@
 import { EntityManager, getManager } from 'typeorm'
 
-import { Profile, User } from '@/entities'
+import { Profile } from '@/entities'
+import { getUser } from './common.model'
 
 /**
- * @description Profileを作成します。
+ * Profileを作成します。
  * @param em TypeORM EntityManager
  */
 const create = async (em: EntityManager) => {
@@ -12,18 +13,14 @@ const create = async (em: EntityManager) => {
 }
 
 /**
- * @description ProfileをUpdateします。
+ * ProfileをUpdateします。
  * @param currentUser User Entity
  * @param body ProfileUpdateApiReq
  */
 const update = async (userId: string, body: ProfileUpdateReq) => {
   const profileRepository = getManager().getRepository(Profile)
-  const userRepository = getManager().getRepository(User)
 
-  const currentUser = await userRepository.findOne(userId)
-  if (!currentUser) {
-    throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })
-  }
+  const currentUser = await getUser(userId)
 
   const profile = await profileRepository.findOne(currentUser.profile)
   if (!profile) {

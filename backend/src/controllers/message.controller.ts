@@ -3,7 +3,7 @@ import { Request, Response } from 'express'
 import * as model from '@/models/message.model'
 
 /**
- * @description Message Controller Index
+ * message controller index
  */
 const index = async (req: Request, res: Response) => {
   const response: IResponse<MessageIndexRes> = {
@@ -23,7 +23,7 @@ const index = async (req: Request, res: Response) => {
 }
 
 /**
- * @description Message Controller Create
+ * message controller create
  */
 const create = async (req: Request, res: Response) => {
   const response: IResponse<MessageCreateRes> = {
@@ -45,7 +45,7 @@ const create = async (req: Request, res: Response) => {
 }
 
 /**
- * @description Message Controller Update
+ * message controller update
  */
 const update = async (req: Request, res: Response) => {
   const response: IResponse<MessageUpdateRes> = {
