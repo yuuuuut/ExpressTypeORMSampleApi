@@ -16,11 +16,11 @@ const create = async (em: EntityManager) => {
  * @param currentUser User Entity
  * @param body ProfileUpdateApiReq
  */
-const update = async (currentUserId: string, body: ProfileUpdateReq) => {
+const update = async (userId: string, body: ProfileUpdateReq) => {
   const profileRepository = getManager().getRepository(Profile)
   const userRepository = getManager().getRepository(User)
 
-  const currentUser = await userRepository.findOne(currentUserId)
+  const currentUser = await userRepository.findOne(userId)
   if (!currentUser) {
     throw Object.assign(new Error('ユーザーが存在しません。'), { status: 404 })
   }

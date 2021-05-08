@@ -25,7 +25,7 @@ router.post('/api/users/:id/rooms', authCheck, roomController.create)
 /***************************
  *   /profiles
  **************************/
-router.put('/api/profiles', authCheck, isCurrentUser, profileController.update)
+router.put('/api/profiles/:id', authCheck, isCurrentUser, profileController.update)
 
 /***************************
  *   /rooms

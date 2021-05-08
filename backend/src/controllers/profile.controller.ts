@@ -9,11 +9,11 @@ const update = async (req: Request, res: Response) => {
   const response: IResponse<ProfileUpdateRes> = {
     status: 201,
   }
-  const currentUserId = req.currentUserId
+  const userId = req.params.id
   const body = req.body as ProfileUpdateReq
 
   try {
-    const profile = await model.update(currentUserId, body)
+    const profile = await model.update(userId, body)
     response.data = {
       profile,
       message: 'プロフィールの更新に成功しました。',

@@ -19,7 +19,11 @@ describe('Profile API Controller Test', () => {
       }
 
       // Response
-      const response = (await authCheckMock('/profiles', 'PUT', data)) as TestIResponse<ProfileUpdateRes>
+      const response = (await authCheckMock(
+        `/profiles/${testCurrentUser.id}`,
+        'PUT',
+        data
+      )) as TestIResponse<ProfileUpdateRes>
 
       // ExpectedJson Data
       const expectedJson = {
@@ -35,7 +39,6 @@ describe('Profile API Controller Test', () => {
       expect(response.body.data).toEqual(expectedJson)
     })
 
-    /*
     it('CurrentUserでないとProfileの更新ができないこと。', async () => {
       // Create Test Data
       const testProfile = await createTestProfile()
@@ -44,22 +47,11 @@ describe('Profile API Controller Test', () => {
       await addProfileTestUser(testCurrentUser, testProfile)
 
       // Response
-      const response = (await authCheckMock('/profiles', 'PUT', {})) as TestIResponse<ProfileUpdateRes>
+      const response = (await authCheckMock(`/profiles/${testUser.id}`, 'PUT', {})) as TestIResponse<ProfileUpdateRes>
 
-      // ExpectedJson Data
-      const expectedJson = {
-        profile: {
-          id: expect.anything(),
-          lineId: data.lineId,
-          twitterId: data.twitterId,
-        },
-        message: 'プロフィールの更新に成功しました。',
-      }
-
-      expect(response.status).toEqual(201)
-      expect(response.body.data).toEqual(expectedJson)
+      expect(response.status).toEqual(403)
+      expect(response.body.error?.message).toEqual('権限のないユーザーです。')
     })
-    */
 
     it('Bodyが空だった場合はProfileを現在のままにすること。', async () => {
       // Create Test Data
@@ -74,7 +66,11 @@ describe('Profile API Controller Test', () => {
       }
 
       // Response
-      const response = (await authCheckMock('/profiles', 'PUT', data)) as TestIResponse<ProfileUpdateRes>
+      const response = (await authCheckMock(
+        `/profiles/${testCurrentUser.id}`,
+        'PUT',
+        data
+      )) as TestIResponse<ProfileUpdateRes>
 
       // ExpectedJson Data
       const expectedJson = {
@@ -90,7 +86,11 @@ describe('Profile API Controller Test', () => {
       expect(response.body.data).toEqual(expectedJson)
 
       // Response
-      const response2 = (await authCheckMock('/profiles', 'PUT', {})) as TestIResponse<ProfileUpdateRes>
+      const response2 = (await authCheckMock(
+        `/profiles/${testCurrentUser.id}`,
+        'PUT',
+        {}
+      )) as TestIResponse<ProfileUpdateRes>
 
       // ExpectedJson Data
       const expectedJson2 = {
@@ -118,7 +118,11 @@ describe('Profile API Controller Test', () => {
       }
 
       // Response
-      const response = (await authCheckMock('/profiles', 'PUT', data)) as TestIResponse<ProfileUpdateRes>
+      const response = (await authCheckMock(
+        `/profiles/${testCurrentUser.id}`,
+        'PUT',
+        data
+      )) as TestIResponse<ProfileUpdateRes>
 
       // ExpectedJson Data
       const expectedJson = {
@@ -146,7 +150,11 @@ describe('Profile API Controller Test', () => {
       }
 
       // Response
-      const response = (await authCheckMock('/profiles', 'PUT', data)) as TestIResponse<ProfileUpdateRes>
+      const response = (await authCheckMock(
+        `/profiles/${testCurrentUser.id}`,
+        'PUT',
+        data
+      )) as TestIResponse<ProfileUpdateRes>
 
       // ExpectedJson Data
       const expectedJson = {
