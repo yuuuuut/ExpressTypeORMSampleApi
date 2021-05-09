@@ -105,10 +105,6 @@ const followers = async (userId: string) => {
  * @param currentUserId CurrentUserのID
  */
 const follow = async (userId: string, currentUserId: string) => {
-  if (userId === currentUserId) {
-    throw Object.assign(new Error('自分自身をフォローすることはできません。'), { status: 500 })
-  }
-
   await checkTodayFollowCount(redis, userId, currentUserId)
 
   const [currentUser, user] = await getUserAndRelationships(userId, currentUserId)
@@ -127,10 +123,6 @@ const follow = async (userId: string, currentUserId: string) => {
  * @param currentUserId CurrentUserのID
  */
 const unfollow = async (userId: string, currentUserId: string) => {
-  if (userId === currentUserId) {
-    throw Object.assign(new Error('自分自身のフォロー解除はできません。'), { status: 500 })
-  }
-
   const [currentUser, user] = await getUserAndRelationships(userId, currentUserId)
 
   if (user.followers.some((u) => u.id === currentUser.id)) {

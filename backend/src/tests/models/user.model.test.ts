@@ -262,14 +262,6 @@ describe('User Model Test', () => {
   })
 
   describe('follow Test', () => {
-    it('followするユーザーが自分自身の場合、Errorが発生すること。', async () => {
-      // Create Test Data
-      const testCurrentUser = await createFirebaseUser()
-
-      await expect(userModel.follow(testCurrentUser.id, testCurrentUser.id)).rejects.toThrow(
-        '自分自身をフォローすることはできません。'
-      )
-    })
     it('followするユーザーが既にフォローされている場合、Errorが発生すること。', async () => {
       // Create Test Data
       const testCurrentUser = await createFirebaseUser()

@@ -169,8 +169,6 @@ describe('User API Controller Test', () => {
       // Response
       const response: TestIResponse<UserUpdateRes> = await authCheckMock(`/users/${testUser.id}`, 'PUT', {})
 
-      console.log(response)
-
       expect(response.status).toEqual(403)
       expect(response.body.error?.message).toEqual('権限のないユーザーです。')
     })

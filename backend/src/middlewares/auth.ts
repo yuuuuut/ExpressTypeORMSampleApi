@@ -20,6 +20,10 @@ async function authCheck(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+/**
+ * Requestを送ったユーザーがログインしているユーザーでない場合、
+ * エラーを発生させる。
+ */
 async function isCurrentUser(req: Request, res: Response, next: NextFunction) {
   const currentUserId = req.currentUserId
   const id = req.params.id
@@ -31,4 +35,19 @@ async function isCurrentUser(req: Request, res: Response, next: NextFunction) {
   next()
 }
 
-export { authCheck, isCurrentUser }
+/**
+ * Requestを送ったユーザーがログインしているユーザーの場合、
+ * エラーを発生させる。
+ */
+async function isOtherUser(req: Request, res: Response, next: NextFunction) {
+  const currentUserId = req.currentUserId
+  const id = req.params.id
+
+  if (currentUserId === id) {
+    return res.status(403).json({ error: { message: '権限のないユーザーです。' } })
+  }
+
+  next()
+}
+
+export { authCheck, isCurrentUser, isOtherUser }

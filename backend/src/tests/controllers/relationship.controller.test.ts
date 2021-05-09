@@ -318,8 +318,8 @@ describe('Relationship API Controller Test', () => {
         'POST'
       )
 
-      expect(response.status).toEqual(500)
-      expect(response.body.error?.message).toEqual('自分自身をフォローすることはできません。')
+      expect(response.status).toEqual(403)
+      expect(response.body.error?.message).toEqual('権限のないユーザーです。')
     })
     it('異なる5人のユーザーをフォローした場合、6人目でErrorが発生すること。', async () => {
       // Create Test Data

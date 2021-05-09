@@ -30,7 +30,7 @@ const create = async (req: Request, res: Response) => {
   }
   const currentUserId = req.currentUserId
   const roomId = req.params.id
-  const body = req.body as MessageCreateReq
+  const body: MessageCreateReq = req.body
 
   try {
     const { message } = await model.create(body, roomId, currentUserId)
