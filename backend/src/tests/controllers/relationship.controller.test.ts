@@ -13,10 +13,10 @@ describe('Relationship API Controller Test', () => {
       await createTestRelationship(testCurrentUser.id, testUser.id)
 
       // Response
-      const response = (await authCheckMock(
+      const response: TestIResponse<RelationshipIndexRes> = await authCheckMock(
         `/users/${testCurrentUser.id}/relationships`,
         'GET'
-      )) as TestIResponse<RelationshipIndexRes>
+      )
 
       // Get Test Data
       const currentUser = await getTestUser(testCurrentUser.id)
@@ -55,10 +55,10 @@ describe('Relationship API Controller Test', () => {
       await createTestRelationship(testCurrentUser.id, testUser3.id)
 
       // Response
-      const response = (await authCheckMock(
+      const response: TestIResponse<RelationshipIndexRes> = await authCheckMock(
         `/users/${testCurrentUser.id}/relationships`,
         'GET'
-      )) as TestIResponse<RelationshipIndexRes>
+      )
 
       // Get Test Data
       const currentUser = await getTestUser(testCurrentUser.id)
@@ -118,10 +118,10 @@ describe('Relationship API Controller Test', () => {
       await createTestRelationship(testUser.id, testCurrentUser.id)
 
       // Response
-      const response = (await authCheckMock(
+      const response: TestIResponse<RelationshipIndexRes> = await authCheckMock(
         `/users/${testCurrentUser.id}/relationships`,
         'GET'
-      )) as TestIResponse<RelationshipIndexRes>
+      )
 
       // Get Test Data
       const currentUser = await getTestUser(testCurrentUser.id)
@@ -160,10 +160,10 @@ describe('Relationship API Controller Test', () => {
       await createTestRelationship(testUser3.id, testCurrentUser.id)
 
       // Response
-      const response = (await authCheckMock(
+      const response: TestIResponse<RelationshipIndexRes> = await authCheckMock(
         `/users/${testCurrentUser.id}/relationships`,
         'GET'
-      )) as TestIResponse<RelationshipIndexRes>
+      )
 
       // Get Test Data
       const currentUser = await getTestUser(testCurrentUser.id)
@@ -224,10 +224,10 @@ describe('Relationship API Controller Test', () => {
       await createTestRelationship(testUser.id, testCurrentUser.id)
 
       // Response
-      const response = (await authCheckMock(
+      const response: TestIResponse<RelationshipIndexRes> = await authCheckMock(
         `/users/${testCurrentUser.id}/relationships`,
         'GET'
-      )) as TestIResponse<RelationshipIndexRes>
+      )
 
       // Get Test Data
       const currentUser = await getTestUser(testCurrentUser.id)
@@ -276,10 +276,10 @@ describe('Relationship API Controller Test', () => {
       const testUser = await createTestUser()
 
       // Response
-      const response = (await authCheckMock(
+      const response: TestIResponse<RelationshipCreateRes> = await authCheckMock(
         `/users/${testUser.id}/relationships`,
         'POST'
-      )) as TestIResponse<RelationshipCreateRes>
+      )
 
       // Get Test Data
       const currentUser = await getTestUser(testCurrentUser.id)
@@ -300,10 +300,10 @@ describe('Relationship API Controller Test', () => {
       await createTestRelationship(testCurrentUser.id, testUser.id)
 
       // Response
-      const response = (await authCheckMock(
+      const response: TestIResponse<RelationshipCreateRes> = await authCheckMock(
         `/users/${testUser.id}/relationships`,
         'POST'
-      )) as TestIResponse<RelationshipCreateRes>
+      )
 
       expect(response.status).toEqual(500)
       expect(response.body.error?.message).toEqual('既にフォローしています。')
@@ -313,10 +313,10 @@ describe('Relationship API Controller Test', () => {
       const testCurrentUser = await createFirebaseUser()
 
       // Response
-      const response = (await authCheckMock(
+      const response: TestIResponse<RelationshipCreateRes> = await authCheckMock(
         `/users/${testCurrentUser.id}/relationships`,
         'POST'
-      )) as TestIResponse<RelationshipCreateRes>
+      )
 
       expect(response.status).toEqual(500)
       expect(response.body.error?.message).toEqual('自分自身をフォローすることはできません。')
@@ -336,10 +336,10 @@ describe('Relationship API Controller Test', () => {
       await authCheckMock(`/users/${users[4].id}/relationships`, 'POST')
 
       // Response
-      const response = (await authCheckMock(
+      const response: TestIResponse<RelationshipCreateRes> = await authCheckMock(
         `/users/${users[5].id}/relationships`,
         'POST'
-      )) as TestIResponse<RelationshipCreateRes>
+      )
 
       expect(response.status).toEqual(500)
       expect(response.body.error?.message).toEqual('今日のフォロー上限に達しました。')
@@ -354,10 +354,10 @@ describe('Relationship API Controller Test', () => {
       await createTestRelationship(testCurrentUser.id, testUser.id)
 
       // Response
-      const response = (await authCheckMock(
+      const response: TestIResponse<RelationshipDestroyRes> = await authCheckMock(
         `/users/${testUser.id}/relationships`,
         'DELETE'
-      )) as TestIResponse<RelationshipDestroyRes>
+      )
 
       // Get Test Data
       const currentUser = await getTestUser(testCurrentUser.id)

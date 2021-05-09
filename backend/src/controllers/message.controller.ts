@@ -1,5 +1,4 @@
 import { Request, Response } from 'express'
-
 import * as model from '@/models/message.model'
 
 /**
@@ -52,7 +51,7 @@ const update = async (req: Request, res: Response) => {
     status: 201,
   }
   const messageId = req.params.id
-  const body = req.body as MessageUpdateReq
+  const body: MessageUpdateReq = req.body
 
   try {
     const message = await model.update(body, messageId)

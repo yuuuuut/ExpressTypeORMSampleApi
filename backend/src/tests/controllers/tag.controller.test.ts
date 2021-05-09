@@ -12,7 +12,7 @@ describe('Tag Controller Test', () => {
       const testTags2 = await createTestTag('読書')
 
       // Response
-      const response = (await Req.get('/tags')) as TestIResponse<TagIndexRes>
+      const response: TestIResponse<TagIndexRes> = await Req.get('/tags')
 
       // ExpectedJson Data
       const expectedJson = {
@@ -41,7 +41,7 @@ describe('Tag Controller Test', () => {
       await addTagTestUser(testCurrentUser, [testTags])
 
       // Response
-      const response = (await Req.get(`/tags/${testTags.id}`)) as TestIResponse<TagIndexRes>
+      const response: TestIResponse<TagIndexRes> = await Req.get(`/tags/${testTags.id}`)
 
       // ExpectedJson Data
       const expectedJson = {
@@ -83,7 +83,7 @@ describe('Tag Controller Test', () => {
       await addTagTestUser(testCurrentUser, [testTags1])
 
       // Response
-      const response = (await Req.get(`/tags/${testTags1.id}`)) as TestIResponse<TagIndexRes>
+      const response: TestIResponse<TagIndexRes> = await Req.get(`/tags/${testTags1.id}`)
 
       // ExpectedJson Data
       const expectedJson = {
@@ -144,7 +144,7 @@ describe('Tag Controller Test', () => {
       await addTagTestUser(testCurrentUser, [testTags1, testTags2])
 
       // Response
-      const response = (await Req.get(`/tags/${testTags1.id}`)) as TestIResponse<TagIndexRes>
+      const response: TestIResponse<TagIndexRes> = await Req.get(`/tags/${testTags1.id}`)
 
       // ExpectedJson Data
       const expectedJson = {

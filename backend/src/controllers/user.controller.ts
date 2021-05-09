@@ -1,5 +1,4 @@
 import { Request, Response } from 'express'
-
 import * as model from '@/models/user.model'
 
 /**
@@ -55,7 +54,7 @@ const create = async (req: Request, res: Response) => {
   const response: IResponse<UserCreateRes> = {
     status: 201,
   }
-  const body = req.body as UserCreateReq
+  const body: UserCreateReq = req.body
 
   try {
     const { user, isCreate } = await model.create(body)
@@ -79,7 +78,7 @@ const update = async (req: Request, res: Response) => {
     status: 201,
   }
   const userId = req.params.id
-  const body = req.body as UserUpdateReq
+  const body: UserUpdateReq = req.body
 
   try {
     const user = await model.update(userId, body)

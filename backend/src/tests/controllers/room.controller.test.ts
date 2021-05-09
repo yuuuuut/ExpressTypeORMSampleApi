@@ -13,7 +13,7 @@ describe('Room Controller Test', () => {
       const testRoom = await createTestRoom(testUser, testCurrentUser)
 
       // Response
-      const response = (await authCheckMock(`/rooms/${testRoom.id}`, 'GET')) as TestIResponse<RoomShowRes>
+      const response: TestIResponse<RoomShowRes> = await authCheckMock(`/rooms/${testRoom.id}`, 'GET')
 
       // ExpectedJson Data
       const expectedJson = {
@@ -51,7 +51,7 @@ describe('Room Controller Test', () => {
     })
     it('Roomが存在しない場合取得ができないこと。', async () => {
       // Response
-      const response = (await authCheckMock(`/rooms/NotRoom`, 'GET')) as TestIResponse<RoomShowRes>
+      const response: TestIResponse<RoomShowRes> = await authCheckMock(`/rooms/NotRoom`, 'GET')
 
       expect(response.status).toEqual(404)
     })
@@ -64,7 +64,7 @@ describe('Room Controller Test', () => {
       const testUser = await createTestUser()
 
       // Response
-      const response = (await authCheckMock(`/users/${testUser.id}/rooms`, 'POST')) as TestIResponse<RoomCreateRes>
+      const response: TestIResponse<RoomCreateRes> = await authCheckMock(`/users/${testUser.id}/rooms`, 'POST')
 
       // ExpectedJson Data
       const expectedJson = {

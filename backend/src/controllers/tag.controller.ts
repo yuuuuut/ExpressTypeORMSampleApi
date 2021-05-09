@@ -1,5 +1,4 @@
 import { Request, Response } from 'express'
-
 import * as model from '@/models/tag.model'
 
 /**

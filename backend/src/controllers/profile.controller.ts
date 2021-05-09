@@ -1,5 +1,4 @@
 import { Request, Response } from 'express'
-
 import * as model from '@/models/profile.model'
 
 /**
@@ -10,7 +9,7 @@ const update = async (req: Request, res: Response) => {
     status: 201,
   }
   const userId = req.params.id
-  const body = req.body as ProfileUpdateReq
+  const body: ProfileUpdateReq = req.body
 
   try {
     const profile = await model.update(userId, body)

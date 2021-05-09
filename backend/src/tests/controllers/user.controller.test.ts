@@ -11,7 +11,7 @@ describe('User API Controller Test', () => {
       const testCurrentUser = await createFirebaseUser()
 
       // Response
-      const response = (await authCheckMock(`/users/${testCurrentUser.id}`, 'GET')) as TestIResponse<UserShowRes>
+      const response: TestIResponse<UserShowRes> = await authCheckMock(`/users/${testCurrentUser.id}`, 'GET')
 
       // ExpectedJson Data
       const expectedJson = {
@@ -37,7 +37,7 @@ describe('User API Controller Test', () => {
       const testUser = await createTestUser()
 
       // Response
-      const response = (await authCheckMock(`/users/${testUser.id}`, 'GET')) as TestIResponse<UserShowRes>
+      const response: TestIResponse<UserShowRes> = await authCheckMock(`/users/${testUser.id}`, 'GET')
 
       // ExpectedJson Data
       const expectedJson = {
@@ -62,7 +62,7 @@ describe('User API Controller Test', () => {
     })
     it('Userが存在しない場合Userの取得ができないこと。', async () => {
       // Response
-      const response = (await authCheckMock(`/users/NotUser`, 'GET')) as TestIResponse<UserShowRes>
+      const response: TestIResponse<UserShowRes> = await authCheckMock(`/users/NotUser`, 'GET')
 
       expect(response.status).toEqual(404)
       expect(response.body.error?.message).toEqual('ユーザーが存在しません。')
@@ -79,7 +79,7 @@ describe('User API Controller Test', () => {
       }
 
       // Response
-      const response = (await Req.post('/users').send(userData)) as TestIResponse<UserCreateRes>
+      const response: TestIResponse<UserCreateRes> = await Req.post('/users').send(userData)
 
       // ExpectedJson Data
       const expectedJson = {
@@ -113,7 +113,7 @@ describe('User API Controller Test', () => {
       }
 
       // Response
-      const response = (await Req.post('/users').send(newUser)) as TestIResponse<UserCreateRes>
+      const response: TestIResponse<UserCreateRes> = await Req.post('/users').send(newUser)
 
       expect(response.status).toEqual(201)
       expect(response.body.data.isCreate).toEqual(false)
@@ -128,16 +128,12 @@ describe('User API Controller Test', () => {
       const tag2 = await createTestTag('読書')
 
       // Test Data
-      const data = {
+      const data: UserUpdateReq = {
         tagIds: [tag1.id, tag2.id],
-      } as UserUpdateReq
+      }
 
       // Response
-      const response = (await authCheckMock(
-        `/users/${testCurrentUser.id}`,
-        'PUT',
-        data
-      )) as TestIResponse<UserUpdateRes>
+      const response: TestIResponse<UserUpdateRes> = await authCheckMock(`/users/${testCurrentUser.id}`, 'PUT', data)
 
       // ExpectedJson Data
       const expectedJson = {
@@ -171,7 +167,7 @@ describe('User API Controller Test', () => {
       const testUser = await createTestUser()
 
       // Response
-      const response = (await authCheckMock(`/users/${testUser.id}`, 'PUT', {})) as TestIResponse<UserUpdateRes>
+      const response: TestIResponse<UserUpdateRes> = await authCheckMock(`/users/${testUser.id}`, 'PUT', {})
 
       console.log(response)
 
@@ -185,16 +181,12 @@ describe('User API Controller Test', () => {
       const tag2 = await createTestTag('読書')
 
       // Test Data
-      const data = {
+      const data: UserUpdateReq = {
         tagIds: [tag1.id, tag2.id],
-      } as UserUpdateReq
+      }
 
       // Response
-      const response = (await authCheckMock(
-        `/users/${testCurrentUser.id}`,
-        'PUT',
-        data
-      )) as TestIResponse<UserUpdateRes>
+      const response: TestIResponse<UserUpdateRes> = await authCheckMock(`/users/${testCurrentUser.id}`, 'PUT', data)
 
       // ExpectedJson Data
       const expectedJson = {
@@ -223,7 +215,7 @@ describe('User API Controller Test', () => {
       expect(response.body.data).toEqual(expectedJson)
 
       // Response
-      const response2 = (await authCheckMock(`/users/${testCurrentUser.id}`, 'PUT', {})) as TestIResponse<UserUpdateRes>
+      const response2: TestIResponse<UserUpdateRes> = await authCheckMock(`/users/${testCurrentUser.id}`, 'PUT', {})
 
       // ExpectedJson Data
       const expectedJson2 = {

@@ -22,7 +22,7 @@ describe('Message API Controller Test', () => {
       const testMessage = await createTestMessage(testCurrentUser, testRoom)
 
       // Response
-      const response = (await authCheckMock(`/rooms/${testRoom.id}/messages`, 'GET')) as TestIResponse<MessageIndexRes>
+      const response: TestIResponse<MessageIndexRes> = await authCheckMock(`/rooms/${testRoom.id}/messages`, 'GET')
 
       // ExpectedJson Data
       const expectedJson = {
@@ -69,7 +69,7 @@ describe('Message API Controller Test', () => {
       const testMessage2 = await createTestMessage(testUser, testRoom)
 
       // Response
-      const response = (await authCheckMock(`/rooms/${testRoom.id}/messages`, 'GET')) as TestIResponse<MessageIndexRes>
+      const response: TestIResponse<MessageIndexRes> = await authCheckMock(`/rooms/${testRoom.id}/messages`, 'GET')
 
       // ExpectedJson Data
       const expectedJson = {
@@ -136,16 +136,16 @@ describe('Message API Controller Test', () => {
       const testRoom = await createTestRoom(testUser, testCurrentUser)
 
       // Test Data
-      const data = {
+      const data: MessageCreateReq = {
         kind: 'LINE',
-      } as MessageCreateReq
+      }
 
       // Response
-      const response = (await authCheckMock(
+      const response: TestIResponse<MessageCreateRes> = await authCheckMock(
         `/rooms/${testRoom.id}/messages`,
         'POST',
         data
-      )) as TestIResponse<MessageCreateRes>
+      )
 
       // ExpectedJson Data
       const expectedJson = {
@@ -186,16 +186,12 @@ describe('Message API Controller Test', () => {
       const testMessage = await createTestMessage(testCurrentUser, testRoom)
 
       // Test Data
-      const data = {
+      const data: MessageUpdateReq = {
         type: 'IS_APPROVAL',
-      } as MessageUpdateReq
+      }
 
       // Response
-      const response = (await authCheckMock(
-        `/messages/${testMessage.id}`,
-        'PUT',
-        data
-      )) as TestIResponse<MessageUpdateRes>
+      const response: TestIResponse<MessageUpdateRes> = await authCheckMock(`/messages/${testMessage.id}`, 'PUT', data)
 
       // ExpectedJson Data
       const expectedJson = {
@@ -219,16 +215,12 @@ describe('Message API Controller Test', () => {
       const testMessage = await createTestMessage(testCurrentUser, testRoom)
 
       // Test Data
-      const data = {
+      const data: MessageUpdateReq = {
         type: 'REJECTED',
-      } as MessageUpdateReq
+      }
 
       // Response
-      const response = (await authCheckMock(
-        `/messages/${testMessage.id}`,
-        'PUT',
-        data
-      )) as TestIResponse<MessageUpdateRes>
+      const response: TestIResponse<MessageUpdateRes> = await authCheckMock(`/messages/${testMessage.id}`, 'PUT', data)
 
       // ExpectedJson Data
       const expectedJson = {
