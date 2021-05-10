@@ -1,5 +1,5 @@
 import { createConnections, getConnection } from 'typeorm'
-import redis from './src/libs/redis'
+import redis from './src/lib/redis'
 
 // Jest Setting
 jest.setTimeout(30000)

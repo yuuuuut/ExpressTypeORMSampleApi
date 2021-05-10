@@ -37,10 +37,10 @@ const option = {
   database: database[process.env.NODE_ENV],
   synchronize: false,
   logging: false,
-  entities: ['src/entities/**/*.ts'],
+  entities: ['src/entity/**/*.ts'],
   migrations: ['src/migration/**/*.ts'],
   cli: {
-    entitiesDir: 'src/entities',
+    entitiesDir: 'src/entity',
     migrationsDir: 'src/migration',
   },
 }

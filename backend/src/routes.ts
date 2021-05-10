@@ -1,13 +1,13 @@
 import { Router } from 'express'
 
-import { authCheck, isCurrentUser, isOtherUser } from '@/middlewares/auth'
+import { authCheck, isCurrentUser, isOtherUser } from '@/middleware/auth'
 
-import * as relationshipController from '@/controllers/relationship.controller'
-import * as profileController from '@/controllers/profile.controller'
-import * as messageController from '@/controllers/message.controller'
-import * as userController from '@/controllers/user.controller'
-import * as roomController from '@/controllers/room.controller'
-import * as tagController from '@/controllers/tag.controller'
+import * as relationshipController from '@/controller/relationship.controller'
+import * as profileController from '@/controller/profile.controller'
+import * as messageController from '@/controller/message.controller'
+import * as userController from '@/controller/user.controller'
+import * as roomController from '@/controller/room.controller'
+import * as tagController from '@/controller/tag.controller'
 
 const router = Router()
 

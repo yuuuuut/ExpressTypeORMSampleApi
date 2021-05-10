@@ -11,17 +11,6 @@ services:
     command: sh -c "yarn ${ENV}"
     ports:
       - "4000:4000"
-
-  frontend:
-    build:
-      context: ./docker
-      dockerfile: Dockerfile.frontend
-    volumes:
-      - ./frontend/:/usr/app
-      - /frontend/node_modules
-    command: sh -c "yarn start"
-    ports:
-      - "3000:3000"
   
   db:
     image: mysql:8.0
