@@ -1,8 +1,8 @@
 import { getManager } from 'typeorm'
 import { v4 as uuidv4 } from 'uuid'
 
+import { getRoom, getUser } from './common.model'
 import { Room, User } from '@/entities'
-import { getUser } from './common.model'
 
 /**
  * room model index
@@ -17,13 +17,10 @@ const index = async (currentUserId: string) => {
 /**
  * room model show
  */
-const show = async (roomId: string) => {
-  const roomRepository = getManager().getRepository(Room)
+const show = async (roomId: string, currentUserId: string) => {
+  const room = await getRoom(roomId, ['users'])
 
-  const room = await roomRepository.findOne(roomId, {
-    relations: ['users'],
-  })
-  if (!room) throw Object.assign(new Error('ルームが存在しません。'), { status: 404 })
+  isUserBelongstoRoom(room.users, currentUserId)
 
   return { room }
 }
@@ -69,4 +66,22 @@ const isRoomBool = (otherUser: User, currentUser: User) => {
   return { isRoom, roomId }
 }
 
+/**
+ * Roomに所属しているUserかどうかをチェックする。
+ * @param users Userの配列
+ * @param currentUserId CurrentUserのID
+ */
+const isUserBelongstoRoom = (users: User[], currentUserId: string) => {
+  for (const user of users) {
+    if (user.id === currentUserId) {
+      return
+    }
+  }
+  throw Object.assign(new Error('許可されていない操作です。'), { status: 500 })
+}
+
 export { index, show, create, isRoomBool }
+
+export const __local__ = {
+  isUserBelongstoRoom,
+}

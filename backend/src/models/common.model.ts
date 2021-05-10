@@ -1,5 +1,5 @@
 import { getManager } from 'typeorm'
-import { User } from '@/entities'
+import { Room, User } from '@/entities'
 
 /**
  * Userを返します。
@@ -24,4 +24,27 @@ async function getUser(userId: string, relations?: string[]) {
   return currentUser
 }
 
-export { getUser }
+/**
+ * Roomを返します。
+ * @param roomId ルームのID
+ * @param relations リレーションを示すstringの配列
+ */
+async function getRoom(roomId: string, relations?: string[]) {
+  let room: Room | undefined
+
+  const roomRepository = getManager().getRepository(Room)
+
+  if (relations) {
+    room = await roomRepository.findOne(roomId, {
+      relations: relations,
+    })
+  } else {
+    room = await roomRepository.findOne(roomId)
+  }
+
+  if (!room) throw Object.assign(new Error('ルームが存在しません。'), { status: 404 })
+
+  return room
+}
+
+export { getUser, getRoom }

@@ -8,14 +8,12 @@ import * as roomModel from '@/models/room.model'
 describe('Room Model Test', () => {
   describe('index Test', () => {
     it('戻り値が正しいこと。', async () => {
-      // Create Test Data
       const testCurrentUser = await createFirebaseUser()
       const testUser = await createTestUser()
       const testRoom = await createTestRoom(testUser, testCurrentUser)
 
       const val = await roomModel.index(testCurrentUser.id)
 
-      // ExpectedJson Data
       const expectedJson = {
         rooms: [
           {
@@ -30,14 +28,12 @@ describe('Room Model Test', () => {
 
   describe('show Test', () => {
     it('戻り値が正しいこと。', async () => {
-      // Create Test Data
       const testCurrentUser = await createFirebaseUser()
       const testUser = await createTestUser()
       const testRoom = await createTestRoom(testUser, testCurrentUser)
 
-      const val = await roomModel.show(testRoom.id)
+      const val = await roomModel.show(testRoom.id, testCurrentUser.id)
 
-      // ExpectedJson Data
       const expectedJson = {
         room: {
           id: testRoom.id,
@@ -74,18 +70,15 @@ describe('Room Model Test', () => {
 
   describe('isRoomBool Test', () => {
     it('Roomが存在する場合の戻り値が正しいこと。', async () => {
-      // Create Test Data
       const testCurrentUser = await createFirebaseUser()
       const testUser = await createTestUser()
       const testRoom = await createTestRoom(testUser, testCurrentUser)
 
-      // Get Test Data
       const currentUser = await getTestUser(testCurrentUser.id)
       const user = await getTestUser(testUser.id)
 
       const val = roomModel.isRoomBool(user, currentUser)
 
-      // ExpectedJson Data
       const expectedJson = {
         isRoom: true,
         roomId: testRoom.id,
@@ -94,23 +87,46 @@ describe('Room Model Test', () => {
       expect(val).toEqual(expectedJson)
     })
     it('Roomが存在しない場合の戻り値が正しいこと。', async () => {
-      // Create Test Data
       const testCurrentUser = await createFirebaseUser()
       const testUser = await createTestUser()
 
-      // Get Test Data
       const currentUser = await getTestUser(testCurrentUser.id)
       const user = await getTestUser(testUser.id)
 
       const val = roomModel.isRoomBool(user, currentUser)
 
-      // ExpectedJson Data
       const expectedJson = {
         isRoom: false,
         roomId: undefined,
       }
 
       expect(val).toEqual(expectedJson)
+    })
+  })
+
+  describe('isUserBelongstoRoom Test', () => {
+    it('正しく動作すること。', async () => {
+      const testCurrentUser = await createFirebaseUser()
+      const testUser = await createTestUser()
+
+      expect(() =>
+        roomModel.__local__.isUserBelongstoRoom([testCurrentUser, testUser], testCurrentUser.id)
+      ).not.toThrow()
+    })
+    it('正しく動作すること。', async () => {
+      const testCurrentUser = await createFirebaseUser()
+      const testUser = await createTestUser()
+
+      expect(() => roomModel.__local__.isUserBelongstoRoom([testCurrentUser, testUser], testUser.id)).not.toThrow()
+    })
+    it('Roomに所属しないUserだった場合、Errorが発生すること', async () => {
+      const testCurrentUser = await createFirebaseUser()
+      const testUser1 = await createTestUser('user1')
+      const testUser2 = await createTestUser('user2')
+
+      expect(() => roomModel.__local__.isUserBelongstoRoom([testCurrentUser, testUser1], testUser2.id)).toThrow(
+        '許可されていない操作です。'
+      )
     })
   })
 })

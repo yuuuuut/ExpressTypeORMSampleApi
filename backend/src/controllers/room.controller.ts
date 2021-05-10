@@ -28,10 +28,11 @@ const show = async (req: Request, res: Response) => {
   const response: IResponse<RoomShowRes> = {
     status: 200,
   }
+  const currentUserId = req.currentUserId
   const roomId = req.params.id
 
   try {
-    const { room } = await model.show(roomId)
+    const { room } = await model.show(roomId, currentUserId)
     response.data = { room }
   } catch (err) {
     response.status = err.status || 500
