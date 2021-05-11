@@ -1,4 +1,4 @@
-import { Message, Profile, Room, Tag, User } from '@/entity'
+import { Message, Profile, Room, Tag, User, Notification } from '@/entity'
 
 declare global {
   namespace Express {
@@ -73,6 +73,7 @@ declare global {
   }
 
   interface RelationshipCreateRes {
+    notification: Notification
     message: string
   }
 

@@ -20,10 +20,7 @@ describe('Relationship API Controller Test', () => {
       const expectedJson = {
         followings: [
           {
-            id: testUser.id,
-            displayName: testUser.displayName,
-            photoURL: testUser.photoURL,
-            isAdmin: testUser.isAdmin,
+            ...testUser,
             followers: testUser.followers,
             followings: testUser.followings,
             followersCount: '1',
@@ -61,10 +58,7 @@ describe('Relationship API Controller Test', () => {
       const expectedJson = {
         followings: [
           {
-            id: user1.id,
-            displayName: user1.displayName,
-            photoURL: user1.photoURL,
-            isAdmin: user1.isAdmin,
+            ...user1,
             followers: user1.followers,
             followings: user1.followings,
             followersCount: user1.followersCount,
@@ -72,10 +66,7 @@ describe('Relationship API Controller Test', () => {
             rooms: [],
           },
           {
-            id: user2.id,
-            displayName: user2.displayName,
-            photoURL: user2.photoURL,
-            isAdmin: user2.isAdmin,
+            ...user2,
             followers: user2.followers,
             followings: user2.followings,
             followersCount: user2.followersCount,
@@ -83,10 +74,7 @@ describe('Relationship API Controller Test', () => {
             rooms: [],
           },
           {
-            id: user3.id,
-            displayName: user3.displayName,
-            photoURL: user3.photoURL,
-            isAdmin: user3.isAdmin,
+            ...user3,
             followers: user3.followers,
             followings: user3.followings,
             followersCount: user3.followersCount,
@@ -117,10 +105,7 @@ describe('Relationship API Controller Test', () => {
       const expectedJson = {
         followers: [
           {
-            id: testUser.id,
-            displayName: testUser.displayName,
-            photoURL: testUser.photoURL,
-            isAdmin: testUser.isAdmin,
+            ...testUser,
             followers: testUser.followers,
             followings: testUser.followings,
             followersCount: '0',
@@ -158,10 +143,7 @@ describe('Relationship API Controller Test', () => {
       const expectedJson = {
         followers: [
           {
-            id: user1.id,
-            displayName: user1.displayName,
-            photoURL: user1.photoURL,
-            isAdmin: user1.isAdmin,
+            ...user1,
             followers: user1.followers,
             followings: user1.followings,
             followersCount: user1.followersCount,
@@ -169,10 +151,7 @@ describe('Relationship API Controller Test', () => {
             rooms: [],
           },
           {
-            id: user2.id,
-            displayName: user2.displayName,
-            photoURL: user2.photoURL,
-            isAdmin: user2.isAdmin,
+            ...user2,
             followers: user2.followers,
             followings: user2.followings,
             followersCount: user2.followersCount,
@@ -180,10 +159,7 @@ describe('Relationship API Controller Test', () => {
             rooms: [],
           },
           {
-            id: user3.id,
-            displayName: user3.displayName,
-            photoURL: user3.photoURL,
-            isAdmin: user3.isAdmin,
+            ...user3,
             followers: user3.followers,
             followings: user3.followings,
             followersCount: user3.followersCount,
@@ -215,10 +191,7 @@ describe('Relationship API Controller Test', () => {
       const expectedJson = {
         followers: [
           {
-            id: testUser.id,
-            displayName: testUser.displayName,
-            photoURL: testUser.photoURL,
-            isAdmin: testUser.isAdmin,
+            ...testUser,
             followers: testUser.followers,
             followings: testUser.followings,
             followersCount: '1',
@@ -228,10 +201,7 @@ describe('Relationship API Controller Test', () => {
         ],
         followings: [
           {
-            id: testUser.id,
-            displayName: testUser.displayName,
-            photoURL: testUser.photoURL,
-            isAdmin: testUser.isAdmin,
+            ...testUser,
             followers: testUser.followers,
             followings: testUser.followings,
             followersCount: '1',
@@ -262,6 +232,39 @@ describe('Relationship API Controller Test', () => {
 
       const expectedJson = {
         message: 'フォローしました。',
+        notification: {
+          id: expect.anything(),
+          action: 'FOLLOW',
+          checked: false,
+          visited: {
+            id: testUser.id,
+            displayName: testUser.displayName,
+            isAdmin: testUser.isAdmin,
+            photoURL: testUser.photoURL,
+            followers: [
+              {
+                id: testCurrentUser.id,
+                displayName: testCurrentUser.displayName,
+                isAdmin: testCurrentUser.isAdmin,
+                photoURL: testCurrentUser.photoURL,
+                followings: [],
+                followers: [],
+                rooms: [],
+              },
+            ],
+            followings: [],
+            rooms: [],
+          },
+          visiter: {
+            id: testCurrentUser.id,
+            displayName: testCurrentUser.displayName,
+            isAdmin: testCurrentUser.isAdmin,
+            photoURL: testCurrentUser.photoURL,
+            followings: [],
+            followers: [],
+            rooms: [],
+          },
+        },
       }
 
       expect(response.status).toEqual(201)

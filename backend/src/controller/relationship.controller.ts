@@ -33,8 +33,9 @@ const create = async (req: Request, res: Response) => {
   const userId = req.params.id
 
   try {
-    await userModel.follow(userId, currentUserId)
+    const { notification } = await userModel.follow(userId, currentUserId)
     response.data = {
+      notification,
       message: 'フォローしました。',
     }
   } catch (err) {

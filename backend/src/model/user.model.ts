@@ -5,6 +5,7 @@ import { getOneUser } from '@/model/common.model'
 import { User } from '@/entity'
 import redis from '@/lib/redis'
 
+import * as notificationModel from '@/model/notification.model'
 import * as profileModel from '@/model/profile.model'
 import * as roomModel from '@/model/room.model'
 import * as tagModel from '@/model/tag.model'
@@ -113,8 +114,16 @@ const follow = async (userId: string, currentUserId: string) => {
     throw Object.assign(new Error('既にフォローしています。'), { status: 500 })
   }
 
-  user.followers.push(currentUser)
-  await user.save()
+  const notification = await getManager().transaction(async (entityManager) => {
+    user.followers.push(currentUser)
+
+    await entityManager.save(user)
+    const notification = await notificationModel.create(currentUser, user, 'FOLLOW', entityManager)
+
+    return notification
+  })
+
+  return { notification }
 }
 
 /**
